@@ -7,6 +7,8 @@ TagManager:
   - Grass
   - Dirt
   - Stone
+  - Gun
+  - Bullet
   layers:
   - Default
   - TransparentFX

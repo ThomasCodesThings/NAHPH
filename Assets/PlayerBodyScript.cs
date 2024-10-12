@@ -24,7 +24,7 @@ public class PlayerBodyScript : MonoBehaviour
         float angle = Vector2.Angle(Vector2.up, direction);
 
         if(angle < minAngle){
-           transform.up = direction;
+           transform.right = direction;
         }
         
     }
