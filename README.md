@@ -12,7 +12,7 @@ Dominik Polák
 * [X] Base player movement
 * [X] Player rotation
 * [X] Sprinting
-* [] Player weapon and shooting animation
+* [X] Player weapon and shooting animation
 * [] Health boxes and ammunition spawning
 * [] Healing and ammo system
 * [] Enemy AI
