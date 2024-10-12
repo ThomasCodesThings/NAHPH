@@ -11,7 +11,17 @@ public class ProceduralGeneration : MonoBehaviour
     [SerializeField] int width;
     [SerializeField] int height;
 
+    private List<int> heights = new List<int>();
+
     private int wallSize = 20;
+
+    public List<int> getHeights(){
+        return heights;
+    }
+
+    public int getBaseWidth(){
+        return width;
+    }
 
     public void generate(){
         for(int x = -width; x < width; x++){
@@ -36,6 +46,9 @@ public class ProceduralGeneration : MonoBehaviour
                 for(int y = height + 1; y < height + wallSize; y++){
                     Instantiate(stonePrefab, new Vector3(x, y, 0), Quaternion.identity);
                 }
+                heights.Add(height + wallSize);
+            }else{
+                heights.Add(height);
             }
         }
     } 
