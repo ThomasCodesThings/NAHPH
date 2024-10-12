@@ -2,6 +2,7 @@
 
 ## Autori:
 Tomáš Černáček
+
 Dominik Polák
 
 
