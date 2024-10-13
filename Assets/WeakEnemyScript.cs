@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WeakEnemyScript : MonoBehaviour
 {
@@ -16,9 +17,24 @@ public class WeakEnemyScript : MonoBehaviour
     private float triggerRadius = 10f;
     private bool isGrounded = true;
     private Rigidbody2D rb;
+    private SpriteRenderer spriteRenderer;
 
     [SerializeField] float jumpForce = 10f;
     [SerializeField] float speed = 5f;
+
+    [SerializeField] Slider healthBar;
+    [SerializeField] Color minHealthColor = Color.red;
+    [SerializeField] Color maxHealthColor = Color.green;
+    private float healthBarOffset = 0.75f;
+
+    public void setHealth(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -33,11 +49,18 @@ public class WeakEnemyScript : MonoBehaviour
         }
 
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        healthBar.value = health;
+        healthBar.maxValue = health;
+       
     }
 
     // Update is called once per frame
     void Update()
     {
+        healthBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * healthBarOffset);
+        healthBar.value = health;
+        healthBar.fillRect.GetComponent<Image>().color = Color.Lerp(minHealthColor, maxHealthColor, healthBar.normalizedValue);
         playerX = (int)player.transform.position.x;
         playerY = (int)player.transform.position.y;
         enemyX = (int)transform.position.x;
@@ -71,7 +94,7 @@ public class WeakEnemyScript : MonoBehaviour
                     if (index + 1 < heights.Count && heights[index + 1] > enemyY && isGrounded)
                     {
                         jump(isPlayerOnLeft); 
-                    else
+                    }else
                     {
                         walk(isPlayerOnLeft); 
                     }
@@ -79,16 +102,19 @@ public class WeakEnemyScript : MonoBehaviour
             }
         }
     }
+    
 
      private void walk(bool isPlayerOnLeft)
     {
         if (isPlayerOnLeft)
         {
             transform.position += Vector3.left * speed * Time.deltaTime;
+            spriteRenderer.flipX = true;
         }
         else
         {
             transform.position += Vector3.right * speed * Time.deltaTime;
+            spriteRenderer.flipX = false;
         }
     }
 
@@ -100,10 +126,12 @@ public class WeakEnemyScript : MonoBehaviour
             if (isPlayerOnLeft)
             {
                 rb.velocity = new Vector2(-speed, rb.velocity.y);
+                spriteRenderer.flipX = true;
             }
             else
             {
                 rb.velocity = new Vector2(speed, rb.velocity.y);
+                spriteRenderer.flipX = false;
             }
 
             isGrounded = false;
@@ -121,6 +149,13 @@ public class WeakEnemyScript : MonoBehaviour
         if (other.gameObject.CompareTag("Grass"))
         {
             isGrounded = true;
+        }
+
+        if (other.gameObject.CompareTag("Bullet"))
+        {
+            int damage = player.GetComponent<PlayerScript>().getDamage();
+            setHealth(damage);
+            Destroy(other.gameObject);
         }
     }
 }

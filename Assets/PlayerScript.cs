@@ -11,6 +11,12 @@ public class PlayerScript : MonoBehaviour
     public float Move;
     public Rigidbody2D rb;
     private bool isGrounded;
+    private int baseDamage = 10;
+
+    public int getDamage()
+    {
+        return baseDamage;
+    }
     // Start is called before the first frame update
     void Start()
     {

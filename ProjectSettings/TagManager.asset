@@ -9,6 +9,7 @@ TagManager:
   - Stone
   - Gun
   - Bullet
+  - WeakEnemy
   layers:
   - Default
   - TransparentFX
