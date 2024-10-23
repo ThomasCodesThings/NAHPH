@@ -16,6 +16,10 @@ public class PlayerBodyScript : MonoBehaviour
     void Update()
     {
 
+        if (Time.timeScale == 0)
+        {
+            return;
+        }
         Vector3 mousePosition = Input.mousePosition;
         mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
 

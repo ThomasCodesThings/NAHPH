@@ -7,6 +7,7 @@ public class PlayerScript : MonoBehaviour
 
     [SerializeField] float speed = 5;
     [SerializeField] float jumpForce = 5;
+    [SerializeField] GameObject pauseMenu;
 
     public float Move;
     public Rigidbody2D rb;
@@ -20,12 +21,31 @@ public class PlayerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        pauseMenu.SetActive(false);
         
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if(Time.timeScale == 1)
+            {
+                PauseGame();
+            }
+            else
+            {
+                ResumeGame();
+            }
+           
+        }
+
+        if (Time.timeScale == 0)
+        {
+            return;
+        }
         Move = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(Move * speed, rb.velocity.y);
         if(Input.GetButtonDown("Jump") && isGrounded){
@@ -50,5 +70,17 @@ public class PlayerScript : MonoBehaviour
         if(other.gameObject.CompareTag("Grass")){
             isGrounded = false;
         }
+    }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+        pauseMenu.SetActive(true);
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1;
+        pauseMenu.SetActive(false);
     }
 }

@@ -21,6 +21,10 @@ public class GunScript : MonoBehaviour
     // Update is called once per frame
     void Update()
 {
+    if (Time.timeScale == 0)
+    {
+        return;
+    }
     if(Input.GetMouseButton(0) && Time.time - lastShotTime > shotDelay)
     {
         lastShotTime = Time.time;
