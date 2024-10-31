@@ -1280,6 +1280,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 333cdf34c9f97e94f934fcb5095cac2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameDifficulty: 0
+  difficultyText: {fileID: 1056081587}
 --- !u!4 &522057777
 Transform:
   m_ObjectHideFlags: 0
@@ -2107,7 +2109,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17a5e338a8f24974e8f517fe9b51dc59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 0}
 --- !u!1 &1055050658
 GameObject:
   m_ObjectHideFlags: 0
@@ -2276,7 +2277,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 173.5, y: 0}
+  m_AnchoredPosition: {x: 160.6, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1056081587
@@ -2333,7 +2334,7 @@ MonoBehaviour:
   m_fontSizeMin: 0
   m_fontSizeMax: 0
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -3677,9 +3678,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1630507259}
-        m_TargetAssemblyTypeName: AudioScript, Assembly-CSharp
-        m_MethodName: IncreaseVolume
+      - m_Target: {fileID: 522057776}
+        m_TargetAssemblyTypeName: GameManagerScript, Assembly-CSharp
+        m_MethodName: DecreaseDifficulty
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4069,9 +4070,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1630507259}
-        m_TargetAssemblyTypeName: AudioScript, Assembly-CSharp
-        m_MethodName: IncreaseVolume
+      - m_Target: {fileID: 522057776}
+        m_TargetAssemblyTypeName: GameManagerScript, Assembly-CSharp
+        m_MethodName: IncreaseDifficulty
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4775,7 +4776,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17a5e338a8f24974e8f517fe9b51dc59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 1469158785}
 --- !u!1 &1742824888
 GameObject:
   m_ObjectHideFlags: 0
