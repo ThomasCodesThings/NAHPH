@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GameStructs;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -13,6 +14,11 @@ public class PlayerScript : MonoBehaviour
     public Rigidbody2D rb;
     private bool isGrounded;
     private int baseDamage = 10;
+    private int health = 100;
+    private int xp = 0;
+    private float elapsedTime = 0.0f;
+    private float timeToHeal = 5.0f;
+    private Medkit[] medkits = new Medkit[]{new Medkit("small"), new Medkit("medium"), new Medkit("large")};
 
     public int getDamage()
     {
@@ -28,6 +34,7 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        elapsedTime += Time.deltaTime;
 
         if(Input.GetKeyDown(KeyCode.Escape))
         {
