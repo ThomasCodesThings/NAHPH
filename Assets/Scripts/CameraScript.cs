@@ -30,7 +30,7 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        targetPosition = new Vector3(player.position.x, player.position.y, player.position.z - offset);
+        targetPosition = new Vector3(player.position.x, player.position.y, -10);
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothSpeed);
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");

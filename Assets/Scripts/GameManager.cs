@@ -8,6 +8,7 @@ public class ProceduralGeneration : MonoBehaviour
     [SerializeField] GameObject stonePrefab;
     [SerializeField] GameObject grassPrefab;
     [SerializeField] GameObject dirtPrefab;
+    [SerializeField] GameObject playerPrefab;
     [SerializeField] int width;
     [SerializeField] int height;
 
