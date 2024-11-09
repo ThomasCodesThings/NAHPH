@@ -20,36 +20,16 @@ namespace GameStructs
         public int ammo;
         public int magazine;
         public string weaponName;
-        public int aidKits;
+        public int medkits;
 
-      public PlayerStats(int health, int maxHealth, int xp, int ammo, int magazine, string weaponName, int aidKits){
+      public PlayerStats(int health, int maxHealth, int xp, int ammo, int magazine, string weaponName, int medkits){
             this.health = health;
             this.maxHealth = maxHealth;
             this.xp = xp;
             this.ammo = ammo;
             this.magazine = magazine;
             this.weaponName = weaponName;
-            this.aidKits = aidKits;
+            this.medkits = medkits;
       }
-    }
-
-    public class Medkit{
-        private int healAmount = 10;
-        public Medkit(string type){
-            switch(type){
-                case "small":
-                    healAmount = 10;
-                    break;
-                case "medium":
-                    healAmount = 25;
-                    break;
-                case "large":
-                    healAmount = 35;
-                    break;
-                default:
-                    healAmount = 10;
-                    break;
-            }
-        }
     }
 }

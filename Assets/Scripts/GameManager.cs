@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] int height;
     [SerializeField] GameObject player;
     [SerializeField] GameObject soldierEnemyPrefab;
+    [SerializeField] GameObject medkitPrefab;
 
     /************************************************************************
      * 
@@ -42,8 +43,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text ammoText;
     [SerializeField] TMP_Text magazineText;
     [SerializeField] TMP_Text weaponNameText;
-    [SerializeField] TMP_Text aidKitsText;
-
+    [SerializeField] TMP_Text medkitsCountText;
     /************************************************************************
      * 
      *  Private Variables
@@ -96,12 +96,16 @@ public class GameManager : MonoBehaviour
     return string.Format("{0:00}:{1:00}", minutes, seconds);
 }
 
-    public void updateUI(){
+    public void updateUI(PlayerStats playerStats){
         healthText.text = playerStats.health.ToString();
+        healthBar.value = playerStats.health;
+        healthBar.maxValue = playerStats.maxHealth;
+        xpBar.value = playerStats.xp;
+        medkitsCountText.text = playerStats.medkits.ToString();
     }
 
     private Vector3 generateRandomSpawnPoint(){
-    float randomX = Random.Range(-5, 5);//Random.Range(-width, width);
+    float randomX = Random.Range(-10, 10);//Random.Range(-width, width);
     float y = 5f;
     float z = 0f; 
 
@@ -120,6 +124,20 @@ public class GameManager : MonoBehaviour
     return enemies;
 }
 
+private List<GameObject> spawnMedKits(int count){
+    List<GameObject> medkits = new List<GameObject>();
+    for (int i = 0; i < count; i++)
+    {
+        Vector3 spawnPoint = generateRandomSpawnPoint();
+        GameObject medkit = Instantiate(medkitPrefab, spawnPoint, Quaternion.identity);
+        string[] medkitTypes = { "small", "medium", "large" };
+        string medkitType = medkitTypes[Random.Range(0, medkitTypes.Length)];
+        medkit.GetComponent<MedkitScript>().updateMedkit(medkitType);
+        medkits.Add(medkit);
+    }
+    return medkits;
+}
+
     private IEnumerator handleWaves(){
         while (currentWave <= maxWaves)
         {
@@ -135,6 +153,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator handleGraceTime(){
         duration = gracePeriod;
+        List<GameObject> medkits = spawnMedKits(5);
         while (duration > 0)
         {
             timerText.text = floatToMinutesSeconds(duration);
@@ -147,7 +166,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator handleWaveTime()
 {
     duration = 0;
-    List<GameObject> enemies = spawnEnemies(enemiesToKill); // Use List instead of array
+    List<GameObject> enemies = spawnEnemies(enemiesToKill);
     while (enemies.Count > 0)
     {
         timerText.text = floatToMinutesSeconds(duration);
@@ -193,9 +212,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         playerStats = player.GetComponent<PlayerScript>().getPlayerStats();
-        healthBar.value = playerStats.health;
-        healthBar.maxValue = playerStats.maxHealth;
-        updateUI();
+        updateUI(playerStats);
         totalElapsedTime += Time.deltaTime;
     }
 }

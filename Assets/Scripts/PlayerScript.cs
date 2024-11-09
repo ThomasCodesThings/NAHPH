@@ -5,7 +5,6 @@ using GameStructs;
 
 public class PlayerScript : MonoBehaviour
 {
-
     [SerializeField] float speed = 5;
     [SerializeField] float jumpForce = 5;
     [SerializeField] GameObject pauseMenu;
@@ -17,34 +16,84 @@ public class PlayerScript : MonoBehaviour
     private int health = 100;
     private int maxHealth = 100;
     private int xp = 0;
-    private float elapsedTime = 0.0f;
-    private float timeToHeal = 5.0f;
-    private Medkit[] medkits = new Medkit[]{new Medkit("small"), new Medkit("medium"), new Medkit("large")};
-
+    private float timeToHeal = 5.0f;  // Healing duration
+    private float healingTimer = 0.0f; // Timer for healing process
+    private bool isHealing = false; // Flag to check if the player is healing
+    private List<GameObject> medkits = new List<GameObject>();
 
     public int getDamage()
     {
         return baseDamage;
     }
 
-    public PlayerStats getPlayerStats(){
-        return new PlayerStats(health, maxHealth, xp, 0, 0, "None", 0);
+    public void setHealth(int damage)
+    {
+        health -= damage;
     }
+
+    public int heal()
+    {
+        if (health < maxHealth && medkits.Count > 0) // Check if there's a medkit and if healing is needed
+        {
+            GameObject medkit = medkits[0];
+            //health += medkit.getHealAmount();
+
+            if (health > maxHealth)
+            {
+                health = maxHealth;
+            }
+            medkits.RemoveAt(0);
+        }
+        return health;
+    }
+
+    public PlayerStats getPlayerStats()
+    {
+        return new PlayerStats(health, maxHealth, xp, 0, 0, "None", medkits.Count);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         pauseMenu.SetActive(false);
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        elapsedTime += Time.deltaTime;
-
-        if(Input.GetKeyDown(KeyCode.Escape))
+        // If E key is pressed and player is not healing, start healing
+        if (Input.GetKeyDown(KeyCode.E) && !isHealing && health < maxHealth && medkits.Count > 0)
         {
-            if(Time.timeScale == 1)
+            StartHealing();
+        }
+
+       
+        if (isHealing)
+        {
+            healingTimer += Time.deltaTime;
+            if (healingTimer >= timeToHeal)
+            {
+                EndHealing();
+            }
+            return; 
+        }
+
+     
+        if (Time.timeScale == 0)
+        {
+            return;
+        }
+
+        Move = Input.GetAxis("Horizontal");
+        rb.velocity = new Vector2(Move * speed, rb.velocity.y);
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (Time.timeScale == 1)
             {
                 PauseGame();
             }
@@ -52,31 +101,28 @@ public class PlayerScript : MonoBehaviour
             {
                 ResumeGame();
             }
-           
         }
-
-        if (Time.timeScale == 0)
-        {
-            return;
-        }
-        Move = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(Move * speed, rb.velocity.y);
-        if(Input.GetButtonDown("Jump") && isGrounded){
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-            
-        }
-      
-        
     }
 
-    private void OnCollisionEnter2D(Collision2D other) {
-        if(other.gameObject.CompareTag("Floor")){
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Floor"))
+        {
             isGrounded = true;
         }
+
+        if (other.gameObject.CompareTag("Medkit"))
+        {
+
+            medkits.Add(other.gameObject);
+            Destroy(other.gameObject);
+        }
     }
 
-    private void OnCollisionExit2D(Collision2D other) {
-        if(other.gameObject.CompareTag("Floor")){
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Floor"))
+        {
             isGrounded = false;
         }
     }
@@ -91,5 +137,19 @@ public class PlayerScript : MonoBehaviour
     {
         Time.timeScale = 1;
         pauseMenu.SetActive(false);
+    }
+
+    private void StartHealing()
+    {
+        isHealing = true;
+        healingTimer = 0.0f;
+    }
+
+    private void EndHealing()
+    {
+        heal(); 
+        isHealing = false; 
+        healingTimer = 0.0f; 
+      
     }
 }
