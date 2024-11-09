@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class WeakEnemyScript : MonoBehaviour
 {
-    [SerializeField] ProceduralGeneration proceduralGeneration;
-    [SerializeField] GameObject player;
+    [SerializeField] GameManager proceduralGeneration;
+    private GameObject player;
     private List<int> heights;
     private int playerX;
     private int playerY;
@@ -30,10 +30,14 @@ public class WeakEnemyScript : MonoBehaviour
     public void setHealth(int damage)
     {
         health -= damage;
-        if (health <= 0)
+        /*if (health <= 0)
         {
             Destroy(gameObject);
-        }
+        }*/
+    }
+
+    public bool isKilled(){
+        return health <= 0;
     }
 
     // Start is called before the first frame update
@@ -52,6 +56,7 @@ public class WeakEnemyScript : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         healthBar.value = health;
         healthBar.maxValue = health;
+        player = GameObject.FindGameObjectWithTag("Player");
        
     }
 
@@ -61,7 +66,7 @@ public class WeakEnemyScript : MonoBehaviour
         healthBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * healthBarOffset);
         healthBar.value = health;
         healthBar.fillRect.GetComponent<Image>().color = Color.Lerp(minHealthColor, maxHealthColor, healthBar.normalizedValue);
-        playerX = (int)player.transform.position.x;
+        /*playerX = (int)player.transform.position.x;
         playerY = (int)player.transform.position.y;
         enemyX = (int)transform.position.x;
         enemyY = (int)transform.position.y;
@@ -100,7 +105,7 @@ public class WeakEnemyScript : MonoBehaviour
                     }
                 }
             }
-        }
+        }*/
     }
     
 
@@ -146,7 +151,7 @@ public class WeakEnemyScript : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
  
-        if (other.gameObject.CompareTag("Grass"))
+        if (other.gameObject.CompareTag("Floor"))
         {
             isGrounded = true;
         }

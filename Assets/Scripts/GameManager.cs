@@ -5,7 +5,7 @@ using GameStructs;
 using TMPro;
 using UnityEngine.UI;
 
-public class ProceduralGeneration : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
 
     /************************************************************************
@@ -53,11 +53,11 @@ public class ProceduralGeneration : MonoBehaviour
     private GameObject difficultyManager;
     private PlayerStats playerStats;
     private float totalElapsedTime = 0.0f;
-    private float gracePeriod = 10.0f;
+    private float gracePeriod = 5.0f;
     private float duration = 0.0f;
     private int currentWave = 1;
     private int enemiesKilled = 0;
-    private int enemiesToKill = 10;
+    private int enemiesToKill = 2;
     private int maxWaves = 5;
 
     private List<int> heights = new List<int>();
@@ -80,7 +80,6 @@ public class ProceduralGeneration : MonoBehaviour
 
    public void generate()
     {
-        // Initial random height for the first segment
 
         for (int x = -width; x < width; x++)
         {
@@ -100,6 +99,26 @@ public class ProceduralGeneration : MonoBehaviour
     public void updateUI(){
         healthText.text = playerStats.health.ToString();
     }
+
+    private Vector3 generateRandomSpawnPoint(){
+    float randomX = Random.Range(-5, 5);//Random.Range(-width, width);
+    float y = 5f;
+    float z = 0f; 
+
+    return new Vector3(randomX, y, z);
+}
+
+    private List<GameObject> spawnEnemies(int count)
+{
+    List<GameObject> enemies = new List<GameObject>(); 
+    for (int i = 0; i < count; i++)
+    {
+        Vector3 spawnPoint = generateRandomSpawnPoint();
+        GameObject enemy = Instantiate(soldierEnemyPrefab, spawnPoint, Quaternion.identity);
+        enemies.Add(enemy); 
+    }
+    return enemies;
+}
 
     private IEnumerator handleWaves(){
         while (currentWave <= maxWaves)
@@ -125,15 +144,27 @@ public class ProceduralGeneration : MonoBehaviour
         Debug.Log("Grace period ended.");
     }
 
-    private IEnumerator handleWaveTime(){
-        duration = 0;
-        while( enemiesKilled < enemiesToKill)
+    private IEnumerator handleWaveTime()
+{
+    duration = 0;
+    List<GameObject> enemies = spawnEnemies(enemiesToKill); // Use List instead of array
+    while (enemies.Count > 0)
+    {
+        timerText.text = floatToMinutesSeconds(duration);
+        yield return null;
+        duration += Time.deltaTime;
+
+        for (int i = 0; i < enemies.Count; i++)
         {
-            timerText.text = floatToMinutesSeconds(duration);
-            yield return null;
-            duration += Time.deltaTime;
+            if (enemies[i].GetComponent<WeakEnemyScript>().isKilled())
+            {
+                Destroy(enemies[i]);
+                enemies.RemoveAt(i);
+                i--;
+            }
         }
     }
+}
     
    void Awake()
 {
