@@ -16,6 +16,9 @@ public class PlayerScript : MonoBehaviour
     private int health = 100;
     private int maxHealth = 100;
     private int xp = 0;
+    private int ammo = 0;
+    private int magazine = 0;
+    private int medkitsUsed = 0;
     private float timeToHeal = 5.0f;
     private float healingTimer = 0.0f; 
     private bool isHealing = false; 
@@ -23,12 +26,12 @@ public class PlayerScript : MonoBehaviour
 
     public int getDamage()
     {
-        return baseDamage;
+        return this.baseDamage;
     }
 
     public void setHealth(int damage)
     {
-        health -= damage;
+        this.health -= damage;
     }
 
     public int heal()
@@ -41,6 +44,7 @@ public class PlayerScript : MonoBehaviour
             {
                 health = maxHealth;
             }
+            medkitsUsed++;
             medkitsHealingAmount.RemoveAt(0);
         }
         
@@ -49,7 +53,12 @@ public class PlayerScript : MonoBehaviour
 
     public PlayerStats getPlayerStats()
     {
-        return new PlayerStats(health, maxHealth, xp, 0, 0, "None", medkitsHealingAmount.Count);
+        return new PlayerStats(health, maxHealth, xp, ammo, magazine, "Pistol", medkitsHealingAmount.Count, medkitsUsed);
+    }
+
+    public void addXP(int xp)
+    {
+        this.xp += xp;
     }
 
     // Start is called before the first frame update

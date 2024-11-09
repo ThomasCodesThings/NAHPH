@@ -30,14 +30,15 @@ public class WeakEnemyScript : MonoBehaviour
     public void setHealth(int damage)
     {
         health -= damage;
-        /*if (health <= 0)
-        {
-            Destroy(gameObject);
-        }*/
+        
     }
 
     public bool isKilled(){
         return health <= 0;
+    }
+
+    public int getXP(){
+        return Random.Range(50, 100);
     }
 
     // Start is called before the first frame update

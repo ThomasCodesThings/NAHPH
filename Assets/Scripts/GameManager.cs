@@ -57,10 +57,11 @@ public class GameManager : MonoBehaviour
     private float duration = 0.0f;
     private int currentWave = 1;
     private int enemiesKilled = 0;
-    private int enemiesToKill = 2;
+    private int enemiesToKill = 3;
     private int maxWaves = 5;
 
     private List<int> heights = new List<int>();
+    private List<Level> levels = new List<Level>();
     private Difficulty currentDifficulty = Difficulty.Easy;
 
     private int wallSize = 20;
@@ -100,8 +101,22 @@ public class GameManager : MonoBehaviour
         healthText.text = playerStats.health.ToString();
         healthBar.value = playerStats.health;
         healthBar.maxValue = playerStats.maxHealth;
-        xpBar.value = playerStats.xp;
         medkitsCountText.text = playerStats.medkits.ToString();
+
+        int currentLevel = 0;
+        int xpCount = 0;
+
+        while(currentLevel < levels.Count - 1 && xpCount + levels[currentLevel].xpToNextLevel <= playerStats.xp)
+        {
+            xpCount += levels[currentLevel].xpToNextLevel;
+            currentLevel++;
+        }
+
+        int difference = playerStats.xp - xpCount;
+        int xpForNextLevel = levels[currentLevel].xpToNextLevel;
+        float differencePercentage = (float)difference / xpForNextLevel;
+        xpBar.value = differencePercentage;
+        levelText.text = "LEVEL " + ++currentLevel;
     }
 
     private Vector3 generateRandomSpawnPoint(){
@@ -177,6 +192,9 @@ private List<GameObject> spawnMedKits(int count){
         {
             if (enemies[i].GetComponent<WeakEnemyScript>().isKilled())
             {
+                int xp = enemies[i].GetComponent<WeakEnemyScript>().getXP();
+                player.GetComponent<PlayerScript>().addXP(xp);
+
                 Destroy(enemies[i]);
                 enemies.RemoveAt(i);
                 i--;
@@ -198,6 +216,12 @@ private List<GameObject> spawnMedKits(int count){
     {
         Debug.LogError("DifficultyManager not found in the scene.");
     }
+
+    levels.Add(new Level(100));
+    levels.Add(new Level(200));
+    levels.Add(new Level(300));
+    levels.Add(new Level(400));
+    levels.Add(new Level(500));
 }
 
 
