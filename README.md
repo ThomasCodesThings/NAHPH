@@ -1,5 +1,7 @@
 # NAVPH project
 
+## TODO
+- fix Pause menu -> Start error
 ## Authors
 Tomáš Černáček
 

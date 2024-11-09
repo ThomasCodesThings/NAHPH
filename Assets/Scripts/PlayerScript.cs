@@ -19,6 +19,7 @@ public class PlayerScript : MonoBehaviour
     private int ammo = 0;
     private int magazine = 0;
     private int medkitsUsed = 0;
+    private int enemiesKilled = 0;
     private float timeToHeal = 5.0f;
     private float healingTimer = 0.0f; 
     private bool isHealing = false; 
@@ -32,6 +33,11 @@ public class PlayerScript : MonoBehaviour
     public void setHealth(int damage)
     {
         this.health -= damage;
+    }
+
+    public bool isKilled()
+    {
+        return health <= 0;
     }
 
     public int heal()
@@ -53,12 +59,37 @@ public class PlayerScript : MonoBehaviour
 
     public PlayerStats getPlayerStats()
     {
-        return new PlayerStats(health, maxHealth, xp, ammo, magazine, "Pistol", medkitsHealingAmount.Count, medkitsUsed);
+        return new PlayerStats(health, maxHealth, xp, ammo, magazine, "Pistol", medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
     }
 
     public void addXP(int xp)
     {
         this.xp += xp;
+    }
+
+    public void addKill()
+    {
+        enemiesKilled++;
+    }
+
+    public int getXp()
+    {
+        return xp;
+    }
+
+    public int getKills()
+    {
+        return enemiesKilled;
+    }
+
+    public int getMedkitsUsed()
+    {
+        return medkitsUsed;
+    }
+
+    public void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
     }
 
     // Start is called before the first frame update
@@ -70,6 +101,11 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if(gameObject.transform.position.y < -10)
+        {
+            health = 0;
+        }
 
         if (Input.GetKeyDown(KeyCode.E) && !isHealing && medkitsHealingAmount.Count > 0)
         {

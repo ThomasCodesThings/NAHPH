@@ -36,7 +36,7 @@ public class DifficultyManager : MonoBehaviour
         Screen.fullScreen = isFullScreen;
     }
     
-    public Difficulty GetDifficulty()
+    public Difficulty getDifficulty()
     {
         return currentDifficulty;
     }

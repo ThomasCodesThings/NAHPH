@@ -32,6 +32,7 @@ public class AudioScript : MonoBehaviour
     void Update()
     {
         musicSource.volume = volume;
+        if (volumeText != null)
         volumeText.text = ((int)(volume * 100)).ToString();
     }
 

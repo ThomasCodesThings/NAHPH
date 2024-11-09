@@ -22,7 +22,7 @@ public class PauseMenuScript : MonoBehaviour
 
    public void GetBackToMainMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene(0);
     }
 
     public void ExitGame()

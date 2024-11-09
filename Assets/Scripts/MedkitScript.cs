@@ -31,7 +31,10 @@ public class MedkitScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
+        rb.isKinematic = true;
+        rb.gravityScale = 0;
+        rb.velocity = Vector2.zero;
     }
 
     // Update is called once per frame

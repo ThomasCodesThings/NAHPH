@@ -4,6 +4,7 @@ using UnityEngine;
 using GameStructs;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -54,9 +55,8 @@ public class GameManager : MonoBehaviour
     private PlayerStats playerStats;
     private float totalElapsedTime = 0.0f;
     private float gracePeriod = 5.0f;
-    private float duration = 0.0f;
+    private float duration = 1.0f;
     private int currentWave = 1;
-    private int enemiesKilled = 0;
     private int enemiesToKill = 3;
     private int maxWaves = 5;
 
@@ -87,6 +87,9 @@ public class GameManager : MonoBehaviour
             Instantiate(dirtPrefab, new Vector3(x, 2, 0), Quaternion.identity);
             Instantiate(floorPrefab, new Vector3(x, 3, 0), Quaternion.identity);
         }
+        Instantiate(floorPrefab, new Vector3(-width, 4, 0), Quaternion.identity);
+        Instantiate(floorPrefab, new Vector3(width - 1, 4, 0), Quaternion.identity);
+
     }
 
     public string floatToMinutesSeconds(float time)
@@ -95,6 +98,32 @@ public class GameManager : MonoBehaviour
     int seconds = Mathf.FloorToInt(time % 60);
 
     return string.Format("{0:00}:{1:00}", minutes, seconds);
+}
+
+public string floatToDate(float time)
+{
+    int minutes = Mathf.FloorToInt(time / 60);
+    int seconds = Mathf.FloorToInt(time % 60);
+    int hours = Mathf.FloorToInt(minutes / 60);
+
+    return string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+}
+
+public string formatNumber(int number)
+{
+    return string.Format("{0:n0}", number);
+}
+
+public GameStats getGameStats()
+{
+    if(player == null){
+        return new GameStats("00:00:00", "0", "0", "0");
+    }
+    string formatedTime = floatToDate(totalElapsedTime);
+    string formatedEnemiesKilled = formatNumber(player.GetComponent<PlayerScript>().getKills());
+    string formatedMedkitsUsed = formatNumber(player.GetComponent<PlayerScript>().getMedkitsUsed());
+    string formatedXp = formatNumber(player.GetComponent<PlayerScript>().getXp());
+    return new GameStats(formatedTime, formatedEnemiesKilled, formatedMedkitsUsed, formatedXp);
 }
 
     public void updateUI(PlayerStats playerStats){
@@ -164,6 +193,7 @@ private List<GameObject> spawnMedKits(int count){
             yield return handleWaveTime();
             currentWave++;
         }
+        SceneManager.LoadScene("VictoryScene");
     }
 
     private IEnumerator handleGraceTime(){
@@ -190,10 +220,11 @@ private List<GameObject> spawnMedKits(int count){
 
         for (int i = 0; i < enemies.Count; i++)
         {
-            if (enemies[i].GetComponent<WeakEnemyScript>().isKilled())
+            if (enemies[i] != null && enemies[i].GetComponent<WeakEnemyScript>().isKilled())
             {
                 int xp = enemies[i].GetComponent<WeakEnemyScript>().getXP();
                 player.GetComponent<PlayerScript>().addXP(xp);
+                player.GetComponent<PlayerScript>().addKill();
 
                 Destroy(enemies[i]);
                 enemies.RemoveAt(i);
@@ -205,11 +236,12 @@ private List<GameObject> spawnMedKits(int count){
     
    void Awake()
 {
-    difficultyManager = GameObject.Find("DifficultyManager");
+    DontDestroyOnLoad(gameObject);
+    difficultyManager = GameObject.FindGameObjectWithTag("DifficultyManager");
 
     if (difficultyManager != null)
     {
-        currentDifficulty = difficultyManager.GetComponent<DifficultyManager>().GetDifficulty();
+        currentDifficulty = difficultyManager.GetComponent<DifficultyManager>().getDifficulty();
         Debug.Log("Current Difficulty: " + currentDifficulty);
     }
     else
@@ -222,6 +254,8 @@ private List<GameObject> spawnMedKits(int count){
     levels.Add(new Level(300));
     levels.Add(new Level(400));
     levels.Add(new Level(500));
+
+    
 }
 
 
@@ -234,9 +268,20 @@ private List<GameObject> spawnMedKits(int count){
 
     // Update is called once per frame
     void Update()
+{
+    if (player != null)
     {
         playerStats = player.GetComponent<PlayerScript>().getPlayerStats();
         updateUI(playerStats);
         totalElapsedTime += Time.deltaTime;
+
+        if (player.GetComponent<PlayerScript>().isKilled())
+        {
+       
+            //player = null;
+
+            SceneManager.LoadScene("GameOverScene");
+        }
     }
+}
 }

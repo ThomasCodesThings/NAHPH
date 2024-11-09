@@ -22,8 +22,9 @@ namespace GameStructs
         public string weaponName;
         public int medkits;
         public int medkitsUsed;
+        public int enemiesKilled;
 
-      public PlayerStats(int health, int maxHealth, int xp, int ammo, int magazine, string weaponName, int medkits, int medkitsUsed){
+      public PlayerStats(int health, int maxHealth, int xp, int ammo, int magazine, string weaponName, int medkits, int medkitsUsed, int enemiesKilled){
             this.health = health;
             this.maxHealth = maxHealth;
             this.xp = xp;
@@ -32,6 +33,7 @@ namespace GameStructs
             this.weaponName = weaponName;
             this.medkits = medkits;
             this.medkitsUsed = medkitsUsed;
+            this.enemiesKilled = enemiesKilled;
       }
     }
 
@@ -40,6 +42,20 @@ namespace GameStructs
 
         public Level(int xpToNextLevel){
             this.xpToNextLevel = xpToNextLevel;
+        }
+    }
+
+    public struct GameStats{
+        public string time;
+        public string totalEnemiesKilled;
+        public string totalMedkitsUsed;
+        public string totalXp;
+
+        public GameStats(string time, string totalEnemiesKilled, string totalMedkitsUsed, string totalXp){
+            this.time = time;
+            this.totalEnemiesKilled = totalEnemiesKilled;
+            this.totalMedkitsUsed = totalMedkitsUsed;
+            this.totalXp = totalXp;
         }
     }
 }

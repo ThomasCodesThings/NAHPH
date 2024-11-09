@@ -12,6 +12,8 @@ TagManager:
   - WeakEnemy
   - Floor
   - Medkit
+  - GameManager
+  - DifficultyManager
   layers:
   - Default
   - TransparentFX
