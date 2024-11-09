@@ -10,6 +10,8 @@ TagManager:
   - Gun
   - Bullet
   - WeakEnemy
+  - Floor
+  - Medkit
   layers:
   - Default
   - TransparentFX

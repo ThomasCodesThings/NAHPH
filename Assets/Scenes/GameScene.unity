@@ -4222,6 +4222,7 @@ MonoBehaviour:
   height: 20
   player: {fileID: 1261849199}
   soldierEnemyPrefab: {fileID: 2199549570022267799, guid: 409bd588789b1104db32485e28c6630d, type: 3}
+  medkitPrefab: {fileID: 7133353836420136446, guid: eca6d9764aef1bf47b5375a4370fd80e, type: 3}
   healthText: {fileID: 1952903739}
   healthBar: {fileID: 792625506}
   xpBar: {fileID: 1460683240}
@@ -4231,7 +4232,7 @@ MonoBehaviour:
   ammoText: {fileID: 118523837}
   magazineText: {fileID: 140144584}
   weaponNameText: {fileID: 415056330}
-  aidKitsText: {fileID: 697604735}
+  medkitsCountText: {fileID: 697604735}
 --- !u!4 &1638814578
 Transform:
   m_ObjectHideFlags: 0
@@ -4690,6 +4691,18 @@ PrefabInstance:
     - target: {fileID: 6389820273899160922, guid: 409bd588789b1104db32485e28c6630d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7623951397811082230, guid: 409bd588789b1104db32485e28c6630d, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: cb768e8d6ae87b249974af3eaf5c38b5, type: 2}
+    - target: {fileID: 7623951397811082230, guid: 409bd588789b1104db32485e28c6630d, type: 3}
+      propertyPath: m_LinearDrag
+      value: 99999
+      objectReference: {fileID: 0}
+    - target: {fileID: 7623951397811082230, guid: 409bd588789b1104db32485e28c6630d, type: 3}
+      propertyPath: m_AngularDrag
+      value: 99999
       objectReference: {fileID: 0}
     - target: {fileID: 8531092398395917558, guid: 409bd588789b1104db32485e28c6630d, type: 3}
       propertyPath: m_LocalPosition.x

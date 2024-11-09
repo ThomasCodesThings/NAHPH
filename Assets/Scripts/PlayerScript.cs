@@ -16,10 +16,10 @@ public class PlayerScript : MonoBehaviour
     private int health = 100;
     private int maxHealth = 100;
     private int xp = 0;
-    private float timeToHeal = 5.0f;  // Healing duration
-    private float healingTimer = 0.0f; // Timer for healing process
-    private bool isHealing = false; // Flag to check if the player is healing
-    private List<GameObject> medkits = new List<GameObject>();
+    private float timeToHeal = 5.0f;
+    private float healingTimer = 0.0f; 
+    private bool isHealing = false; 
+    private List<int> medkitsHealingAmount = new List<int>();
 
     public int getDamage()
     {
@@ -33,23 +33,23 @@ public class PlayerScript : MonoBehaviour
 
     public int heal()
     {
-        if (health < maxHealth && medkits.Count > 0) // Check if there's a medkit and if healing is needed
+        if (medkitsHealingAmount.Count > 0)
         {
-            GameObject medkit = medkits[0];
-            //health += medkit.getHealAmount();
-
+            int healAmount = medkitsHealingAmount[0];
+            health += healAmount;
             if (health > maxHealth)
             {
                 health = maxHealth;
             }
-            medkits.RemoveAt(0);
+            medkitsHealingAmount.RemoveAt(0);
         }
+        
         return health;
     }
 
     public PlayerStats getPlayerStats()
     {
-        return new PlayerStats(health, maxHealth, xp, 0, 0, "None", medkits.Count);
+        return new PlayerStats(health, maxHealth, xp, 0, 0, "None", medkitsHealingAmount.Count);
     }
 
     // Start is called before the first frame update
@@ -61,8 +61,8 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // If E key is pressed and player is not healing, start healing
-        if (Input.GetKeyDown(KeyCode.E) && !isHealing && health < maxHealth && medkits.Count > 0)
+
+        if (Input.GetKeyDown(KeyCode.E) && !isHealing && medkitsHealingAmount.Count > 0)
         {
             StartHealing();
         }
@@ -114,7 +114,7 @@ public class PlayerScript : MonoBehaviour
         if (other.gameObject.CompareTag("Medkit"))
         {
 
-            medkits.Add(other.gameObject);
+            medkitsHealingAmount.Add(other.gameObject.GetComponent<MedkitScript>().getHealAmount());
             Destroy(other.gameObject);
         }
     }
