@@ -3298,8 +3298,8 @@ Transform:
   m_GameObject: {fileID: 1179832893}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.8, y: -6, z: -3.2303555}
-  m_LocalScale: {x: 4, y: 4, z: 1}
+  m_LocalPosition: {x: 1.5, y: -54.4, z: -3.2303555}
+  m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 870489302}
@@ -3408,7 +3408,7 @@ Transform:
   m_GameObject: {fileID: 1261849199}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.71, y: 35.26, z: 0}
+  m_LocalPosition: {x: -6.18, y: 11.48, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4825,6 +4825,8 @@ MonoBehaviour:
   playerPrefab: {fileID: 8616937628321680139, guid: af1cb13bd56ef73429d5ca75c9d4dc5f, type: 3}
   width: 100
   height: 20
+  player: {fileID: 1261849199}
+  difficulty: {fileID: 0}
 --- !u!4 &1638814578
 Transform:
   m_ObjectHideFlags: 0

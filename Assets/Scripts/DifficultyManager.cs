@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using GameStructs;
 
-public class GameManagerScript : MonoBehaviour
+public class DifficultyManager : MonoBehaviour
 {
     public int gameDifficulty = 0;
     public TextMeshProUGUI difficultyText;
@@ -27,7 +27,7 @@ public class GameManagerScript : MonoBehaviour
     {
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex == 1)
         {
-            Debug.Log("Scene changed to 1");
+            //Debug.Log("Scene changed to 1");
         }
     }
 
