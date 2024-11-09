@@ -59,22 +59,18 @@ public class PlayerScript : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             
         }
-        if(Input.GetButton("Sprint")){
-            speed = 10;
-        }else{
-            speed = 5;
-        }
+      
         
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
-        if(other.gameObject.CompareTag("Grass")){
+        if(other.gameObject.CompareTag("Floor")){
             isGrounded = true;
         }
     }
 
     private void OnCollisionExit2D(Collision2D other) {
-        if(other.gameObject.CompareTag("Grass")){
+        if(other.gameObject.CompareTag("Floor")){
             isGrounded = false;
         }
     }
