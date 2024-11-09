@@ -15,14 +15,20 @@ public class PlayerScript : MonoBehaviour
     private bool isGrounded;
     private int baseDamage = 10;
     private int health = 100;
+    private int maxHealth = 100;
     private int xp = 0;
     private float elapsedTime = 0.0f;
     private float timeToHeal = 5.0f;
     private Medkit[] medkits = new Medkit[]{new Medkit("small"), new Medkit("medium"), new Medkit("large")};
 
+
     public int getDamage()
     {
         return baseDamage;
+    }
+
+    public PlayerStats getPlayerStats(){
+        return new PlayerStats(health, maxHealth, xp, 0, 0, "None", 0);
     }
     // Start is called before the first frame update
     void Start()
