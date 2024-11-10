@@ -137,7 +137,7 @@ public GameStats getGameStats()
     return new GameStats(formatedTime, formatedEnemiesKilled, formatedMedkitsUsed, formatedXp);
 }
 
-private void RemoveCollision(List<GameObject> enemies)
+private void removeCollision(List<GameObject> enemies)
 {
     foreach (GameObject enemy in enemies)
     {
@@ -164,6 +164,26 @@ private void RemoveCollision(List<GameObject> enemies)
         }
     }
 
+}
+
+public void clearAfterWave(){
+    foreach(GameObject enemy in enemies){
+        if(enemy != null){
+            Destroy(enemy);
+        }
+    }
+
+    foreach(GameObject medkit in medkits){
+        if(medkit != null){
+            Destroy(medkit);
+        }
+    }
+
+    foreach(GameObject ammo in ammos){
+        if(ammo != null){
+            Destroy(ammo);
+        }
+    }
 }
 
     private Vector3 generateRandomSpawnPoint(){
@@ -222,6 +242,7 @@ private List<GameObject> spawnAmmo(int count){
             timerText.color = Color.white;
             yield return handleWaveTime();
             currentWave++;
+            clearAfterWave();
         }
         SceneManager.LoadScene("VictoryScene");
     }
@@ -243,7 +264,7 @@ private List<GameObject> spawnAmmo(int count){
     duration = 0;
     enemies = spawnEnemies(enemiesToKill);
 
-    RemoveCollision(enemies);
+    removeCollision(enemies);
     while (enemies.Count > 0)
     {
         timerText.text = floatToMinutesSeconds(duration);
