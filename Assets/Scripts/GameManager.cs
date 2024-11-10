@@ -67,6 +67,10 @@ public class GameManager : MonoBehaviour
     private string[] medkitTypes = { "small", "medium", "large" };
     private string[] ammoTypes = { "small", "medium", "large" };
 
+    private List<GameObject> enemies = new List<GameObject>();
+    private List<GameObject> medkits = new List<GameObject>();
+    private List<GameObject> ammos = new List<GameObject>();
+
     private int wallSize = 10;
 
     public List<int> getHeights(){
@@ -134,7 +138,7 @@ public GameStats getGameStats()
 
     private Vector3 generateRandomSpawnPoint(){
     float randomX = Random.Range(-width, width);
-    float y = 5f;
+    float y = 4f;
     float z = 0f; 
 
     return new Vector3(randomX, y, z);
@@ -194,8 +198,8 @@ private List<GameObject> spawnAmmo(int count){
 
     private IEnumerator handleGraceTime(){
         duration = gracePeriod;
-        List<GameObject> medkits = spawnMedKits(5);
-        List<GameObject> ammos = spawnAmmo(3);
+        medkits = spawnMedKits(3);
+        ammos = spawnAmmo(3);
         while (duration > 0)
         {
             timerText.text = floatToMinutesSeconds(duration);
@@ -207,7 +211,33 @@ private List<GameObject> spawnAmmo(int count){
     private IEnumerator handleWaveTime()
 {
     duration = 0;
-    List<GameObject> enemies = spawnEnemies(enemiesToKill);
+    enemies = spawnEnemies(enemiesToKill);
+
+    //disable collision between enemies and medkits and ammo
+    foreach (GameObject enemy in enemies)
+    {
+        if (enemy == null)
+        {
+            continue;
+        }
+        foreach (GameObject medkit in medkits)
+        {
+            if (medkit == null)
+            {
+                continue;
+            }
+            Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), medkit.GetComponent<Collider2D>());
+        }
+
+        foreach (GameObject ammo in ammos)
+        {
+            if (ammo == null)
+            {
+                continue;
+            }
+            Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), ammo.GetComponent<Collider2D>());
+        }
+    }
     while (enemies.Count > 0)
     {
         timerText.text = floatToMinutesSeconds(duration);
