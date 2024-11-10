@@ -320,9 +320,9 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 99999
-  m_AngularDrag: 99999
-  m_GravityScale: 0.8
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: cb768e8d6ae87b249974af3eaf5c38b5, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -346,9 +346,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11328837c51931243beb6b44262cc2cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  proceduralGeneration: {fileID: 0}
-  medkitPrefab: {fileID: 2105280438963431220, guid: eca6d9764aef1bf47b5375a4370fd80e, type: 3}
-  ammoPackPrefab: {fileID: 7925313812035161402, guid: 63bb57ddc9ed9664eb39aebf55af897f, type: 3}
   jumpForce: 5
   speed: 2
   healthBar: {fileID: 6034857765291642494}

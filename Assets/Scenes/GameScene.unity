@@ -4682,10 +4682,6 @@ PrefabInstance:
       value: WeakEnemy
       objectReference: {fileID: 0}
     - target: {fileID: 6365548465995276886, guid: 409bd588789b1104db32485e28c6630d, type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 1261849199}
-    - target: {fileID: 6365548465995276886, guid: 409bd588789b1104db32485e28c6630d, type: 3}
       propertyPath: proceduralGeneration
       value: 
       objectReference: {fileID: 1638814577}
@@ -4694,16 +4690,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7623951397811082230, guid: 409bd588789b1104db32485e28c6630d, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 6200000, guid: cb768e8d6ae87b249974af3eaf5c38b5, type: 2}
-    - target: {fileID: 7623951397811082230, guid: 409bd588789b1104db32485e28c6630d, type: 3}
       propertyPath: m_LinearDrag
-      value: 99999
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7623951397811082230, guid: 409bd588789b1104db32485e28c6630d, type: 3}
       propertyPath: m_AngularDrag
-      value: 99999
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8531092398395917558, guid: 409bd588789b1104db32485e28c6630d, type: 3}
       propertyPath: m_LocalPosition.x

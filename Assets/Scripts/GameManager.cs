@@ -93,6 +93,7 @@ public class GameManager : MonoBehaviour
         {
             Instantiate(dirtPrefab, new Vector3(x, 2, 0), Quaternion.identity);
             Instantiate(floorPrefab, new Vector3(x, 3, 0), Quaternion.identity);
+            heights.Add(3);
         }
         for (int i = 0; i < wallSize; i++)
         {
@@ -136,9 +137,38 @@ public GameStats getGameStats()
     return new GameStats(formatedTime, formatedEnemiesKilled, formatedMedkitsUsed, formatedXp);
 }
 
+private void RemoveCollision(List<GameObject> enemies)
+{
+    foreach (GameObject enemy in enemies)
+    {
+        if (enemy == null)
+        {
+            continue;
+        }
+        foreach (GameObject medkit in medkits)
+        {
+            if (medkit == null)
+            {
+                continue;
+            }
+            Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), medkit.GetComponent<Collider2D>());
+        }
+
+        foreach (GameObject ammo in ammos)
+        {
+            if (ammo == null)
+            {
+                continue;
+            }
+            Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), ammo.GetComponent<Collider2D>());
+        }
+    }
+
+}
+
     private Vector3 generateRandomSpawnPoint(){
     float randomX = Random.Range(-width, width);
-    float y = 4f;
+    float y = 5f;
     float z = 0f; 
 
     return new Vector3(randomX, y, z);
@@ -213,31 +243,7 @@ private List<GameObject> spawnAmmo(int count){
     duration = 0;
     enemies = spawnEnemies(enemiesToKill);
 
-    //disable collision between enemies and medkits and ammo
-    foreach (GameObject enemy in enemies)
-    {
-        if (enemy == null)
-        {
-            continue;
-        }
-        foreach (GameObject medkit in medkits)
-        {
-            if (medkit == null)
-            {
-                continue;
-            }
-            Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), medkit.GetComponent<Collider2D>());
-        }
-
-        foreach (GameObject ammo in ammos)
-        {
-            if (ammo == null)
-            {
-                continue;
-            }
-            Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), ammo.GetComponent<Collider2D>());
-        }
-    }
+    RemoveCollision(enemies);
     while (enemies.Count > 0)
     {
         timerText.text = floatToMinutesSeconds(duration);

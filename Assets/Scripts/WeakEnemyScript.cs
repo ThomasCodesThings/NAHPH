@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class WeakEnemyScript : MonoBehaviour
 {
-    [SerializeField] GameManager proceduralGeneration;
+    private GameObject gameManager;
     private GameObject player;
     private List<int> heights;
     private int playerX;
@@ -44,14 +44,8 @@ public class WeakEnemyScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (proceduralGeneration != null)
-        {
-            heights = proceduralGeneration.getHeights();
-        }
-        else
-        {
-            Debug.LogError("ProceduralGeneration object not assigned!");
-        }
+        gameManager = GameObject.FindGameObjectWithTag("GameManager");
+        heights = gameManager.GetComponent<GameManager>().getHeights();
 
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -67,12 +61,12 @@ public class WeakEnemyScript : MonoBehaviour
         healthBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * healthBarOffset);
         healthBar.value = health;
         healthBar.fillRect.GetComponent<Image>().color = Color.Lerp(minHealthColor, maxHealthColor, healthBar.normalizedValue);
-        /*playerX = (int)player.transform.position.x;
+        playerX = (int)player.transform.position.x;
         playerY = (int)player.transform.position.y;
         enemyX = (int)transform.position.x;
         enemyY = (int)transform.position.y;
 
-        int index = Mathf.Clamp(enemyX + proceduralGeneration.getBaseWidth(), 0, heights.Count - 1);
+        int index = Mathf.Clamp(enemyX + gameManager.GetComponent<GameManager>().getBaseWidth(), 0, heights.Count - 1);
 
         float distance = Vector2.Distance(new Vector2(playerX, playerY), new Vector2(enemyX, enemyY));
         if (distance < triggerRadius)
@@ -106,7 +100,7 @@ public class WeakEnemyScript : MonoBehaviour
                     }
                 }
             }
-        }*/
+        }
     }
     
 
