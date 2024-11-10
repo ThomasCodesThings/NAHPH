@@ -24,6 +24,7 @@ public class PlayerScript : MonoBehaviour
     private GameObject rangeWeapon;
     private GameObject meleeWeapon;
     private GameObject currentWeapon;
+    private string currentWeaponName = "Basic Pistol";
 
       public GameObject FindChildWithTag(GameObject parent, string tag)
     {
@@ -49,7 +50,14 @@ public class PlayerScript : MonoBehaviour
 
     public int getDamage()
     {
-        return currentWeapon.GetComponent<GunScript>().getDamage();
+        switch(currentWeaponName){
+            case "Basic Pistol":
+                return rangeWeapon.GetComponent<GunScript>().getDamage();
+            case "Smg":
+                return rangeWeapon.GetComponent<SmgScript>().getDamage();
+            default:
+                return rangeWeapon.GetComponent<GunScript>().getDamage();
+        }
     }
 
     public void setHealth(int damage)
@@ -81,7 +89,14 @@ public class PlayerScript : MonoBehaviour
 
     public PlayerStats getPlayerStats()
     {
-        return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<GunScript>().getAmmo(), rangeWeapon.GetComponent<GunScript>().getMagazine(), rangeWeapon.GetComponent<GunScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
+        switch(currentWeaponName){
+            case "Basic Pistol":
+               return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<GunScript>().getAmmo(), rangeWeapon.GetComponent<GunScript>().getMagazine(), rangeWeapon.GetComponent<GunScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
+            case "Smg":
+                return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<SmgScript>().getAmmo(), rangeWeapon.GetComponent<SmgScript>().getMagazine(), rangeWeapon.GetComponent<SmgScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
+            default:
+                return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<GunScript>().getAmmo(), rangeWeapon.GetComponent<GunScript>().getMagazine(), rangeWeapon.GetComponent<GunScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
+        }
     }
 
     public void addXP(int xp)
@@ -107,6 +122,11 @@ public class PlayerScript : MonoBehaviour
     public int getMedkitsUsed()
     {
         return medkitsUsed;
+    }
+
+    public string getCurrentWeaponName()
+    {
+        return currentWeaponName;
     }
 
     public void Awake()
@@ -192,9 +212,40 @@ public class PlayerScript : MonoBehaviour
 
         if(other.gameObject.CompareTag("AmmoPack")){
             int ammo = other.gameObject.GetComponent<AmmoPackScript>().getAmmoAmount();
-            rangeWeapon.GetComponent<GunScript>().addAmmo(ammo);
+            if (currentWeaponName == "Basic Pistol")
+            {
+                rangeWeapon.GetComponent<GunScript>().addAmmo(ammo);
+            }
+            else if (currentWeaponName == "Smg")
+            {
+                rangeWeapon.GetComponent<SmgScript>().addAmmo(ammo);
+            }
             Destroy(other.gameObject);
         }
+
+        if(other.gameObject.CompareTag("Smg"))
+    {
+
+        Transform weaponHolder = transform.GetChild(1);
+        Vector3 previousPosition = rangeWeapon.transform.localPosition;
+        Quaternion previousRotation = rangeWeapon.transform.localRotation;
+
+        if (rangeWeapon != null)
+        {
+            Destroy(rangeWeapon);
+        }
+        rangeWeapon = Instantiate(other.gameObject);
+
+        rangeWeapon.transform.SetParent(weaponHolder);
+
+        rangeWeapon.transform.localPosition = previousPosition;
+        rangeWeapon.transform.localRotation = previousRotation;
+
+        currentWeapon = rangeWeapon;
+        currentWeaponName = "Smg";
+        
+        Destroy(other.gameObject); 
+    }
     }
 
     private void OnCollisionExit2D(Collision2D other)

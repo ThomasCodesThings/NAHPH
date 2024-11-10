@@ -2,20 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GunScript : MonoBehaviour
+public class SmgScript : MonoBehaviour
 {
     [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private float bulletSpeed = 10f;
+    [SerializeField] private float bulletSpeed = 30f;
     [SerializeField] private float bulletLifeTime = 5f;
 
     private float lastShotTime = 0f;
-    private float shotDelay = 0.5f;
-    private float bulletOffset = 0.4f;
-    private int ammo = 8;
-    private int magazine = 64;
-    private int minDamage = 20;
-    private int maxDamage = 30;
-    private string name = "Basic Pistol";
+    private float shotDelay = 0.2f;
+    private float bulletOffset = 0.5f;
+    private int ammo = 10;
+    private int magazine = 40;
+    private int damage = 10;
+    private string name = "Smg";
+    private GameObject player;
 
     public int getAmmo()
     {
@@ -29,7 +29,7 @@ public class GunScript : MonoBehaviour
 
     public int getDamage()
     {
-        return Random.Range(minDamage, maxDamage);
+        return damage;
     }
 
     public string getName()
@@ -45,7 +45,7 @@ public class GunScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
@@ -56,14 +56,18 @@ public class GunScript : MonoBehaviour
         return;
     }
 
+    if(player == null){
+        return;
+    }
+
     if (Input.GetKeyDown(KeyCode.R))
     {
         if (magazine > 0)
         {
-            int missingAmmo = 8 - ammo;
+            int missingAmmo = 10 - ammo;
             if (magazine >= missingAmmo)
             {
-                ammo = 8;
+                ammo = 10;
                 magazine -= missingAmmo;
             }
             else
@@ -73,8 +77,10 @@ public class GunScript : MonoBehaviour
             }
         }
     }
-
-    if(Input.GetMouseButton(0) && Time.time - lastShotTime > shotDelay && ammo > 0)
+    
+    string currentWeaponName = player.GetComponent<PlayerScript>().getCurrentWeaponName();
+    
+    if(Input.GetMouseButton(0) && Time.time - lastShotTime > shotDelay && ammo > 0 && currentWeaponName == name)
     {
         lastShotTime = Time.time;
 
@@ -86,5 +92,4 @@ public class GunScript : MonoBehaviour
         Destroy(bullet, bulletLifeTime);
     }
 }
-
 }

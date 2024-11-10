@@ -73,6 +73,15 @@ public class GameManager : MonoBehaviour
 
     private int wallSize = 10;
 
+    /************************************************************************
+     * 
+     *  Weapons
+     * 
+     * *********************************************************************/
+
+    [SerializeField] GameObject smgPrefab;
+    private bool spawnedWeapon;
+
     public List<int> getHeights(){
         return heights;
     }
@@ -359,6 +368,14 @@ public void updateUI(PlayerStats playerStats){
             //player = null;
 
             SceneManager.LoadScene("GameOverScene");
+        }
+
+        if(playerStats.xp > 100){
+            if(!spawnedWeapon){
+                Vector3 spawnPoint = generateRandomSpawnPoint();
+                Instantiate(smgPrefab, spawnPoint, Quaternion.identity);
+                spawnedWeapon = true;
+            }
         }
 
 
