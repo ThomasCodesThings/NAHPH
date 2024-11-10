@@ -106,33 +106,23 @@ public class WeakEnemyScript : MonoBehaviour
 
      private void walk(bool isPlayerOnLeft)
     {
-        if (isPlayerOnLeft)
-        {
-            transform.position += Vector3.left * speed * Time.deltaTime;
-            spriteRenderer.flipX = true;
-        }
-        else
-        {
-            transform.position += Vector3.right * speed * Time.deltaTime;
-            spriteRenderer.flipX = false;
-        }
+        float direction = isPlayerOnLeft ? -1 : 1;
+        transform.localScale = new Vector3(direction, transform.localScale.y, transform.localScale.z);
+
+
+        transform.position += Vector3.right * direction * speed * Time.deltaTime;
     }
 
     private void jump(bool isPlayerOnLeft)
     {
         if (isGrounded)
         {
-           rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
-            if (isPlayerOnLeft)
-            {
-                rb.velocity = new Vector2(-speed, rb.velocity.y);
-                spriteRenderer.flipX = true;
-            }
-            else
-            {
-                rb.velocity = new Vector2(speed, rb.velocity.y);
-                spriteRenderer.flipX = false;
-            }
+            float direction = isPlayerOnLeft ? -1 : 1;
+            rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+            
+        
+            rb.velocity = new Vector2(direction * speed, rb.velocity.y);
+            transform.localScale = new Vector3(direction, transform.localScale.y, transform.localScale.z);
 
             isGrounded = false;
         }
