@@ -5,6 +5,7 @@ using UnityEngine;
 public class AmmoPackScript : MonoBehaviour
 {
     [SerializeField] int ammoAmount = 10;
+    private Rigidbody2D rb;
 
     public void updateAmmoPack(string type){
         switch(type){
@@ -31,12 +32,20 @@ public class AmmoPackScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = gameObject.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void OnCollisionEnter2D(Collision2D collision){
+        if(collision.gameObject.CompareTag("Floor")){
+            rb.isKinematic = true;
+            rb.gravityScale = 0;
+            rb.velocity = Vector2.zero;
+        }
     }
 }

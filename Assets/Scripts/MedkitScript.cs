@@ -5,6 +5,7 @@ using UnityEngine;
 public class MedkitScript : MonoBehaviour
 {
      private int healAmount = 10;
+    private Rigidbody2D rb;
 
     public void updateMedkit(string type){
         switch(type){
@@ -32,15 +33,20 @@ public class MedkitScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
-        rb.isKinematic = true;
-        rb.gravityScale = 0;
-        rb.velocity = Vector2.zero;
+        rb = gameObject.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void OnCollisionEnter2D(Collision2D collision){
+        if(collision.gameObject.CompareTag("Floor")){
+            rb.isKinematic = true;
+            rb.gravityScale = 0;
+            rb.velocity = Vector2.zero;
+        }
     }
 }
