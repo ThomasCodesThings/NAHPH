@@ -23,11 +23,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject platformLeftPrefab;
     [SerializeField] GameObject platformRightPrefab;
     [SerializeField] GameObject playerPrefab;
-    [SerializeField] int width;
+    [SerializeField] int width = 25;
     [SerializeField] int height;
     [SerializeField] GameObject player;
     [SerializeField] GameObject soldierEnemyPrefab;
     [SerializeField] GameObject medkitPrefab;
+    [SerializeField] GameObject ammoPackPrefab;
 
     /************************************************************************
      * 
@@ -63,8 +64,10 @@ public class GameManager : MonoBehaviour
     private List<int> heights = new List<int>();
     private List<Level> levels = new List<Level>();
     private Difficulty currentDifficulty = Difficulty.Easy;
+    private string[] medkitTypes = { "small", "medium", "large" };
+    private string[] ammoTypes = { "small", "medium", "large" };
 
-    private int wallSize = 20;
+    private int wallSize = 10;
 
     public List<int> getHeights(){
         return heights;
@@ -87,8 +90,11 @@ public class GameManager : MonoBehaviour
             Instantiate(dirtPrefab, new Vector3(x, 2, 0), Quaternion.identity);
             Instantiate(floorPrefab, new Vector3(x, 3, 0), Quaternion.identity);
         }
-        Instantiate(floorPrefab, new Vector3(-width, 4, 0), Quaternion.identity);
-        Instantiate(floorPrefab, new Vector3(width - 1, 4, 0), Quaternion.identity);
+        for (int i = 0; i < wallSize; i++)
+        {
+            Instantiate(dirtPrefab, new Vector3(-width, 3 + i, 0), Quaternion.identity);
+            Instantiate(dirtPrefab, new Vector3(width - 1, 3 + i, 0), Quaternion.identity);
+        }
 
     }
 
@@ -127,7 +133,7 @@ public GameStats getGameStats()
 }
 
     private Vector3 generateRandomSpawnPoint(){
-    float randomX = Random.Range(-10, 10);//Random.Range(-width, width);
+    float randomX = Random.Range(-width, width);
     float y = 5f;
     float z = 0f; 
 
@@ -152,12 +158,24 @@ private List<GameObject> spawnMedKits(int count){
     {
         Vector3 spawnPoint = generateRandomSpawnPoint();
         GameObject medkit = Instantiate(medkitPrefab, spawnPoint, Quaternion.identity);
-        string[] medkitTypes = { "small", "medium", "large" };
         string medkitType = medkitTypes[Random.Range(0, medkitTypes.Length)];
         medkit.GetComponent<MedkitScript>().updateMedkit(medkitType);
         medkits.Add(medkit);
     }
     return medkits;
+}
+
+private List<GameObject> spawnAmmo(int count){
+    List<GameObject> ammos = new List<GameObject>();
+    for (int i = 0; i < count; i++)
+    {
+        Vector3 spawnPoint = generateRandomSpawnPoint();
+        GameObject ammo = Instantiate(ammoPackPrefab, spawnPoint, Quaternion.identity);
+        string ammoType = ammoTypes[Random.Range(0, ammoTypes.Length)];
+        ammo.GetComponent<AmmoPackScript>().updateAmmoPack(ammoType);
+        ammos.Add(ammo);
+    }
+    return ammos;
 }
 
     private IEnumerator handleWaves(){
@@ -177,13 +195,13 @@ private List<GameObject> spawnMedKits(int count){
     private IEnumerator handleGraceTime(){
         duration = gracePeriod;
         List<GameObject> medkits = spawnMedKits(5);
+        List<GameObject> ammos = spawnAmmo(3);
         while (duration > 0)
         {
             timerText.text = floatToMinutesSeconds(duration);
             yield return null;
             duration -= Time.deltaTime;
         }
-        Debug.Log("Grace period ended.");
     }
 
     private IEnumerator handleWaveTime()

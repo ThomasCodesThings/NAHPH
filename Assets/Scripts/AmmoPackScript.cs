@@ -2,40 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MedkitScript : MonoBehaviour
+public class AmmoPackScript : MonoBehaviour
 {
-     private int healAmount = 10;
+    [SerializeField] int ammoAmount = 10;
 
-    public void updateMedkit(string type){
+    public void updateAmmoPack(string type){
         switch(type){
             case "small":
-                healAmount = 10;
+                ammoAmount = 8;
                 gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
                 break;
             case "medium":
-                healAmount = 25;
+                ammoAmount = 12;
                 gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
                 break;
             case "large":
-                healAmount = 50;
+                ammoAmount = 16;
                 gameObject.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
                 break;
             default:
-                healAmount = 10;
+                ammoAmount = 8;
                 break;
         }
     }
-
-    public int getHealAmount(){
-        return healAmount;
+    public int getAmmoAmount(){
+        return ammoAmount;
     }
     // Start is called before the first frame update
     void Start()
     {
-        Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
-        rb.isKinematic = true;
-        rb.gravityScale = 0;
-        rb.velocity = Vector2.zero;
+        
     }
 
     // Update is called once per frame

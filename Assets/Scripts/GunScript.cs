@@ -36,6 +36,11 @@ public class GunScript : MonoBehaviour
         return name;
     }
 
+    public void addAmmo(int amount)
+    {
+        magazine += amount;
+    }
+
     // Start is called before the first frame update
     void Start()
     {

@@ -12,7 +12,6 @@ public class PlayerScript : MonoBehaviour
     public float Move;
     public Rigidbody2D rb;
     private bool isGrounded;
-    private int baseDamage = 10;
     private int health = 100;
     private int maxHealth = 100;
     private int xp = 0;
@@ -188,6 +187,12 @@ public class PlayerScript : MonoBehaviour
         {
 
             medkitsHealingAmount.Add(other.gameObject.GetComponent<MedkitScript>().getHealAmount());
+            Destroy(other.gameObject);
+        }
+
+        if(other.gameObject.CompareTag("AmmoPack")){
+            int ammo = other.gameObject.GetComponent<AmmoPackScript>().getAmmoAmount();
+            rangeWeapon.GetComponent<GunScript>().addAmmo(ammo);
             Destroy(other.gameObject);
         }
     }
