@@ -58,8 +58,11 @@ public class GameManager : MonoBehaviour
     private float gracePeriod = 5.0f;
     private float duration = 1.0f;
     private int currentWave = 1;
-    private int enemiesToKill = 3;
+    private int enemyCount = 1;
+    private int medkitCount = 1;
+    private int ammoCount = 1;
     private int maxWaves = 5;
+
 
     private List<int> heights = new List<int>();
     private List<Level> levels = new List<Level>();
@@ -110,6 +113,58 @@ public class GameManager : MonoBehaviour
             Instantiate(dirtPrefab, new Vector3(width - 1, 3 + i, 0), Quaternion.identity);
         }
 
+    }
+    //(number of enemies, number of medkits, number of ammos)
+    public (int, int, int) getLevelSettings(){
+        switch(currentDifficulty){
+            case Difficulty.Easy:
+                switch(currentWave){
+                    case 1:
+                        return (2, 1, 1);
+                    case 2:
+                        return (3, 3, 1);
+                    case 3:
+                        return (5, 5, 3);
+                    case 4:
+                        return (7, 2, 5);
+                    case 5:
+                        return (10, 3, 5);
+                    default:
+                        return (1, 1, 1);
+                }
+            case Difficulty.Medium:
+                switch(currentWave){
+                    case 1:
+                        return (5, 3, 1);
+                    case 2:
+                        return (7, 3, 1);
+                    case 3:
+                        return (10, 5, 3);
+                    case 4:
+                        return (15, 2, 5);
+                    case 5:
+                        return (15, 3, 5);
+                    default:
+                        return (1, 1, 1);
+                }
+            case Difficulty.Hard:
+                switch(currentWave){
+                    case 1:
+                        return (7, 3, 1);
+                    case 2:
+                        return (10, 3, 1);
+                    case 3:
+                        return (15, 5, 3);
+                    case 4:
+                        return (20, 2, 5);
+                    case 5:
+                        return (20, 3, 5);
+                    default:
+                        return (1, 1, 1);
+                }
+            default:
+                return (1, 1, 1);
+        }
     }
 
     public string floatToMinutesSeconds(float time)
@@ -244,6 +299,10 @@ private List<GameObject> spawnAmmo(int count){
     private IEnumerator handleWaves(){
         while (currentWave <= maxWaves)
         {
+            (int enemiesToKill, int medkitsToSpawn, int ammosToSpawn) = getLevelSettings();
+            enemyCount = enemiesToKill;
+            medkitCount = medkitsToSpawn;
+            ammoCount = ammosToSpawn;
             waveText.text = "GRACE PERIOD";
             timerText.color = Color.red;
             yield return handleGraceTime();
@@ -258,8 +317,8 @@ private List<GameObject> spawnAmmo(int count){
 
     private IEnumerator handleGraceTime(){
         duration = gracePeriod;
-        medkits = spawnMedKits(3);
-        ammos = spawnAmmo(3);
+        medkits = spawnMedKits(medkitCount);
+        ammos = spawnAmmo(ammoCount);
         while (duration > 0)
         {
             timerText.text = floatToMinutesSeconds(duration);
@@ -271,7 +330,7 @@ private List<GameObject> spawnAmmo(int count){
     private IEnumerator handleWaveTime()
 {
     duration = 0;
-    enemies = spawnEnemies(enemiesToKill);
+    enemies = spawnEnemies(enemyCount);
 
     removeCollision(enemies);
     while (enemies.Count > 0)

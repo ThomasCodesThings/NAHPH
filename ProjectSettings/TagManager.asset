@@ -16,6 +16,7 @@ TagManager:
   - DifficultyManager
   - PlayerRangeWeapon
   - AmmoPack
+  - Smg
   layers:
   - Default
   - TransparentFX

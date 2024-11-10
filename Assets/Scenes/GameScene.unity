@@ -4234,6 +4234,7 @@ MonoBehaviour:
   magazineText: {fileID: 140144584}
   weaponNameText: {fileID: 415056330}
   medkitsCountText: {fileID: 697604735}
+  smgPrefab: {fileID: 2531169699788630866, guid: 927a02472504b1f499ef57b5612096de, type: 3}
 --- !u!4 &1638814578
 Transform:
   m_ObjectHideFlags: 0
