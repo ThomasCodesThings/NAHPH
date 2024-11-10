@@ -24,6 +24,7 @@ public class PlayerScript : MonoBehaviour
     private List<int> medkitsHealingAmount = new List<int>();
     private GameObject rangeWeapon;
     private GameObject meleeWeapon;
+    private GameObject currentWeapon;
 
       public GameObject FindChildWithTag(GameObject parent, string tag)
     {
@@ -49,12 +50,12 @@ public class PlayerScript : MonoBehaviour
 
     public int getDamage()
     {
-        return this.baseDamage;
+        return currentWeapon.GetComponent<GunScript>().getDamage();
     }
 
     public void setHealth(int damage)
     {
-        this.health -= damage;
+       health -= damage;
     }
 
     public bool isKilled()
@@ -121,8 +122,7 @@ public class PlayerScript : MonoBehaviour
         rangeWeapon = GameObject.FindGameObjectWithTag("PlayerRangeWeapon");
         //meleeWeapon = GameObject.FindGameObjectWithTag("PlayerMeleeWeapon");
 
-        int weaponDamage = rangeWeapon.GetComponent<GunScript>().getDamage();
-        Debug.Log("Weapon Damage: " + weaponDamage);
+        currentWeapon = rangeWeapon;
         
     }
 
