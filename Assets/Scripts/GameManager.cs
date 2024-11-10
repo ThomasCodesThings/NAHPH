@@ -126,28 +126,6 @@ public GameStats getGameStats()
     return new GameStats(formatedTime, formatedEnemiesKilled, formatedMedkitsUsed, formatedXp);
 }
 
-    public void updateUI(PlayerStats playerStats){
-        healthText.text = playerStats.health.ToString();
-        healthBar.value = playerStats.health;
-        healthBar.maxValue = playerStats.maxHealth;
-        medkitsCountText.text = playerStats.medkits.ToString();
-
-        int currentLevel = 0;
-        int xpCount = 0;
-
-        while(currentLevel < levels.Count - 1 && xpCount + levels[currentLevel].xpToNextLevel <= playerStats.xp)
-        {
-            xpCount += levels[currentLevel].xpToNextLevel;
-            currentLevel++;
-        }
-
-        int difference = playerStats.xp - xpCount;
-        int xpForNextLevel = levels[currentLevel].xpToNextLevel;
-        float differencePercentage = (float)difference / xpForNextLevel;
-        xpBar.value = differencePercentage;
-        levelText.text = "LEVEL " + ++currentLevel;
-    }
-
     private Vector3 generateRandomSpawnPoint(){
     float randomX = Random.Range(-10, 10);//Random.Range(-width, width);
     float y = 5f;
@@ -233,6 +211,31 @@ private List<GameObject> spawnMedKits(int count){
         }
     }
 }
+
+public void updateUI(PlayerStats playerStats){
+        healthText.text = playerStats.health.ToString();
+        healthBar.value = playerStats.health;
+        healthBar.maxValue = playerStats.maxHealth;
+        medkitsCountText.text = playerStats.medkits.ToString();
+
+        int currentLevel = 0;
+        int xpCount = 0;
+
+        while(currentLevel < levels.Count - 1 && xpCount + levels[currentLevel].xpToNextLevel <= playerStats.xp)
+        {
+            xpCount += levels[currentLevel].xpToNextLevel;
+            currentLevel++;
+        }
+
+        int difference = playerStats.xp - xpCount;
+        int xpForNextLevel = levels[currentLevel].xpToNextLevel;
+        float differencePercentage = (float)difference / xpForNextLevel;
+        xpBar.value = differencePercentage;
+        levelText.text = "LEVEL " + ++currentLevel;
+        ammoText.text = playerStats.ammo.ToString();
+        magazineText.text = playerStats.magazine.ToString();
+        weaponNameText.text = playerStats.weaponName;
+    }
     
    void Awake()
 {
@@ -282,6 +285,8 @@ private List<GameObject> spawnMedKits(int count){
 
             SceneManager.LoadScene("GameOverScene");
         }
+
+
     }
 }
 }

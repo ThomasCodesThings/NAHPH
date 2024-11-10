@@ -16,14 +16,36 @@ public class PlayerScript : MonoBehaviour
     private int health = 100;
     private int maxHealth = 100;
     private int xp = 0;
-    private int ammo = 0;
-    private int magazine = 0;
     private int medkitsUsed = 0;
     private int enemiesKilled = 0;
     private float timeToHeal = 5.0f;
     private float healingTimer = 0.0f; 
     private bool isHealing = false; 
     private List<int> medkitsHealingAmount = new List<int>();
+    private GameObject rangeWeapon;
+    private GameObject meleeWeapon;
+
+      public GameObject FindChildWithTag(GameObject parent, string tag)
+    {
+        foreach (Transform child in parent.GetComponentsInChildren<Transform>())
+        {
+            if (child.CompareTag(tag))
+            {
+                return child.gameObject;
+            }
+        }
+        return null;
+    }
+
+    public GameObject getRangeWeapon()
+    {
+        return rangeWeapon;
+    }
+
+    public GameObject getMeleeWeapon()
+    {
+        return meleeWeapon;
+    }
 
     public int getDamage()
     {
@@ -59,7 +81,7 @@ public class PlayerScript : MonoBehaviour
 
     public PlayerStats getPlayerStats()
     {
-        return new PlayerStats(health, maxHealth, xp, ammo, magazine, "Pistol", medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
+        return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<GunScript>().getAmmo(), rangeWeapon.GetComponent<GunScript>().getMagazine(), rangeWeapon.GetComponent<GunScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
     }
 
     public void addXP(int xp)
@@ -96,6 +118,12 @@ public class PlayerScript : MonoBehaviour
     void Start()
     {
         pauseMenu.SetActive(false);
+        rangeWeapon = GameObject.FindGameObjectWithTag("PlayerRangeWeapon");
+        //meleeWeapon = GameObject.FindGameObjectWithTag("PlayerMeleeWeapon");
+
+        int weaponDamage = rangeWeapon.GetComponent<GunScript>().getDamage();
+        Debug.Log("Weapon Damage: " + weaponDamage);
+        
     }
 
     // Update is called once per frame

@@ -59,25 +59,5 @@ namespace GameStructs
         }
     }
 
-    public struct PrimaryGun{
-        public string name;
-        public int damage;
-        public int ammo;
-        public int magazine;
-        public float fireRate;
-        public float reloadTime;
-        public Texture2D texture;
-        public float bulletSpeed;
-
-        public PrimaryGun(string name, int damage, int ammo, int magazine, float fireRate, float reloadTime, Texture2D texture, float bulletSpeed){
-            this.name = name;
-            this.damage = damage;
-            this.ammo = ammo;
-            this.magazine = magazine;
-            this.fireRate = fireRate;
-            this.reloadTime = reloadTime;
-            this.texture = texture;
-            this.bulletSpeed = bulletSpeed;
-        }
-    }
+    
 }

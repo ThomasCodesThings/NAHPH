@@ -11,6 +11,30 @@ public class GunScript : MonoBehaviour
     private float lastShotTime = 0f;
     private float shotDelay = 0.5f;
     private float bulletOffset = 0.4f;
+    private int ammo = 8;
+    private int magazine = 64;
+    private int damage = 10;
+    private string name = "Basic Pistol";
+
+    public int getAmmo()
+    {
+        return ammo;
+    }
+
+    public int getMagazine()
+    {
+        return magazine;
+    }
+
+    public int getDamage()
+    {
+        return damage;
+    }
+
+    public string getName()
+    {
+        return name;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -25,13 +49,33 @@ public class GunScript : MonoBehaviour
     {
         return;
     }
-    if(Input.GetMouseButton(0) && Time.time - lastShotTime > shotDelay)
+
+    if (Input.GetKeyDown(KeyCode.R))
+    {
+        if (magazine > 0)
+        {
+            int missingAmmo = 8 - ammo;
+            if (magazine >= missingAmmo)
+            {
+                ammo = 8;
+                magazine -= missingAmmo;
+            }
+            else
+            {
+                ammo += magazine;
+                magazine = 0;
+            }
+        }
+    }
+
+    if(Input.GetMouseButton(0) && Time.time - lastShotTime > shotDelay && ammo > 0)
     {
         lastShotTime = Time.time;
 
         Vector3 bulletSpawnPosition = transform.position + transform.right * bulletOffset;
 
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition, Quaternion.identity);
+        ammo--;
         bullet.GetComponent<Rigidbody2D>().velocity = transform.right * bulletSpeed;
         Destroy(bullet, bulletLifeTime);
     }
