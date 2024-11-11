@@ -167,6 +167,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private int calculateWaveTime(){
+        switch(currentDifficulty){
+            case Difficulty.Easy:
+                return (currentWave - 1)  * 60 + 180;
+            case Difficulty.Medium:
+                return (currentWave - 1)  * 60 + 120;
+            case Difficulty.Hard:
+                return (currentWave - 1)  * 60 + 60;
+            default:
+                return 60;
+        }
+    }
+
     public string floatToMinutesSeconds(float time)
 {
     int minutes = Mathf.FloorToInt(time / 60);
@@ -329,15 +342,15 @@ private List<GameObject> spawnAmmo(int count){
 
     private IEnumerator handleWaveTime()
 {
-    duration = 0;
+    duration = calculateWaveTime();
     enemies = spawnEnemies(enemyCount);
 
     removeCollision(enemies);
-    while (enemies.Count > 0)
+    while (enemies.Count > 0 && duration > 0)
     {
         timerText.text = floatToMinutesSeconds(duration);
         yield return null;
-        duration += Time.deltaTime;
+        duration -= Time.deltaTime;
 
         for (int i = 0; i < enemies.Count; i++)
         {
@@ -352,6 +365,11 @@ private List<GameObject> spawnAmmo(int count){
                 i--;
             }
         }
+    }
+    //game over
+    if (duration <= 0)
+    {
+        SceneManager.LoadScene("GameOverScene");
     }
 }
 
