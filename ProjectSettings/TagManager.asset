@@ -17,6 +17,7 @@ TagManager:
   - PlayerRangeWeapon
   - AmmoPack
   - Smg
+  - EnemyBullet
   layers:
   - Default
   - TransparentFX

@@ -27,6 +27,16 @@ public class WeakEnemyScript : MonoBehaviour
     [SerializeField] Color maxHealthColor = Color.green;
     private float healthBarOffset = 0.75f;
 
+    private int damage = 10;
+    private float lastShotTime = 0f;
+    private float shotDelay = 0.5f;
+    private float bulletOffset = 0.4f;
+    private float bulletSpeed = 10f;
+    private float bulletLifeTime = 5f;
+    [SerializeField] private GameObject bulletPrefab;
+
+
+
     public void setHealth(int damage)
     {
         health -= damage;
@@ -39,6 +49,10 @@ public class WeakEnemyScript : MonoBehaviour
 
     public int getXP(){
         return Random.Range(50, 100);
+    }
+    public int getDamage()
+    {
+        return damage;
     }
 
     // Start is called before the first frame update
@@ -72,7 +86,7 @@ public class WeakEnemyScript : MonoBehaviour
         if (distance < triggerRadius)
         {
             bool isPlayerOnLeft = playerX < enemyX;
-            if (playerY == enemyY)
+            if (playerY - 1 == enemyY)
             {
                 shoot(isPlayerOnLeft);
             }
@@ -129,9 +143,23 @@ public class WeakEnemyScript : MonoBehaviour
     }
 
     private void shoot(bool isPlayerOnLeft)
+{
+    if (Time.time - lastShotTime > shotDelay)
     {
-        Debug.Log("Shoot");
+        lastShotTime = Time.time;
+        float direction = isPlayerOnLeft ? -1 : 1;
+
+        // Adjust bullet spawn position based on direction
+        Vector3 bulletSpawnPosition = transform.position + Vector3.right * bulletOffset * direction;
+        
+        // Instantiate bullet and set velocity
+        GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition, Quaternion.identity);
+        bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(direction * bulletSpeed, 0);
+
+        // Destroy bullet after its lifetime expires
+        Destroy(bullet, bulletLifeTime);
     }
+}
 
     private void OnCollisionEnter2D(Collision2D other)
     {

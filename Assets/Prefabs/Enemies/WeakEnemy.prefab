@@ -351,6 +351,7 @@ MonoBehaviour:
   healthBar: {fileID: 6034857765291642494}
   minHealthColor: {r: 1, g: 0, b: 0, a: 1}
   maxHealthColor: {r: 0, g: 1, b: 0, a: 1}
+  bulletPrefab: {fileID: 5117667170296281873, guid: 6879af79d591ffb4fba3fc69022ffcd3, type: 3}
 --- !u!1 &3450233193478439006
 GameObject:
   m_ObjectHideFlags: 0

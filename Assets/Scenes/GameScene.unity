@@ -4507,7 +4507,7 @@ MonoBehaviour:
   height: 20
   player: {fileID: 1261849199}
   soldierEnemyPrefab: {fileID: 2199549570022267799, guid: 409bd588789b1104db32485e28c6630d, type: 3}
-  medkitPrefab: {fileID: 7133353836420136446, guid: eca6d9764aef1bf47b5375a4370fd80e, type: 3}
+  medkitPrefab: {fileID: 8723278715032774768, guid: eca6d9764aef1bf47b5375a4370fd80e, type: 3}
   ammoPackPrefab: {fileID: 3658277320011829494, guid: 63bb57ddc9ed9664eb39aebf55af897f, type: 3}
   healthText: {fileID: 1952903739}
   healthBar: {fileID: 792625506}
