@@ -18,6 +18,7 @@ TagManager:
   - AmmoPack
   - Smg
   - EnemyBullet
+  - Shotgun
   layers:
   - Default
   - TransparentFX

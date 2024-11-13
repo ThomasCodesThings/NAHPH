@@ -69,6 +69,8 @@ public class GameManager : MonoBehaviour
     private Difficulty currentDifficulty = Difficulty.Easy;
     private string[] medkitTypes = { "small", "medium", "large" };
     private string[] ammoTypes = { "small", "medium", "large" };
+    private Dictionary<int, GameObject> weaponThresholds;
+    private HashSet<int> spawnedThresholds;
 
     private List<GameObject> enemies = new List<GameObject>();
     private List<GameObject> medkits = new List<GameObject>();
@@ -83,7 +85,7 @@ public class GameManager : MonoBehaviour
      * *********************************************************************/
 
     [SerializeField] GameObject smgPrefab;
-    private bool spawnedWeapon;
+    [SerializeField] GameObject shotgunPrefab;
 
     public List<int> getHeights(){
         return heights;
@@ -106,12 +108,16 @@ public class GameManager : MonoBehaviour
             Instantiate(dirtPrefab, new Vector3(x, 2, 0), Quaternion.identity);
             Instantiate(floorPrefab, new Vector3(x, 3, 0), Quaternion.identity);
             heights.Add(3);
+           
+
         }
         for (int i = 0; i < wallSize; i++)
         {
             Instantiate(dirtPrefab, new Vector3(-width, 3 + i, 0), Quaternion.identity);
             Instantiate(dirtPrefab, new Vector3(width - 1, 3 + i, 0), Quaternion.identity);
         }
+
+       
 
     }
     //(number of enemies, number of medkits, number of ammos)
@@ -419,6 +425,14 @@ public void updateUI(PlayerStats playerStats){
     levels.Add(new Level(400));
     levels.Add(new Level(500));
 
+    weaponThresholds = new Dictionary<int, GameObject>
+        {
+            { 100, smgPrefab },
+            { 200, shotgunPrefab },
+        };
+
+    spawnedThresholds = new HashSet<int>();
+
     
 }
 
@@ -447,15 +461,15 @@ public void updateUI(PlayerStats playerStats){
             SceneManager.LoadScene("GameOverScene");
         }
 
-        if(playerStats.xp > 100){
-            if(!spawnedWeapon){
+        foreach (int threshold in weaponThresholds.Keys)
+        {
+            if (playerStats.xp >= threshold && !spawnedThresholds.Contains(threshold))
+            {
                 Vector3 spawnPoint = generateRandomSpawnPoint();
-                Instantiate(smgPrefab, spawnPoint, Quaternion.identity);
-                spawnedWeapon = true;
+                Instantiate(weaponThresholds[threshold], spawnPoint, Quaternion.identity);
+                spawnedThresholds.Add(threshold);
             }
         }
-
-
     }
 }
 }

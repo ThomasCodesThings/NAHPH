@@ -9,7 +9,7 @@ public class BulletSoldierScript : MonoBehaviour
 
     public int getDamage()
     {
-        return damage;
+        return GameObject.FindGameObjectWithTag("WeakEnemy").GetComponent<WeakEnemyScript>().getDamage();
     }
     // Start is called before the first frame update
     void Start()
@@ -23,6 +23,7 @@ public class BulletSoldierScript : MonoBehaviour
         GameObject[] medkits = GameObject.FindGameObjectsWithTag("Medkit");
         GameObject[] ammopacks = GameObject.FindGameObjectsWithTag("AmmoPack");
         GameObject[] weakEnemies = GameObject.FindGameObjectsWithTag("WeakEnemy");
+        GameObject[] bullets = GameObject.FindGameObjectsWithTag("Bullet");
         foreach(GameObject medkit in medkits){
             if(medkit == null){
                 continue;
@@ -42,6 +43,13 @@ public class BulletSoldierScript : MonoBehaviour
             }
             Physics2D.IgnoreCollision(weakEnemy.GetComponent<Collider2D>(), GetComponent<Collider2D>());
         }
+
+        foreach(GameObject bullet in bullets){
+            if(bullet == null){
+                continue;
+            }
+            Physics2D.IgnoreCollision(bullet.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+    }
     }
     }
 

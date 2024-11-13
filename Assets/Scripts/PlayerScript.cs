@@ -6,7 +6,7 @@ using GameStructs;
 public class PlayerScript : MonoBehaviour
 {
     [SerializeField] float speed = 5;
-    [SerializeField] float jumpForce = 5;
+    [SerializeField] float jumpForce = 12;
     [SerializeField] GameObject pauseMenu;
 
     public float Move;
@@ -94,6 +94,8 @@ public class PlayerScript : MonoBehaviour
                return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<GunScript>().getAmmo(), rangeWeapon.GetComponent<GunScript>().getMagazine(), rangeWeapon.GetComponent<GunScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
             case "Smg":
                 return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<SmgScript>().getAmmo(), rangeWeapon.GetComponent<SmgScript>().getMagazine(), rangeWeapon.GetComponent<SmgScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
+            case "Shotgun":
+                return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<ShotgunScript>().getAmmo(), rangeWeapon.GetComponent<ShotgunScript>().getMagazine(), rangeWeapon.GetComponent<ShotgunScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
             default:
                 return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<GunScript>().getAmmo(), rangeWeapon.GetComponent<GunScript>().getMagazine(), rangeWeapon.GetComponent<GunScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
         }
@@ -219,7 +221,11 @@ public class PlayerScript : MonoBehaviour
             else if (currentWeaponName == "Smg")
             {
                 rangeWeapon.GetComponent<SmgScript>().addAmmo(ammo);
+            }else if (currentWeaponName == "Shotgun")
+            {
+                rangeWeapon.GetComponent<ShotgunScript>().addAmmo(ammo);
             }
+
             Destroy(other.gameObject);
         }
 
@@ -243,6 +249,30 @@ public class PlayerScript : MonoBehaviour
 
         currentWeapon = rangeWeapon;
         currentWeaponName = "Smg";
+        
+        Destroy(other.gameObject); 
+    }
+
+
+    if(other.gameObject.CompareTag("Shotgun"))
+    {
+        Transform weaponHolder = transform.GetChild(1);
+        Vector3 previousPosition = rangeWeapon.transform.localPosition;
+        Quaternion previousRotation = rangeWeapon.transform.localRotation;
+
+        if (rangeWeapon != null)
+        {
+            Destroy(rangeWeapon);
+        }
+        rangeWeapon = Instantiate(other.gameObject);
+
+        rangeWeapon.transform.SetParent(weaponHolder);
+
+        rangeWeapon.transform.localPosition = previousPosition;
+        rangeWeapon.transform.localRotation = previousRotation;
+
+        currentWeapon = rangeWeapon;
+        currentWeaponName = "Shotgun";
         
         Destroy(other.gameObject); 
     }

@@ -16,6 +16,7 @@ public class GunScript : MonoBehaviour
     private int minDamage = 20;
     private int maxDamage = 30;
     private string name = "Basic Pistol";
+    private int maxAmmo = 8;
 
     public int getAmmo()
     {
@@ -60,10 +61,10 @@ public class GunScript : MonoBehaviour
     {
         if (magazine > 0)
         {
-            int missingAmmo = 8 - ammo;
+            int missingAmmo = maxAmmo - ammo;
             if (magazine >= missingAmmo)
             {
-                ammo = 8;
+                ammo = maxAmmo;
                 magazine -= missingAmmo;
             }
             else

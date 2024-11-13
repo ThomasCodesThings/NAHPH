@@ -2,21 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SmgScript : MonoBehaviour
+public class ShotgunScript : MonoBehaviour
 {
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private float bulletSpeed = 30f;
     [SerializeField] private float bulletLifeTime = 5f;
 
     private float lastShotTime = 0f;
-    private float shotDelay = 0.2f;
+    private float shotDelay = 0.7f;
     private float bulletOffset = 0.5f;
-    private int ammo = 10;
-    private int magazine = 40;
-    private int damage = 10;
-    private string name = "Smg";
+    private int ammo = 5;
+    private int magazine = 20;
+    private int damage = 20;
+    private string name = "Shotgun";
     private GameObject player;
-    private int maxAmmo = 10;
+    private int maxAmmo = 5;
 
     public int getAmmo()
     {

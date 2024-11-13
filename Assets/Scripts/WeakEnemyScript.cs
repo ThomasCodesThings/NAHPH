@@ -27,11 +27,11 @@ public class WeakEnemyScript : MonoBehaviour
     [SerializeField] Color maxHealthColor = Color.green;
     private float healthBarOffset = 0.75f;
 
-    private int damage = 10;
+    private int damage = 1;
     private float lastShotTime = 0f;
     private float shotDelay = 0.5f;
     private float bulletOffset = 0.4f;
-    private float bulletSpeed = 10f;
+    private float bulletSpeed = 7f;
     private float bulletLifeTime = 5f;
     [SerializeField] private GameObject bulletPrefab;
 
