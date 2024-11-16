@@ -19,6 +19,9 @@ TagManager:
   - Smg
   - EnemyBullet
   - Shotgun
+  - Drone
+  - DroneBody
+  - DroneWeapon
   layers:
   - Default
   - TransparentFX
