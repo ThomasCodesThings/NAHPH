@@ -277,8 +277,8 @@ public class PlayerScript : MonoBehaviour
         Destroy(other.gameObject); 
     }
 
-    if(other.gameObject.CompareTag("EnemyBullet")){
-        int damage = other.gameObject.GetComponent<BulletSoldierScript>().getDamage();
+    if(other.gameObject.CompareTag("EnergyProjectile")){
+        int damage = other.gameObject.GetComponent<DroneProjectileScript>().getDamage();
         //Debug.Log("Player hit by enemy bullet. Damage: " + damage);
         setHealth(damage);
         Destroy(other.gameObject);

@@ -18,7 +18,6 @@ public class DroneScript : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
 
-    private int damage = 10;
     private float lastShotTime = 0f;
     private float shotDelay = 0.5f;
     private float bulletOffset = 0.4f;
@@ -35,7 +34,6 @@ public class DroneScript : MonoBehaviour
     public void setHealth(int damage)
     {
         health -= damage;
-        
     }
 
     public bool isKilled(){
@@ -45,10 +43,7 @@ public class DroneScript : MonoBehaviour
     public int getXP(){
         return Random.Range(100, 200);
     }
-    public int getDamage()
-    {
-        return damage;
-    }
+ 
     // Start is called before the first frame update
     void Start()
     {

@@ -22,6 +22,8 @@ TagManager:
   - Drone
   - DroneBody
   - DroneWeapon
+  - EnergyProjectile
+  - BallisticProjectile
   layers:
   - Default
   - TransparentFX

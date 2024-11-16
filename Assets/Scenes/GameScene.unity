@@ -765,7 +765,7 @@ MonoBehaviour:
   healthBar: {fileID: 784931446}
   minHealthColor: {r: 1, g: 0, b: 0, a: 1}
   maxHealthColor: {r: 0, g: 1, b: 0, a: 1}
-  bulletPrefab: {fileID: 1907605427488731722, guid: c41745bc113676d469fdee8b9b0b9dc7, type: 3}
+  bulletPrefab: {fileID: 2070654514708079422, guid: 9ce65b504003b854cab1673b70949fdf, type: 3}
 --- !u!1 &140144582
 GameObject:
   m_ObjectHideFlags: 0
@@ -6037,6 +6037,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WeakEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 6365548465995276886, guid: 409bd588789b1104db32485e28c6630d, type: 3}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: 6463940134533983277, guid: 955eac48e73b18542b5ab4ef0073f756, type: 3}
     - target: {fileID: 6365548465995276886, guid: 409bd588789b1104db32485e28c6630d, type: 3}
       propertyPath: proceduralGeneration
       value: 
