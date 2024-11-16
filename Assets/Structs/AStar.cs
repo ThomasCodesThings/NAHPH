@@ -35,11 +35,9 @@ public class AStar
 
     public (int, int) getNextMove(int srcX, int srcY, int destX, int destY)
     {
-        Debug.Log("Source: " + srcX + " " + srcY);
-        Debug.Log("Destination: " + destX + " " + destY);
+      
         Pair? p = AStarSearch(new Pair(srcX, srcY), new Pair(destX, destY));
-        
-        Debug.Log("length" + this.grid.GetLength(0) + " " + this.grid.GetLength(1));
+
         if (p.HasValue)
         {
             return (p.Value.first, p.Value.second);
