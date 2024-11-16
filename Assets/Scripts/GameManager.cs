@@ -5,6 +5,8 @@ using GameStructs;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using AI;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -77,6 +79,8 @@ public class GameManager : MonoBehaviour
     private List<GameObject> ammos = new List<GameObject>();
 
     private int wallSize = 10;
+    private int[,] blockGrid;
+    private AStar AStarSearch;
 
     /************************************************************************
      * 
@@ -99,27 +103,42 @@ public class GameManager : MonoBehaviour
         return totalElapsedTime;
     }
 
-
    public void generate()
     {
+        //0 - cell is blocked
+        //1 -cell is non blocked
+        blockGrid = new int[width * 2, wallSize + 4];
+        for (int x = 0; x < blockGrid.GetLength(0); x++)
+        {
+            for (int y = 0; y < blockGrid.GetLength(1); y++)
+            {
+                blockGrid[x, y] = 1; 
+            }
+        }
 
         for (int x = -width; x < width; x++)
         {
+            int gridX = x + width;
+
             Instantiate(dirtPrefab, new Vector3(x, 2, 0), Quaternion.identity);
             Instantiate(floorPrefab, new Vector3(x, 3, 0), Quaternion.identity);
+            
+            blockGrid[gridX, 2] = 0;  
+            blockGrid[gridX, 3] = 0;
+            
             heights.Add(3);
-           
-
         }
+
         for (int i = 0; i < wallSize; i++)
         {
             Instantiate(dirtPrefab, new Vector3(-width, 3 + i, 0), Quaternion.identity);
             Instantiate(dirtPrefab, new Vector3(width - 1, 3 + i, 0), Quaternion.identity);
+
+            blockGrid[0, 3 + i] = 0;              
+            blockGrid[width * 2 - 1, 3 + i] = 0;
         }
-
-       
-
     }
+    
     //(number of enemies, number of medkits, number of ammos)
     public (int, int, int) getLevelSettings(){
         switch(currentDifficulty){
@@ -270,7 +289,7 @@ public void clearAfterWave(){
 }
 
     private Vector3 generateRandomSpawnPoint(){
-    float randomX = Random.Range(-width, width);
+    float randomX = UnityEngine.Random.Range(-width, width);
     float y = 5f;
     float z = 0f; 
 
@@ -295,7 +314,7 @@ private List<GameObject> spawnMedKits(int count){
     {
         Vector3 spawnPoint = generateRandomSpawnPoint();
         GameObject medkit = Instantiate(medkitPrefab, spawnPoint, Quaternion.identity);
-        string medkitType = medkitTypes[Random.Range(0, medkitTypes.Length)];
+        string medkitType = medkitTypes[UnityEngine.Random.Range(0, medkitTypes.Length)];
         medkit.GetComponent<MedkitScript>().updateMedkit(medkitType);
         medkits.Add(medkit);
     }
@@ -308,7 +327,7 @@ private List<GameObject> spawnAmmo(int count){
     {
         Vector3 spawnPoint = generateRandomSpawnPoint();
         GameObject ammo = Instantiate(ammoPackPrefab, spawnPoint, Quaternion.identity);
-        string ammoType = ammoTypes[Random.Range(0, ammoTypes.Length)];
+        string ammoType = ammoTypes[UnityEngine.Random.Range(0, ammoTypes.Length)];
         ammo.GetComponent<AmmoPackScript>().updateAmmoPack(ammoType);
         ammos.Add(ammo);
     }
@@ -436,12 +455,23 @@ public void updateUI(PlayerStats playerStats){
     
 }
 
+public (int, int) getNextBlock(float srcX, float srcY)
+{
+    GameObject player = GameObject.FindGameObjectWithTag("Player");
+    int enemyX = (int)Math.Round(srcX) + width;
+    int enemyY = (int)Math.Round(srcY);
+    int playerX = (int)Math.Round(player.transform.position.x) + width;
+    int playerY = (int)Math.Round(player.transform.position.y) + 1;
+    
+    return AStarSearch.getNextMove(enemyX, enemyY, playerX, playerY);
+}
 
     // Start is called before the first frame update
     void Start()
     {
       StartCoroutine(handleWaves());
-      generate();   
+      generate();
+      AStarSearch = new AStar(blockGrid);
     }
 
     // Update is called once per frame
