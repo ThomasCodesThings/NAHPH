@@ -92,6 +92,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject smgPrefab;
     [SerializeField] GameObject shotgunPrefab;
+    [SerializeField] GameObject laserPrefab;
+    [SerializeField] GameObject plasmaCannonPrefab;
 
     public List<int> getHeights(){
         return heights;
@@ -369,6 +371,10 @@ public void clearDecals(){
     private IEnumerator handleWaves(){
         while (currentWave <= maxWaves)
         {
+            if (waveText == null || timerText == null)
+            {
+                yield break;
+            }
             (int soldiersToSpawn, int dronesToSpawn, int medkitsToSpawn, int ammosToSpawn) = getLevelSettings();
             soldierCount = soldiersToSpawn;
             droneCount = dronesToSpawn;
@@ -510,7 +516,9 @@ public void updateUI(PlayerStats playerStats){
     weaponThresholds = new Dictionary<int, GameObject>
         {
             { 100, smgPrefab },
-            { 200, shotgunPrefab },
+            { 250, shotgunPrefab },
+            { 400, laserPrefab },
+            { 600, plasmaCannonPrefab }
         };
 
     spawnedThresholds = new HashSet<int>();
@@ -562,6 +570,7 @@ public (int, int) getNextBlock(float srcX, float srcY)
             if (playerStats.xp >= threshold && !spawnedThresholds.Contains(threshold))
             {
                 Vector3 spawnPoint = generateRandomSpawnPoint();
+                spawnPoint.y = spawnPoint.y - 1;
                 Instantiate(weaponThresholds[threshold], spawnPoint, Quaternion.identity);
                 spawnedThresholds.Add(threshold);
             }

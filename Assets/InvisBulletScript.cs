@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletScript : MonoBehaviour
+public class InvisBulletScript : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
         //set gameobject sprite renderer to false
-        //GetComponent<SpriteRenderer>().enabled = false;
+        GetComponent<SpriteRenderer>().enabled = false;
     }
 
     // Update is called once per frame

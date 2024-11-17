@@ -11,12 +11,12 @@ public class SmgScript : MonoBehaviour
     private float lastShotTime = 0f;
     private float shotDelay = 0.2f;
     private float bulletOffset = 0.5f;
-    private int ammo = 10;
+    private static int maxAmmo = 5;
+    private int ammo = maxAmmo;
     private int magazine = 40;
     private int damage = 10;
     private string name = "Smg";
     private GameObject player;
-    private int maxAmmo = 10;
 
     public int getAmmo()
     {

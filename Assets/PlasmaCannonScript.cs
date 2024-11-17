@@ -2,20 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShotgunScript : MonoBehaviour
+public class PlasmaCannonScript : MonoBehaviour
 {
     [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private float bulletSpeed = 30f;
+    [SerializeField] private float bulletSpeed = 20f;
     [SerializeField] private float bulletLifeTime = 5f;
 
     private float lastShotTime = 0f;
-    private float shotDelay = 0.7f;
+    private float shotDelay = 0.5f;
     private float bulletOffset = 0.5f;
-    private static int maxAmmo = 5;
+    private static int maxAmmo = 8;
     private int ammo = maxAmmo;
-    private int magazine = 20;
-    private int damage = 20;
-    private string name = "Shotgun";
+    private int magazine = 16;
+    private int damage = 50;
+    private string name = "Plasma Cannon";
     private GameObject player;
 
     public int getAmmo()

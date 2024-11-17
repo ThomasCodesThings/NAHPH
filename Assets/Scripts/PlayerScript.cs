@@ -57,6 +57,10 @@ public class PlayerScript : MonoBehaviour
                 return rangeWeapon.GetComponent<SmgScript>().getDamage();
             case "Shotgun":
                 return rangeWeapon.GetComponent<ShotgunScript>().getDamage();
+            case "Laser":
+                return rangeWeapon.GetComponent<LaserScript>().getDamage();
+            case "Plasma Cannon":
+                return rangeWeapon.GetComponent<PlasmaCannonScript>().getDamage();
             default:
                 return rangeWeapon.GetComponent<GunScript>().getDamage();
         }
@@ -98,6 +102,10 @@ public class PlayerScript : MonoBehaviour
                 return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<SmgScript>().getAmmo(), rangeWeapon.GetComponent<SmgScript>().getMagazine(), rangeWeapon.GetComponent<SmgScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
             case "Shotgun":
                 return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<ShotgunScript>().getAmmo(), rangeWeapon.GetComponent<ShotgunScript>().getMagazine(), rangeWeapon.GetComponent<ShotgunScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
+            case "Laser":
+                return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<LaserScript>().getAmmo(), rangeWeapon.GetComponent<LaserScript>().getMagazine(), rangeWeapon.GetComponent<LaserScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
+            case "Plasma Cannon":
+                return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<PlasmaCannonScript>().getAmmo(), rangeWeapon.GetComponent<PlasmaCannonScript>().getMagazine(), rangeWeapon.GetComponent<PlasmaCannonScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
             default:
                 return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<GunScript>().getAmmo(), rangeWeapon.GetComponent<GunScript>().getMagazine(), rangeWeapon.GetComponent<GunScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
         }
@@ -275,6 +283,52 @@ public class PlayerScript : MonoBehaviour
 
         currentWeapon = rangeWeapon;
         currentWeaponName = "Shotgun";
+        
+        Destroy(other.gameObject); 
+    }
+
+    if(other.gameObject.CompareTag("Laser"))
+    {
+        Transform weaponHolder = transform.GetChild(1);
+        Vector3 previousPosition = rangeWeapon.transform.localPosition;
+        Quaternion previousRotation = rangeWeapon.transform.localRotation;
+
+        if (rangeWeapon != null)
+        {
+            Destroy(rangeWeapon);
+        }
+        rangeWeapon = Instantiate(other.gameObject);
+
+        rangeWeapon.transform.SetParent(weaponHolder);
+
+        rangeWeapon.transform.localPosition = previousPosition;
+        rangeWeapon.transform.localRotation = previousRotation;
+
+        currentWeapon = rangeWeapon;
+        currentWeaponName = "Laser";
+        
+        Destroy(other.gameObject); 
+    }
+
+    if(other.gameObject.CompareTag("PlasmaCannon"))
+    {
+        Transform weaponHolder = transform.GetChild(1);
+        Vector3 previousPosition = rangeWeapon.transform.localPosition;
+        Quaternion previousRotation = rangeWeapon.transform.localRotation;
+
+        if (rangeWeapon != null)
+        {
+            Destroy(rangeWeapon);
+        }
+        rangeWeapon = Instantiate(other.gameObject);
+
+        rangeWeapon.transform.SetParent(weaponHolder);
+
+        rangeWeapon.transform.localPosition = previousPosition;
+        rangeWeapon.transform.localRotation = previousRotation;
+
+        currentWeapon = rangeWeapon;
+        currentWeaponName = "Plasma Cannon";
         
         Destroy(other.gameObject); 
     }

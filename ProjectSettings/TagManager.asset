@@ -27,6 +27,8 @@ TagManager:
   - Soldier
   - SoldierLegs
   - AudioManager
+  - Laser
+  - PlasmaCannon
   layers:
   - Default
   - TransparentFX

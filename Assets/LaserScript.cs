@@ -2,21 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShotgunScript : MonoBehaviour
+public class LaserScript : MonoBehaviour
 {
     [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private float bulletSpeed = 30f;
+    [SerializeField] private float bulletSpeed = 200f;
     [SerializeField] private float bulletLifeTime = 5f;
 
     private float lastShotTime = 0f;
-    private float shotDelay = 0.7f;
-    private float bulletOffset = 0.5f;
+    private float shotDelay = 0.1f;
+    private float bulletOffset = 1f;
     private static int maxAmmo = 5;
     private int ammo = maxAmmo;
     private int magazine = 20;
     private int damage = 20;
-    private string name = "Shotgun";
+    private string name = "Laser";
     private GameObject player;
+   
 
     public int getAmmo()
     {

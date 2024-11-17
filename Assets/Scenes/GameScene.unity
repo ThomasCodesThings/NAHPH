@@ -4558,6 +4558,8 @@ MonoBehaviour:
   medkitsCountText: {fileID: 697604735}
   smgPrefab: {fileID: 4741992239764208733, guid: 0cddacaa2170bfc44b4e527f71bb32cf, type: 3}
   shotgunPrefab: {fileID: 7163977236383335979, guid: 1e10195c0fabcdf408d030b447fef0b0, type: 3}
+  laserPrefab: {fileID: 779747454004402257, guid: 085a1f44c0526724980e25680c23f79f, type: 3}
+  plasmaCannonPrefab: {fileID: 575209615412231045, guid: ee8d4394235099244ad09f068088cc3d, type: 3}
 --- !u!4 &1638814578
 Transform:
   m_ObjectHideFlags: 0

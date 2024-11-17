@@ -127,6 +127,10 @@ public class SoldierScript : MonoBehaviour
     void Update()
     {
 
+    if(gameObject.transform.position.y < 0){
+        health = 0;
+    }
+
     //IgnoreCollision();
 
     if (Time.timeScale == 0)
