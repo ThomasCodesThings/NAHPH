@@ -55,6 +55,8 @@ public class PlayerScript : MonoBehaviour
                 return rangeWeapon.GetComponent<GunScript>().getDamage();
             case "Smg":
                 return rangeWeapon.GetComponent<SmgScript>().getDamage();
+            case "Shotgun":
+                return rangeWeapon.GetComponent<ShotgunScript>().getDamage();
             default:
                 return rangeWeapon.GetComponent<GunScript>().getDamage();
         }
@@ -278,7 +280,16 @@ public class PlayerScript : MonoBehaviour
     }
 
     if(other.gameObject.CompareTag("EnergyProjectile")){
-        int damage = other.gameObject.GetComponent<DroneProjectileScript>().getDamage();
+        GameObject drone = GameObject.FindGameObjectWithTag("Drone");
+        int damage = drone.GetComponent<DroneScript>().getDamage();
+        //Debug.Log("Player hit by enemy bullet. Damage: " + damage);
+        setHealth(damage);
+        Destroy(other.gameObject);
+    }
+
+    if(other.gameObject.CompareTag("BallisticProjectile")){
+        GameObject soldier = GameObject.FindGameObjectWithTag("Soldier");
+        int damage = soldier.GetComponent<SoldierScript>().getDamage();
         //Debug.Log("Player hit by enemy bullet. Damage: " + damage);
         setHealth(damage);
         Destroy(other.gameObject);

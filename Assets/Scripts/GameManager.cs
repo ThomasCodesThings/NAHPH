@@ -28,7 +28,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] int width = 25;
     [SerializeField] int height;
     [SerializeField] GameObject player;
-    [SerializeField] GameObject soldierEnemyPrefab;
+    [SerializeField] GameObject soldierPrefab;
+    [SerializeField] GameObject dronePrefab;
     [SerializeField] GameObject medkitPrefab;
     [SerializeField] GameObject ammoPackPrefab;
 
@@ -60,7 +61,8 @@ public class GameManager : MonoBehaviour
     private float gracePeriod = 5.0f;
     private float duration = 1.0f;
     private int currentWave = 1;
-    private int enemyCount = 1;
+    private int soldierCount = 1;
+    private int droneCount = 1;
     private int medkitCount = 1;
     private int ammoCount = 1;
     private int maxWaves = 5;
@@ -138,57 +140,57 @@ public class GameManager : MonoBehaviour
             blockGrid[width * 2 - 1, 3 + i] = 0;
         }
     }
-    
-    //(number of enemies, number of medkits, number of ammos)
-    public (int, int, int) getLevelSettings(){
+
+    //(number of soldiers, number of drones, number of medkits, number of ammos)
+    public (int, int, int, int) getLevelSettings(){
         switch(currentDifficulty){
             case Difficulty.Easy:
                 switch(currentWave){
                     case 1:
-                        return (2, 1, 1);
+                        return (2, 0, 1, 1);
                     case 2:
-                        return (3, 3, 1);
+                        return (3, 1, 3, 1);
                     case 3:
-                        return (5, 5, 3);
+                        return (5, 1, 5, 3);
                     case 4:
-                        return (7, 2, 5);
+                        return (7, 2, 2, 5);
                     case 5:
-                        return (10, 3, 5);
+                        return (10, 2, 3, 5);
                     default:
-                        return (1, 1, 1);
+                        return (1, 1, 1, 1);
                 }
             case Difficulty.Medium:
                 switch(currentWave){
                     case 1:
-                        return (5, 3, 1);
+                        return (5, 0, 3, 1);
                     case 2:
-                        return (7, 3, 1);
+                        return (7, 1, 3, 1);
                     case 3:
-                        return (10, 5, 3);
+                        return (10, 2, 5, 3);
                     case 4:
-                        return (15, 2, 5);
+                        return (15, 2, 2, 5);
                     case 5:
-                        return (15, 3, 5);
+                        return (15, 3, 3, 5);
                     default:
-                        return (1, 1, 1);
+                        return (1, 1, 1, 1);
                 }
             case Difficulty.Hard:
                 switch(currentWave){
                     case 1:
-                        return (7, 3, 1);
+                        return (7, 1, 3, 1);
                     case 2:
-                        return (10, 3, 1);
+                        return (10, 2, 3, 1);
                     case 3:
-                        return (15, 5, 3);
+                        return (15, 2, 5, 3);
                     case 4:
-                        return (20, 2, 5);
+                        return (20, 3, 2, 5);
                     case 5:
-                        return (20, 3, 5);
+                        return (20, 4, 3, 5);
                     default:
-                        return (1, 1, 1);
+                        return (1, 1, 1, 1);
                 }
             default:
-                return (1, 1, 1);
+                return (1, 1, 1, 1);
         }
     }
 
@@ -296,13 +298,26 @@ public void clearAfterWave(){
     return new Vector3(randomX, y, z);
 }
 
-    private List<GameObject> spawnEnemies(int count)
+    private List<GameObject> spawnSoldiers(int count)
 {
     List<GameObject> enemies = new List<GameObject>(); 
     for (int i = 0; i < count; i++)
     {
         Vector3 spawnPoint = generateRandomSpawnPoint();
-        GameObject enemy = Instantiate(soldierEnemyPrefab, spawnPoint, Quaternion.identity);
+        GameObject enemy = Instantiate(soldierPrefab, spawnPoint, Quaternion.identity);
+        enemies.Add(enemy); 
+    }
+    return enemies;
+}
+
+ private List<GameObject> spawnDrones(int count)
+{
+    List<GameObject> enemies = new List<GameObject>(); 
+    for (int i = 0; i < count; i++)
+    {
+        Vector3 spawnPoint = generateRandomSpawnPoint();
+        spawnPoint.y = 10f;
+        GameObject enemy = Instantiate(dronePrefab, spawnPoint, Quaternion.identity);
         enemies.Add(enemy); 
     }
     return enemies;
@@ -334,11 +349,29 @@ private List<GameObject> spawnAmmo(int count){
     return ammos;
 }
 
+public void clearDecals(){
+    GameObject[] bullets = GameObject.FindGameObjectsWithTag("Bullet");
+    foreach(GameObject bullet in bullets){
+        Destroy(bullet);
+    }
+
+    GameObject[] energyProjectiles = GameObject.FindGameObjectsWithTag("EnergyProjectile");
+    foreach(GameObject energyProjectile in energyProjectiles){
+        Destroy(energyProjectile);
+    }
+
+    GameObject[] ballisticProjectiles = GameObject.FindGameObjectsWithTag("BallisticProjectile");
+    foreach(GameObject ballisticProjectile in ballisticProjectiles){
+        Destroy(ballisticProjectile);
+    }
+}
+
     private IEnumerator handleWaves(){
         while (currentWave <= maxWaves)
         {
-            (int enemiesToKill, int medkitsToSpawn, int ammosToSpawn) = getLevelSettings();
-            enemyCount = enemiesToKill;
+            (int soldiersToSpawn, int dronesToSpawn, int medkitsToSpawn, int ammosToSpawn) = getLevelSettings();
+            soldierCount = soldiersToSpawn;
+            droneCount = dronesToSpawn;
             medkitCount = medkitsToSpawn;
             ammoCount = ammosToSpawn;
             waveText.text = "GRACE PERIOD";
@@ -349,6 +382,7 @@ private List<GameObject> spawnAmmo(int count){
             yield return handleWaveTime();
             currentWave++;
             clearAfterWave();
+            clearDecals();
         }
         SceneManager.LoadScene("VictoryScene");
     }
@@ -368,7 +402,12 @@ private List<GameObject> spawnAmmo(int count){
     private IEnumerator handleWaveTime()
 {
     duration = calculateWaveTime();
-    enemies = spawnEnemies(enemyCount);
+    List<GameObject> soldiers = spawnSoldiers(soldierCount);
+    List<GameObject> drones = spawnDrones(droneCount);
+
+    List<GameObject> enemies = new List<GameObject>();
+    enemies.AddRange(soldiers);
+    enemies.AddRange(drones);
 
     removeCollision(enemies);
     while (enemies.Count > 0 && duration > 0)
@@ -379,15 +418,29 @@ private List<GameObject> spawnAmmo(int count){
 
         for (int i = 0; i < enemies.Count; i++)
         {
-            if (enemies[i] != null && enemies[i].GetComponent<WeakEnemyScript>().isKilled())
-            {
-                int xp = enemies[i].GetComponent<WeakEnemyScript>().getXP();
-                player.GetComponent<PlayerScript>().addXP(xp);
-                player.GetComponent<PlayerScript>().addKill();
 
-                Destroy(enemies[i]);
-                enemies.RemoveAt(i);
-                i--;
+            if(enemies[i] != null){
+                switch(enemies[i].tag){
+                    case "Soldier":
+                        if(enemies[i].GetComponent<SoldierScript>().isKilled()){
+                            int xp = enemies[i].GetComponent<SoldierScript>().getXP();
+                            player.GetComponent<PlayerScript>().addXP(xp);
+                            player.GetComponent<PlayerScript>().addKill();
+                            Destroy(enemies[i]);
+                            enemies.RemoveAt(i);
+                        }
+
+                        break;
+                    case "Drone":
+                        if(enemies[i].GetComponent<DroneScript>().isKilled()){
+                            int xp = enemies[i].GetComponent<DroneScript>().getXP();
+                            player.GetComponent<PlayerScript>().addXP(xp);
+                            player.GetComponent<PlayerScript>().addKill();
+                            Destroy(enemies[i]);
+                            enemies.RemoveAt(i);
+                        }
+                        break;
+                }
             }
         }
     }
@@ -399,6 +452,10 @@ private List<GameObject> spawnAmmo(int count){
 }
 
 public void updateUI(PlayerStats playerStats){
+        if (healthBar == null || xpBar == null || levelText == null || waveText == null || timerText == null || ammoText == null || magazineText == null || weaponNameText == null || medkitsCountText == null)
+        {
+            return;
+        }
         healthText.text = playerStats.health.ToString();
         healthBar.value = playerStats.health;
         healthBar.maxValue = playerStats.maxHealth;
@@ -491,6 +548,9 @@ public (int, int) getNextBlock(float srcX, float srcY)
             SceneManager.LoadScene("GameOverScene");
         }
 
+        if(weaponThresholds == null || spawnedThresholds == null){
+            return;
+        }
         foreach (int threshold in weaponThresholds.Keys)
         {
             if (playerStats.xp >= threshold && !spawnedThresholds.Contains(threshold))

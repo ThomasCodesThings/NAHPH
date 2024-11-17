@@ -20,7 +20,21 @@ public class VictoryScript : MonoBehaviour
     }
 
     public void switchToMainMenu(){
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if(player != null){
+            Destroy(player);
+        }
+        
+        if(gameManager != null){
+            Destroy(gameManager);
+        }
+        
         SceneManager.LoadScene(0);
+        Time.timeScale = 1;
+        GameObject audioManager = GameObject.FindGameObjectWithTag("AudioManager");
+        if(audioManager != null){
+            Destroy(audioManager);
+        }
     }
 
     void Awake()

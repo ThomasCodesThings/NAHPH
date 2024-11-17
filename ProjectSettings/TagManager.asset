@@ -24,6 +24,9 @@ TagManager:
   - DroneWeapon
   - EnergyProjectile
   - BallisticProjectile
+  - Soldier
+  - SoldierLegs
+  - AudioManager
   layers:
   - Default
   - TransparentFX

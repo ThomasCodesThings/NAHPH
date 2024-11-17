@@ -46,6 +46,10 @@ public class AmmoPackScript : MonoBehaviour
             if(collision.gameObject == null){
                 return;
             }
+
+            if(rb == null){
+                return;
+            }
             rb.isKinematic = true;
             rb.gravityScale = 0;
             rb.velocity = Vector2.zero;

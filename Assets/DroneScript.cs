@@ -15,6 +15,7 @@ public class DroneScript : MonoBehaviour
 
     private int health = 100;
     private float triggerRadius = 10f;
+    private int damage = 2;
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
 
@@ -43,24 +44,112 @@ public class DroneScript : MonoBehaviour
     public int getXP(){
         return Random.Range(100, 200);
     }
+
+    public int getDamage()
+    {
+        return damage;
+    }
+
+    private void IgnoreCollision()
+    {
+        GameObject[] medkits = GameObject.FindGameObjectsWithTag("Medkit");
+        GameObject[] ammopacks = GameObject.FindGameObjectsWithTag("AmmoPack");
+        GameObject[] soldiers = GameObject.FindGameObjectsWithTag("Soldier");
+        GameObject[] drones = GameObject.FindGameObjectsWithTag("Drone");
+        GameObject[] energyProjectiles = GameObject.FindGameObjectsWithTag("EnergyProjectile");
+        GameObject[] ballisticProjectiles = GameObject.FindGameObjectsWithTag("BallisticProjectile");
+
+        foreach(GameObject medkit in medkits){
+            if(medkit == null){
+                continue;
+            }
+            Physics2D.IgnoreCollision(medkit.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        }
+
+        foreach(GameObject ammopack in ammopacks){
+            if(ammopack == null){
+                continue;
+            }
+            Physics2D.IgnoreCollision(ammopack.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+            }
+
+
+       foreach(GameObject soldier in soldiers){
+            if(soldier == null){
+                continue;
+            }
+            Physics2D.IgnoreCollision(soldier.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        }
+
+        foreach(GameObject drone in drones){
+            if(drone == null){
+                continue;
+            }
+            Physics2D.IgnoreCollision(drone.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        }
+
+        foreach(GameObject energyProjectile in energyProjectiles){
+            if(energyProjectile == null){
+                continue;
+            }
+            Physics2D.IgnoreCollision(energyProjectile.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        }
+
+        foreach(GameObject ballisticProjectile in ballisticProjectiles){
+            if(ballisticProjectile == null){
+                continue;
+            }
+            Physics2D.IgnoreCollision(ballisticProjectile.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        }   
+    }
  
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GameObject.FindGameObjectWithTag("GameManager");
-        player = GameObject.FindGameObjectWithTag("Player");
-        rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+    gameManager = GameObject.FindGameObjectWithTag("GameManager");
+    if (gameManager == null)
+    {
+        Debug.LogError("GameManager not found in the scene.");
+    }
+
+    player = GameObject.FindGameObjectWithTag("Player");
+    if (player == null)
+    {
+        Debug.LogError("Player not found in the scene.");
+    }
+
+    rb = GetComponent<Rigidbody2D>();
+    spriteRenderer = GetComponent<SpriteRenderer>();
+
+    if (healthBar != null)
+    {
         healthBar.value = health;
         healthBar.maxValue = health;
+    }
+    else
+    {
+        Debug.LogWarning("HealthBar is not assigned in the Inspector.");
+    }
 
-        droneBody = GameObject.FindGameObjectWithTag("DroneBody");
-        droneWeapon = GameObject.FindGameObjectWithTag("DroneWeapon");
+    droneBody = GameObject.FindGameObjectWithTag("DroneBody");
+    if (droneBody == null)
+    {
+        Debug.LogError("DroneBody not found in the scene.");
+    }
+
+    droneWeapon = GameObject.FindGameObjectWithTag("DroneWeapon");
+    if (droneWeapon == null)
+    {
+        Debug.LogError("DroneWeapon not found in the scene.");
+    }
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        //IgnoreCollision();
+
         if (Time.timeScale == 0)
         {
             return;
@@ -97,8 +186,20 @@ public class DroneScript : MonoBehaviour
             Destroy(bullet, bulletLifeTime);
         }
 
-        if (isKilled())
-        {
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+       if (other.gameObject.CompareTag("Bullet"))
+       {
+           int damage = player.GetComponent<PlayerScript>().getDamage();
+           setHealth(damage);
+           Destroy(other.gameObject);
+       }
+    }
+
+    private void OnDestroy(){
+  
             Rigidbody2D bodyRb = droneBody.GetComponent<Rigidbody2D>();
             Rigidbody2D weaponRb = droneWeapon.GetComponent<Rigidbody2D>();
 
@@ -114,18 +215,17 @@ public class DroneScript : MonoBehaviour
                 Destroy(healthBar.gameObject);
             }
 
-            Destroy(gameObject, destroyedTime);       
-        }
+            if(droneBody != null){
+                Destroy(droneBody);
+            }
 
-    }
+            if(droneWeapon != null){
+                Destroy(droneWeapon);
+            }
 
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-       if (other.gameObject.CompareTag("Bullet"))
-       {
-           int damage = player.GetComponent<PlayerScript>().getDamage();
-           setHealth(damage);
-           Destroy(other.gameObject);
-       }
+            if(gameObject != null){
+                Destroy(gameObject, destroyedTime);
+            }
+            
     }
 }
