@@ -11,15 +11,15 @@ public class MedkitScript : MonoBehaviour
         switch(type){
             case "small":
                 healAmount = 10;
-                gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                gameObject.transform.localScale = gameObject.transform.localScale * 0.5f;
                 break;
             case "medium":
                 healAmount = 25;
-                gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+                //gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
                 break;
             case "large":
                 healAmount = 50;
-                gameObject.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                gameObject.transform.localScale = gameObject.transform.localScale * 1.5f;
                 break;
             default:
                 healAmount = 10;

@@ -16,7 +16,8 @@ public class BulletScript : MonoBehaviour
     {
         GameObject[] medkits = GameObject.FindGameObjectsWithTag("Medkit");
         GameObject[] ammopacks = GameObject.FindGameObjectsWithTag("AmmoPack");
-        GameObject[] enemyBullets = GameObject.FindGameObjectsWithTag("EnemyBullet");
+        GameObject[] energyProjectiles = GameObject.FindGameObjectsWithTag("EnergyProjectile");
+        GameObject[] ballisticProjectiles = GameObject.FindGameObjectsWithTag("BallisticProjectile");
 
         foreach(GameObject medkit in medkits){
             if(medkit == null){
@@ -31,17 +32,24 @@ public class BulletScript : MonoBehaviour
             }
             Physics2D.IgnoreCollision(ammopack.GetComponent<Collider2D>(), GetComponent<Collider2D>());
 
-        foreach(GameObject enemyBullet in enemyBullets){
-            if(enemyBullet == null){
+        foreach(GameObject energyProjectile in energyProjectiles){
+            if(energyProjectile == null){
                 continue;
             }
-            Physics2D.IgnoreCollision(enemyBullet.GetComponent<Collider2D>(), GetComponent<Collider2D>());
-    }
+            Physics2D.IgnoreCollision(energyProjectile.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        }
+
+        foreach(GameObject ballisticProjectile in ballisticProjectiles){
+            if(ballisticProjectile == null){
+                continue;
+            }
+            Physics2D.IgnoreCollision(ballisticProjectile.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Floor" || collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Drone"){
+        if(collision.gameObject.tag == "Floor"){
    
             Destroy(gameObject);
         }

@@ -11,15 +11,15 @@ public class AmmoPackScript : MonoBehaviour
         switch(type){
             case "small":
                 ammoAmount = 8;
-                gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                gameObject.transform.localScale = gameObject.transform.localScale * 0.5f;
                 break;
             case "medium":
                 ammoAmount = 12;
-                gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+            
                 break;
             case "large":
                 ammoAmount = 16;
-                gameObject.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                gameObject.transform.localScale = gameObject.transform.localScale * 1.5f;
                 break;
             default:
                 ammoAmount = 8;

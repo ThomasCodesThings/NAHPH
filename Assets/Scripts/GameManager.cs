@@ -393,6 +393,9 @@ public void clearDecals(){
         ammos = spawnAmmo(ammoCount);
         while (duration > 0)
         {
+            if(timerText == null){
+                yield break;
+            }
             timerText.text = floatToMinutesSeconds(duration);
             yield return null;
             duration -= Time.deltaTime;
@@ -412,6 +415,9 @@ public void clearDecals(){
     removeCollision(enemies);
     while (enemies.Count > 0 && duration > 0)
     {
+        if(timerText == null){
+            yield break;
+        }
         timerText.text = floatToMinutesSeconds(duration);
         yield return null;
         duration -= Time.deltaTime;

@@ -281,6 +281,9 @@ public class PlayerScript : MonoBehaviour
 
     if(other.gameObject.CompareTag("EnergyProjectile")){
         GameObject drone = GameObject.FindGameObjectWithTag("Drone");
+        if(drone == null){
+            return;
+        }
         int damage = drone.GetComponent<DroneScript>().getDamage();
         //Debug.Log("Player hit by enemy bullet. Damage: " + damage);
         setHealth(damage);
