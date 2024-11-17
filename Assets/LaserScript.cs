@@ -5,16 +5,16 @@ using UnityEngine;
 public class LaserScript : MonoBehaviour
 {
     [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private float bulletSpeed = 200f;
+    [SerializeField] private float bulletSpeed = 100f;
     [SerializeField] private float bulletLifeTime = 5f;
 
     private float lastShotTime = 0f;
     private float shotDelay = 0.1f;
     private float bulletOffset = 1f;
-    private static int maxAmmo = 5;
+    private static int maxAmmo = 10;
     private int ammo = maxAmmo;
-    private int magazine = 20;
-    private int damage = 20;
+    private int magazine = 40;
+    private int damage = 25;
     private string name = "Laser";
     private GameObject player;
    
