@@ -29,6 +29,7 @@ TagManager:
   - AudioManager
   - Laser
   - PlasmaCannon
+  - XpSlider
   layers:
   - Default
   - TransparentFX
