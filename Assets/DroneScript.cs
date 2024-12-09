@@ -32,6 +32,8 @@ public class DroneScript : MonoBehaviour
     private float explosionForce = 10f;
     private bool playerIsOnLeft = false;
 
+    private int minDistance = 2;
+
     public void setHealth(int damage)
     {
         health -= damage;
@@ -173,7 +175,12 @@ public class DroneScript : MonoBehaviour
         healthBar.fillRect.GetComponent<Image>().color = Color.Lerp(minHealthColor, maxHealthColor, healthBar.normalizedValue);
         }
 
-        int width = gameManager.GetComponent<GameManager>().getBaseWidth();    
+        int width = gameManager.GetComponent<GameManager>().getBaseWidth();
+        int distance = (int)Vector3.Distance(transform.position, player.transform.position);
+        if (distance < minDistance)
+        {
+            return;
+        }
         (int newX, int newY) = gameManager.GetComponent<GameManager>().getNextBlock(transform.position.x, transform.position.y);
         Vector3 target = new Vector3(newX - width, newY, 0);
         transform.position = Vector3.Lerp(transform.position, target, Time.deltaTime * smooth);
