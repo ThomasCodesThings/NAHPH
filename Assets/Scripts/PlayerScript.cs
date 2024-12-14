@@ -6,7 +6,7 @@ using GameStructs;
 public class PlayerScript : MonoBehaviour
 {
     [SerializeField] float speed = 5;
-    [SerializeField] float jumpForce = 12;
+    [SerializeField] float jumpForce = 100;
     [SerializeField] GameObject pauseMenu;
 
     public float Move;
@@ -25,6 +25,22 @@ public class PlayerScript : MonoBehaviour
     private GameObject meleeWeapon;
     private GameObject currentWeapon;
     private string currentWeaponName = "Basic Pistol";
+    private GameObject playerBody;
+    private float pixelsPerUnit = 1000.0f;
+    private Vector2 pivotPoint = new Vector2(0.5f, 0.5f);
+    private string[] weaponUpgrades = new string[] { "Smg", "Shotgun", "Laser", "Plasma Cannon" };
+
+     /************************************************************************
+     * 
+     *  Player body sprites
+     * 
+     * *********************************************************************/
+
+    [SerializeField] Texture2D pistolBodyTexture;
+    [SerializeField] Texture2D smgBodyTexture;
+    [SerializeField] Texture2D shotgunBodyTexture;
+    [SerializeField] Texture2D laserBodyTexture;
+    [SerializeField] Texture2D plasmaCannonBodyTexture;
 
       public GameObject FindChildWithTag(GameObject parent, string tag)
     {
@@ -151,6 +167,7 @@ public class PlayerScript : MonoBehaviour
     {
         pauseMenu.SetActive(false);
         rangeWeapon = GameObject.FindGameObjectWithTag("PlayerRangeWeapon");
+        playerBody = GameObject.FindGameObjectWithTag("PlayerBody");
         //meleeWeapon = GameObject.FindGameObjectWithTag("PlayerMeleeWeapon");
 
         currentWeapon = rangeWeapon;
@@ -239,7 +256,72 @@ public class PlayerScript : MonoBehaviour
             Destroy(other.gameObject);
         }
 
-        if(other.gameObject.CompareTag("Smg"))
+
+    for (int i = 0; i < weaponUpgrades.Length; i++)
+    {
+        string weapon = weaponUpgrades[i];
+        string weaponTag = weapon.Replace(" ", "");
+        if(other.gameObject.CompareTag(weaponTag))
+        {
+            /*Transform weaponHolder = transform.GetChild(1);
+            Vector3 previousPosition = rangeWeapon.transform.localPosition;
+            Quaternion previousRotation = rangeWeapon.transform.localRotation;
+
+            if (rangeWeapon != null)
+            {
+                Destroy(rangeWeapon);
+            }
+            rangeWeapon = Instantiate(other.gameObject);
+
+            rangeWeapon.transform.SetParent(weaponHolder);
+
+            rangeWeapon.transform.localPosition = previousPosition;
+            rangeWeapon.transform.localRotation = previousRotation;*/
+            //GameObject copy = other.gameObject;
+            rangeWeapon = other.gameObject;
+            currentWeapon = rangeWeapon;
+            currentWeaponName = weapon;
+
+            switch(weapon){
+                case "Smg":
+                    playerBody.GetComponent<SpriteRenderer>().sprite = Sprite.Create(
+                        smgBodyTexture,
+                        new Rect(0.0f, 0.0f, smgBodyTexture.width, smgBodyTexture.height),
+                        pivotPoint,
+                        pixelsPerUnit
+                    );
+                    break;
+                case "Shotgun":
+                    playerBody.GetComponent<SpriteRenderer>().sprite = Sprite.Create(
+                        shotgunBodyTexture,
+                        new Rect(0.0f, 0.0f, shotgunBodyTexture.width, shotgunBodyTexture.height),
+                        pivotPoint,
+                        pixelsPerUnit
+                    );
+                    break;
+                case "Laser":
+                    playerBody.GetComponent<SpriteRenderer>().sprite = Sprite.Create(
+                        laserBodyTexture,
+                        new Rect(0.0f, 0.0f, laserBodyTexture.width, laserBodyTexture.height),
+                        pivotPoint,
+                        pixelsPerUnit
+                    );
+                    break;
+                case "Plasma Cannon":
+                    playerBody.GetComponent<SpriteRenderer>().sprite = Sprite.Create(
+                        plasmaCannonBodyTexture,
+                        new Rect(0.0f, 0.0f, plasmaCannonBodyTexture.width, plasmaCannonBodyTexture.height),
+                        pivotPoint,
+                        pixelsPerUnit
+                    );
+                    break;
+            }
+            
+            other.gameObject.SetActive(false);
+            //Destroy(other.gameObject); 
+        }
+    }
+        /*if(other.gameObject.CompareTag("Smg"))
     {
 
         Transform weaponHolder = transform.GetChild(1);
@@ -259,6 +341,13 @@ public class PlayerScript : MonoBehaviour
 
         currentWeapon = rangeWeapon;
         currentWeaponName = "Smg";
+
+        playerBody.GetComponent<SpriteRenderer>().sprite = Sprite.Create(
+            smgBodyTexture,
+            new Rect(0.0f, 0.0f, smgBodyTexture.width, smgBodyTexture.height),
+            pivotPoint,
+            pixelsPerUnit
+        );
         
         Destroy(other.gameObject); 
     }
@@ -283,6 +372,13 @@ public class PlayerScript : MonoBehaviour
 
         currentWeapon = rangeWeapon;
         currentWeaponName = "Shotgun";
+
+        playerBody.GetComponent<SpriteRenderer>().sprite = Sprite.Create(
+            shotgunBodyTexture,
+            new Rect(0.0f, 0.0f, shotgunBodyTexture.width, shotgunBodyTexture.height),
+            pivotPoint,
+            pixelsPerUnit
+        );
         
         Destroy(other.gameObject); 
     }
@@ -306,6 +402,13 @@ public class PlayerScript : MonoBehaviour
 
         currentWeapon = rangeWeapon;
         currentWeaponName = "Laser";
+
+        playerBody.GetComponent<SpriteRenderer>().sprite = Sprite.Create(
+            laserBodyTexture,
+            new Rect(0.0f, 0.0f, laserBodyTexture.width, laserBodyTexture.height),
+            pivotPoint,
+            pixelsPerUnit
+        );
         
         Destroy(other.gameObject); 
     }
@@ -329,9 +432,16 @@ public class PlayerScript : MonoBehaviour
 
         currentWeapon = rangeWeapon;
         currentWeaponName = "Plasma Cannon";
+
+        playerBody.GetComponent<SpriteRenderer>().sprite = Sprite.Create(
+            plasmaCannonBodyTexture,
+            new Rect(0.0f, 0.0f, plasmaCannonBodyTexture.width, plasmaCannonBodyTexture.height),
+            pivotPoint,
+            pixelsPerUnit
+        );
         
         Destroy(other.gameObject); 
-    }
+    }*/
 
     if(other.gameObject.CompareTag("EnergyProjectile")){
         GameObject drone = GameObject.FindGameObjectWithTag("Drone");
@@ -339,6 +449,17 @@ public class PlayerScript : MonoBehaviour
             return;
         }
         int damage = drone.GetComponent<DroneScript>().getDamage();
+        //Debug.Log("Player hit by enemy bullet. Damage: " + damage);
+        setHealth(damage);
+        Destroy(other.gameObject);
+    }
+
+    if(other.gameObject.CompareTag("EnergyProjectileBoss")){
+        GameObject boss = GameObject.FindGameObjectWithTag("Boss");
+        if(boss == null){
+            return;
+        }
+        int damage = boss.GetComponent<BossScript>().getDamage();
         //Debug.Log("Player hit by enemy bullet. Damage: " + damage);
         setHealth(damage);
         Destroy(other.gameObject);

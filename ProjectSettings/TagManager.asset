@@ -30,6 +30,11 @@ TagManager:
   - Laser
   - PlasmaCannon
   - XpSlider
+  - BossBody
+  - BossWeapon
+  - EnergyProjectileBoss
+  - Boss
+  - PlayerBody
   layers:
   - Default
   - TransparentFX

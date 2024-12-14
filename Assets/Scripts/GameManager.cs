@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject platformRightPrefab;
     [SerializeField] GameObject playerPrefab;
     [SerializeField] int width = 25;
-    [SerializeField] int height;
+    [SerializeField] int height = 20;
     [SerializeField] GameObject player;
     [SerializeField] GameObject soldierPrefab;
     [SerializeField] GameObject dronePrefab;
@@ -79,10 +79,10 @@ public class GameManager : MonoBehaviour
     private List<GameObject> enemies = new List<GameObject>();
     private List<GameObject> medkits = new List<GameObject>();
     private List<GameObject> ammos = new List<GameObject>();
-
-    private int wallSize = 10;
     private int[,] blockGrid;
     private AStar AStarSearch;
+
+    private int seed = Math.Abs(Guid.NewGuid().GetHashCode());
 
     /************************************************************************
      * 
@@ -107,11 +107,53 @@ public class GameManager : MonoBehaviour
         return totalElapsedTime;
     }
 
+        private void generatePlatform(int startX, int startY, int platformWidth)
+        {
+            int prefabLength = 2;
+
+            int endX = Mathf.Min(startX + platformWidth, width - prefabLength); 
+            int clippedWidth = Mathf.Max(endX - startX, 0);
+
+            if (clippedWidth < prefabLength * 2)
+            {
+                return;
+            }
+
+            Instantiate(platformLeftPrefab, new Vector3(startX, startY, 0), Quaternion.identity);
+
+            int centerWidth = clippedWidth - 2 * prefabLength;
+            if (centerWidth > 0)
+            {
+                GameObject centerInstance = Instantiate(platformCenterPrefab, new Vector3(startX + prefabLength, startY, 0), Quaternion.identity);
+
+                Vector3 scale = centerInstance.transform.localScale;
+                scale.x = centerWidth / (float)prefabLength;
+                centerInstance.transform.localScale = scale;
+            }
+
+            Instantiate(platformRightPrefab, new Vector3(startX + clippedWidth - prefabLength, startY, 0), Quaternion.identity);
+
+            for (int x = startX; x < startX + clippedWidth; x++)
+            {
+                int gridX = x + width;
+                if (gridX >= 0 && gridX < blockGrid.GetLength(0))
+                {
+                    blockGrid[gridX, startY] = 0;
+                }
+            }
+}
+
+
+
+
    public void generate()
     {
+
+        System.Random random = new System.Random(seed);
+        int wallSize = height - 4;
         //0 - cell is blocked
         //1 -cell is non blocked
-        blockGrid = new int[width * 2, wallSize + 4];
+        blockGrid = new int[width * 2, height];
         for (int x = 0; x < blockGrid.GetLength(0); x++)
         {
             for (int y = 0; y < blockGrid.GetLength(1); y++)
@@ -133,14 +175,36 @@ public class GameManager : MonoBehaviour
             heights.Add(3);
         }
 
-        for (int i = 0; i < wallSize; i++)
+        for (int i = 0; i < height; i++)
         {
-            Instantiate(dirtPrefab, new Vector3(-width, 3 + i, 0), Quaternion.identity);
-            Instantiate(dirtPrefab, new Vector3(width - 1, 3 + i, 0), Quaternion.identity);
+            Instantiate(dirtPrefab, new Vector3(-width, i, 0), Quaternion.identity);
+            Instantiate(dirtPrefab, new Vector3(width - 1, i, 0), Quaternion.identity);
 
-            blockGrid[0, 3 + i] = 0;              
-            blockGrid[width * 2 - 1, 3 + i] = 0;
+            blockGrid[0, i] = 0;              
+            blockGrid[width * 2 - 1, i] = 0;
         }
+
+
+      /* for (int y = 6; y < height; y+=3)
+        {
+            for (int x = -width + 3; x < width; x++)
+            {
+                bool spawnPlatform = random.Next(0, 3) == 1;
+
+                if (spawnPlatform)
+                {
+                    int platformWidth = random.Next(4, 8);
+                    generatePlatform(x, y, platformWidth);
+                    x += platformWidth;
+                }
+                else
+                {
+                    int gapSize = random.Next(3, 7);
+                    x += gapSize; 
+                }
+            }
+        }*/
+
     }
 
     //(number of soldiers, number of drones, number of medkits, number of ammos)
