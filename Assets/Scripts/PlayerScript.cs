@@ -8,6 +8,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] float speed = 5;
     [SerializeField] float jumpForce = 100;
     [SerializeField] GameObject pauseMenu;
+    [SerializeField] Animator animator;
 
     public float Move;
     public Rigidbody2D rb;
@@ -206,6 +207,8 @@ public class PlayerScript : MonoBehaviour
         }
 
         Move = Input.GetAxis("Horizontal");
+        animator.SetFloat("Speed", Mathf.Abs(Move));
+        animator.SetBool("IsJumping", !isGrounded);
         rb.velocity = new Vector2(Move * speed, rb.velocity.y);
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
