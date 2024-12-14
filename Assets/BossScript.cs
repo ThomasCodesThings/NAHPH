@@ -177,15 +177,15 @@ public class BossScript : MonoBehaviour
         Vector3 target = new Vector3(newX - width, newY, 0);
         transform.position = Vector3.Lerp(transform.position, target, Time.deltaTime * smooth);
 
+        animator.SetBool("IsFiring", Time.time - lastShotTime < shotDelay);
+
         if (Time.time - lastShotTime > shotDelay)
         {
-            animator.SetBool("isFiring", true);
+        
             lastShotTime = Time.time;
             GameObject bullet = Instantiate(bulletPrefab, bossWeapon.transform.position + bossWeapon.transform.right * bulletOffset, bossWeapon.transform.rotation);
             bullet.GetComponent<Rigidbody2D>().velocity = bossWeapon.transform.right * bulletSpeed;
             Destroy(bullet, bulletLifeTime);
-        }else{
-            animator.SetBool("isFiring", false);
         }
 
     }
