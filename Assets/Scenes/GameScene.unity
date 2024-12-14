@@ -3350,7 +3350,7 @@ MonoBehaviour:
   pistolBodyTexture: {fileID: 2800000, guid: 6219b00006b731f449e608058f8bdaed, type: 3}
   smgBodyTexture: {fileID: 2800000, guid: 3523ed9485d451641973209783d6e786, type: 3}
   shotgunBodyTexture: {fileID: 2800000, guid: f86fe07d04dbec941b9cf29cdbb4cb2a, type: 3}
-  laserBodyTexture: {fileID: 2800000, guid: 6219b00006b731f449e608058f8bdaed, type: 3}
+  laserBodyTexture: {fileID: 2800000, guid: 415ca19406b559449bd04e6fd703b2a8, type: 3}
   plasmaCannonBodyTexture: {fileID: 2800000, guid: c01a5500c49f1464fa339091d6dabb85, type: 3}
 --- !u!1 &1297397757
 GameObject:
@@ -5990,6 +5990,63 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 924618292}
   m_SourcePrefab: {fileID: 100100000, guid: 08f6894ed584af64a8f149d2e542de9c, type: 3}
+--- !u!1001 &1371706728530198987
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3751690880110825005, guid: caa3f41527970a641a19a4ff034e6f7b, type: 3}
+      propertyPath: m_Name
+      value: CannonBall
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939027137523819346, guid: caa3f41527970a641a19a4ff034e6f7b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.699
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939027137523819346, guid: caa3f41527970a641a19a4ff034e6f7b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 11.359
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939027137523819346, guid: caa3f41527970a641a19a4ff034e6f7b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.2804923
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939027137523819346, guid: caa3f41527970a641a19a4ff034e6f7b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939027137523819346, guid: caa3f41527970a641a19a4ff034e6f7b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939027137523819346, guid: caa3f41527970a641a19a4ff034e6f7b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939027137523819346, guid: caa3f41527970a641a19a4ff034e6f7b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939027137523819346, guid: caa3f41527970a641a19a4ff034e6f7b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939027137523819346, guid: caa3f41527970a641a19a4ff034e6f7b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939027137523819346, guid: caa3f41527970a641a19a4ff034e6f7b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: caa3f41527970a641a19a4ff034e6f7b, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -6003,3 +6060,4 @@ SceneRoots:
   - {fileID: 26703268}
   - {fileID: 1379787655}
   - {fileID: 1597613614}
+  - {fileID: 1371706728530198987}
