@@ -43,6 +43,8 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] Texture2D laserBodyTexture;
     [SerializeField] Texture2D plasmaCannonBodyTexture;
 
+    [SerializeField] Animator meleeWeaponAnimator;
+
       public GameObject FindChildWithTag(GameObject parent, string tag)
     {
         foreach (Transform child in parent.GetComponentsInChildren<Transform>())
@@ -200,6 +202,15 @@ public class PlayerScript : MonoBehaviour
             return; 
         }
 
+        //detect right click
+        /*if(Input.GetMouseButtonDown(1))
+        {   
+            Debug.Log("Right click");
+            meleeWeaponAnimator.SetBool("OnMeleeAttack", true);
+        }else{
+            meleeWeaponAnimator.SetBool("OnMeleeAttack", false);
+        }*/
+
      
         if (Time.timeScale == 0)
         {
@@ -244,16 +255,25 @@ public class PlayerScript : MonoBehaviour
 
         if(other.gameObject.CompareTag("AmmoPack")){
             int ammo = other.gameObject.GetComponent<AmmoPackScript>().getAmmoAmount();
-            if (currentWeaponName == "Basic Pistol")
-            {
-                rangeWeapon.GetComponent<GunScript>().addAmmo(ammo);
-            }
-            else if (currentWeaponName == "Smg")
-            {
-                rangeWeapon.GetComponent<SmgScript>().addAmmo(ammo);
-            }else if (currentWeaponName == "Shotgun")
-            {
-                rangeWeapon.GetComponent<ShotgunScript>().addAmmo(ammo);
+            switch(currentWeaponName){
+                case "Basic Pistol":
+                    rangeWeapon.GetComponent<GunScript>().addAmmo(ammo);
+                    break;
+                case "Smg":
+                    rangeWeapon.GetComponent<SmgScript>().addAmmo(ammo);
+                    break;
+                case "Shotgun":
+                    rangeWeapon.GetComponent<ShotgunScript>().addAmmo(ammo);
+                    break;
+                case "Laser":
+                    rangeWeapon.GetComponent<LaserScript>().addAmmo(ammo);
+                    break;
+                case "Plasma Cannon":
+                    rangeWeapon.GetComponent<PlasmaCannonScript>().addAmmo(ammo);
+                    break;
+                default:
+                    rangeWeapon.GetComponent<GunScript>().addAmmo(ammo);
+                    break;
             }
 
             Destroy(other.gameObject);
@@ -281,9 +301,10 @@ public class PlayerScript : MonoBehaviour
             rangeWeapon.transform.localPosition = previousPosition;
             rangeWeapon.transform.localRotation = previousRotation;*/
             //GameObject copy = other.gameObject;
-            rangeWeapon = other.gameObject;
+            rangeWeapon = Instantiate(other.gameObject, new Vector3(-200, 200, 0), Quaternion.identity);
             currentWeapon = rangeWeapon;
             currentWeaponName = weapon;
+        
 
             switch(weapon){
                 case "Smg":
@@ -320,8 +341,8 @@ public class PlayerScript : MonoBehaviour
                     break;
             }
             
-            other.gameObject.SetActive(false);
-            //Destroy(other.gameObject); 
+            //other.gameObject.SetActive(false);
+            Destroy(other.gameObject); 
         }
     }
         /*if(other.gameObject.CompareTag("Smg"))

@@ -6,6 +6,7 @@ public class PlayerBodyScript : MonoBehaviour
 {
 
     private float minAngle = 145f;
+    
     // Start is called before the first frame update
     void Start()
     {
