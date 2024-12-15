@@ -240,7 +240,7 @@ public class PlayerScript : MonoBehaviour
         rb.velocity = new Vector2(Move * speed, rb.velocity.y);
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            rb.AddForce(new Vector2(rb.velocity.x, jumpForce));
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))

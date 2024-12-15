@@ -107,6 +107,31 @@ public class GameManager : MonoBehaviour
         return totalElapsedTime;
     }
 
+    private void generatePlatform(int startX, int startY, int platformWidth){
+        int prefabLength = 2;
+
+        if(startX + platformWidth > width){
+            return;
+        }
+
+        Instantiate(platformLeftPrefab, new Vector3(startX, startY, 0), Quaternion.identity);
+        blockGrid[startX + width, startY] = 0;
+        blockGrid[startX + width + 1, startY] = 0;
+
+        for (int x = startX + prefabLength; x < startX + platformWidth - prefabLength; x+= prefabLength)
+        {
+            Instantiate(platformCenterPrefab, new Vector3(x, startY, 0), Quaternion.identity);
+            blockGrid[x + width, startY] = 0;
+            blockGrid[x + width + 1, startY] = 0;
+        }
+
+        Instantiate(platformRightPrefab, new Vector3(startX + platformWidth - prefabLength, startY, 0), Quaternion.identity);
+        blockGrid[startX + platformWidth - prefabLength + width, startY] = 0;
+        blockGrid[startX + platformWidth - prefabLength + 1 + width, startY] = 0;
+    }
+
+
+    /*
         private void generatePlatform(int startX, int startY, int platformWidth)
         {
             int prefabLength = 2;
@@ -141,7 +166,7 @@ public class GameManager : MonoBehaviour
                     blockGrid[gridX, startY] = 0;
                 }
             }
-}
+        }*/
 
 
 
@@ -185,25 +210,29 @@ public class GameManager : MonoBehaviour
         }
 
 
-      /* for (int y = 6; y < height; y+=3)
+       for (int y = 7; y < height; y+=4)
         {
             for (int x = -width + 3; x < width; x++)
-            {
-                bool spawnPlatform = random.Next(0, 3) == 1;
+            {   
+                int randomInt = random.Next(0, 5);
+                bool spawnPlatform = randomInt == 1 || randomInt == 2;
 
                 if (spawnPlatform)
                 {
                     int platformWidth = random.Next(4, 8);
+                    if(!(platformWidth % 2 == 0)){
+                        platformWidth++;
+                    }
                     generatePlatform(x, y, platformWidth);
                     x += platformWidth;
                 }
                 else
                 {
-                    int gapSize = random.Next(3, 7);
+                    int gapSize = random.Next(2, 5);
                     x += gapSize; 
                 }
             }
-        }*/
+        }
 
     }
 
