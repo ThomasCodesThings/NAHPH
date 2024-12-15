@@ -217,6 +217,23 @@ public class PlayerScript : MonoBehaviour
             return;
         }
 
+        Vector3 mousePosition = Input.mousePosition;
+        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+
+        Vector2 direction = new Vector2(mousePosition.x - transform.position.x, mousePosition.y - transform.position.y);
+
+        transform.right = direction;
+
+        if (mousePosition.x < transform.position.x)
+        {
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+
+
         Move = Input.GetAxis("Horizontal");
         animator.SetFloat("Speed", Mathf.Abs(Move));
         animator.SetBool("IsJumping", !isGrounded);
