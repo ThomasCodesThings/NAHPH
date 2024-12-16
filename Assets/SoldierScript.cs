@@ -112,6 +112,7 @@ public class SoldierScript : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager");
+        animator = GetComponent<Animator>();
         heights = gameManager.GetComponent<GameManager>().getHeights();
 
         rb = GetComponent<Rigidbody2D>();
@@ -119,7 +120,6 @@ public class SoldierScript : MonoBehaviour
         healthBar.value = health;
         healthBar.maxValue = health;
         player = GameObject.FindGameObjectWithTag("Player");
-        animator = GetComponentsInChildren<Animator>()[0];
 
     }
 
@@ -140,13 +140,13 @@ public class SoldierScript : MonoBehaviour
 
 
         float directionMultiplier = transform.localScale.x > 0 ? 1 : -1; // Flip offset based on character's facing direction
-    Vector3 healthBarWorldPosition = new Vector3(
-        transform.position.x + directionMultiplier * -1.5f, // Adjust for facing direction
+        Vector3 healthBarWorldPosition = new Vector3(
+        transform.position.x + directionMultiplier * -0.1f, // Adjust for facing direction
         transform.position.y + 2f * healthBarOffset, 
-        transform.position.z
+        transform.position.z   
     );
 
-    healthBar.transform.position = Camera.main.WorldToScreenPoint(healthBarWorldPosition);
+        healthBar.transform.position = Camera.main.WorldToScreenPoint(healthBarWorldPosition);
         healthBar.value = health;
         healthBar.fillRect.GetComponent<Image>().color = Color.Lerp(minHealthColor, maxHealthColor, healthBar.normalizedValue);
         playerX = (int)player.transform.position.x;
@@ -163,7 +163,7 @@ public class SoldierScript : MonoBehaviour
             if (playerY == enemyY)
             {
                 shoot(isPlayerOnLeft);
-                animator.SetFloat("xVelocity", 0f);
+                animator.SetBool("IsWalking", false);
             }
             else
             {
@@ -172,22 +172,24 @@ public class SoldierScript : MonoBehaviour
                     if (index - 1 >= 0 && heights[index - 1] > enemyY && isGrounded)
                     {
                         jump(isPlayerOnLeft);
+                        animator.SetBool("IsWalking", false);
                     }
                     else
                     {
                         walk(isPlayerOnLeft);
-                        animator.SetFloat("xVelocity", 1f);
+                        animator.SetBool("IsWalking", true);
                     }
                 }
                 else
                 {
                     if (index + 1 < heights.Count && heights[index + 1] > enemyY && isGrounded)
                     {
-                        jump(isPlayerOnLeft); 
+                        jump(isPlayerOnLeft);
+                        animator.SetBool("IsWalking", false);
                     }else
                     {
                         walk(isPlayerOnLeft);
-                        animator.SetFloat("xVelocity", 1f);
+                        animator.SetBool("IsWalking", true);
                     }
                 }
             }
