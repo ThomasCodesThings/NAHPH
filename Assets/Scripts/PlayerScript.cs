@@ -45,7 +45,7 @@ public class PlayerScript : MonoBehaviour
 
     [SerializeField] Animator meleeWeaponAnimator;
 
-      public GameObject FindChildWithTag(GameObject parent, string tag)
+    public GameObject FindChildWithTag(GameObject parent, string tag)
     {
         foreach (Transform child in parent.GetComponentsInChildren<Transform>())
         {
@@ -218,20 +218,33 @@ public class PlayerScript : MonoBehaviour
         }
 
         Vector3 mousePosition = Input.mousePosition;
-        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
 
-        Vector2 direction = new Vector2(mousePosition.x - transform.position.x, mousePosition.y - transform.position.y);
 
-        transform.right = direction;
+        mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, Camera.main.nearClipPlane));
+
+        Vector2 direction = new Vector2(mousePosition.x - transform.position.x, mousePosition.y - transform.position.y - 0.5f);
+
+
+        float angle = Mathf.Atan2(direction.y, Mathf.Abs(direction.x)) * Mathf.Rad2Deg;
+
 
         if (mousePosition.x < transform.position.x)
         {
+
             transform.rotation = Quaternion.Euler(0, 180, 0);
+
+
+            playerBody.transform.rotation = Quaternion.Euler(0, 180, angle);
         }
         else
         {
+
             transform.rotation = Quaternion.Euler(0, 0, 0);
+
+
+            playerBody.transform.rotation = Quaternion.Euler(0, 0, angle);
         }
+
 
 
         Move = Input.GetAxis("Horizontal");
