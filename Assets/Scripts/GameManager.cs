@@ -82,7 +82,9 @@ public class GameManager : MonoBehaviour
     private int[,] blockGrid;
     private AStar AStarSearch;
 
-    private int seed = Math.Abs(Guid.NewGuid().GetHashCode());
+    private static int seed = Math.Abs(Guid.NewGuid().GetHashCode());
+
+    System.Random random = new System.Random(seed);
 
     /************************************************************************
      * 
@@ -94,6 +96,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject shotgunPrefab;
     [SerializeField] GameObject laserPrefab;
     [SerializeField] GameObject plasmaCannonPrefab;
+
+    private List<(int, int)> blockedCells = new List<(int, int)>();
 
     public List<int> getHeights(){
         return heights;
@@ -117,17 +121,23 @@ public class GameManager : MonoBehaviour
         Instantiate(platformLeftPrefab, new Vector3(startX, startY, 0), Quaternion.identity);
         blockGrid[startX + width, startY] = 0;
         blockGrid[startX + width + 1, startY] = 0;
+        blockedCells.Add((startX, startY));
+        blockedCells.Add((startX + 1, startY));
 
         for (int x = startX + prefabLength; x < startX + platformWidth - prefabLength; x+= prefabLength)
         {
             Instantiate(platformCenterPrefab, new Vector3(x, startY, 0), Quaternion.identity);
             blockGrid[x + width, startY] = 0;
             blockGrid[x + width + 1, startY] = 0;
+            blockedCells.Add((x, startY));
+            blockedCells.Add((x + 1, startY));
         }
 
         Instantiate(platformRightPrefab, new Vector3(startX + platformWidth - prefabLength, startY, 0), Quaternion.identity);
         blockGrid[startX + platformWidth - prefabLength + width, startY] = 0;
         blockGrid[startX + platformWidth - prefabLength + 1 + width, startY] = 0;
+        blockedCells.Add((startX + platformWidth - prefabLength, startY));
+        blockedCells.Add((startX + platformWidth - prefabLength + 1, startY));
     }
 
 
@@ -173,31 +183,21 @@ public class GameManager : MonoBehaviour
 
    public void generate()
     {
-
-        System.Random random = new System.Random(seed);
-        int wallSize = height - 4;
+        int wallSize = height;
         //0 - cell is blocked
         //1 -cell is non blocked
-        blockGrid = new int[width * 2, height];
-        for (int x = 0; x < blockGrid.GetLength(0); x++)
-        {
-            for (int y = 0; y < blockGrid.GetLength(1); y++)
-            {
-                blockGrid[x, y] = 1; 
-            }
-        }
 
         for (int x = -width; x < width; x++)
         {
             int gridX = x + width;
 
-            Instantiate(dirtPrefab, new Vector3(x, 2, 0), Quaternion.identity);
-            Instantiate(floorPrefab, new Vector3(x, 3, 0), Quaternion.identity);
+            Instantiate(dirtPrefab, new Vector3(x, 0, 0), Quaternion.identity);
+            Instantiate(floorPrefab, new Vector3(x, 1, 0), Quaternion.identity);
             
-            blockGrid[gridX, 2] = 0;  
-            blockGrid[gridX, 3] = 0;
+            blockGrid[gridX, 0] = 0;  
+            blockGrid[gridX, 1] = 0;
             
-            heights.Add(3);
+            heights.Add(1);
         }
 
         for (int i = 0; i < height; i++)
@@ -210,7 +210,7 @@ public class GameManager : MonoBehaviour
         }
 
 
-       for (int y = 7; y < height; y+=4)
+       for (int y = 5; y < height; y+=4)
         {
             for (int x = -width + 3; x < width; x++)
             {   
@@ -228,7 +228,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    int gapSize = random.Next(2, 5);
+                    int gapSize = random.Next(4, 7);
                     x += gapSize; 
                 }
             }
@@ -385,13 +385,23 @@ public void clearAfterWave(){
     }
 }
 
-    private Vector3 generateRandomSpawnPoint(){
-    float randomX = UnityEngine.Random.Range(-width, width);
-    float y = 5f;
-    float z = 0f; 
+private Vector3 generateRandomSpawnPoint(int offsetY = 2)
+{
 
-    return new Vector3(randomX, y, z);
+    int chance = random.Next(1, 10);
+
+    if(chance > 7){
+        int randomX = random.Next(-width, width);
+        int randomY = random.Next(2, height);
+        return new Vector3(randomX, randomY, 0);
+    }else{
+        //pick random item from blockedCells
+        int randomIndex = random.Next(0, blockedCells.Count);
+        (int x, int y) = blockedCells[randomIndex];
+        return new Vector3(x, y + offsetY, 0);
+    }
 }
+
 
     private List<GameObject> spawnSoldiers(int count)
 {
@@ -616,7 +626,14 @@ public void updateUI(PlayerStats playerStats){
 
     spawnedThresholds = new HashSet<int>();
 
-    
+    blockGrid = new int[width * 2, height];
+        for (int x = 0; x < blockGrid.GetLength(0); x++)
+        {
+            for (int y = 0; y < blockGrid.GetLength(1); y++)
+            {
+                blockGrid[x, y] = 1; 
+            }
+        }
 }
 
 public (int, int) getNextBlock(float srcX, float srcY)
@@ -633,8 +650,8 @@ public (int, int) getNextBlock(float srcX, float srcY)
     // Start is called before the first frame update
     void Start()
     {
-      StartCoroutine(handleWaves());
       generate();
+      StartCoroutine(handleWaves());
       AStarSearch = new AStar(blockGrid);
     }
 
@@ -662,8 +679,7 @@ public (int, int) getNextBlock(float srcX, float srcY)
         {
             if (playerStats.xp >= threshold && !spawnedThresholds.Contains(threshold))
             {
-                Vector3 spawnPoint = generateRandomSpawnPoint();
-                spawnPoint.y = spawnPoint.y - 1;
+                Vector3 spawnPoint = generateRandomSpawnPoint(offsetY: 1);
                 Instantiate(weaponThresholds[threshold], spawnPoint, Quaternion.identity);
                 spawnedThresholds.Add(threshold);
             }

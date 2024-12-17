@@ -4573,7 +4573,7 @@ MonoBehaviour:
   platformLeftPrefab: {fileID: 3767010550175255973, guid: dd7958add7bb4a54c8df5477c67c9522, type: 3}
   platformRightPrefab: {fileID: 4364207888349565425, guid: f26f0b0cdfc66d54ba797b199cd0c025, type: 3}
   playerPrefab: {fileID: 8616937628321680139, guid: af1cb13bd56ef73429d5ca75c9d4dc5f, type: 3}
-  width: 30
+  width: 100
   height: 20
   player: {fileID: 1261849199}
   soldierPrefab: {fileID: 7235682654702471235, guid: b02f4d7d98fabce458438fdd4bd682fd, type: 3}
