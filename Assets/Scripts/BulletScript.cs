@@ -7,6 +7,7 @@ public class BulletScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("BulletScript Start() called");
         //set gameobject sprite renderer to false
         //GetComponent<SpriteRenderer>().enabled = false;
     }
@@ -14,7 +15,8 @@ public class BulletScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GameObject[] medkits = GameObject.FindGameObjectsWithTag("Medkit");
+        //Debug.Log("BulletScript Update() called");
+        /*GameObject[] medkits = GameObject.FindGameObjectsWithTag("Medkit");
         GameObject[] ammopacks = GameObject.FindGameObjectsWithTag("AmmoPack");
         GameObject[] energyProjectiles = GameObject.FindGameObjectsWithTag("EnergyProjectile");
         GameObject[] ballisticProjectiles = GameObject.FindGameObjectsWithTag("BallisticProjectile");
@@ -45,10 +47,11 @@ public class BulletScript : MonoBehaviour
             }
             Physics2D.IgnoreCollision(ballisticProjectile.GetComponent<Collider2D>(), GetComponent<Collider2D>());
         }
-    }
+    }*/
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log("BulletScript OnCollisionEnter2D() called");
         if(collision.gameObject.CompareTag("Floor")){
             Debug.Log("Bullet hit the floor");
             Destroy(gameObject);

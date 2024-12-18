@@ -244,7 +244,6 @@ public class SoldierScript : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
- 
         if (other.gameObject.CompareTag("Floor"))
         {
             isGrounded = true;
@@ -252,6 +251,7 @@ public class SoldierScript : MonoBehaviour
 
         if (other.gameObject.CompareTag("Bullet"))
         {
+            
             int damage = player.GetComponent<PlayerScript>().getDamage();
             setHealth(damage);
             Destroy(other.gameObject);

@@ -10,7 +10,7 @@ public class GunScript : MonoBehaviour
 
     private float lastShotTime = 0f;
     private float shotDelay = 0.5f;
-    private float bulletOffset = 0.4f;
+    private float bulletOffset = 1f;
     private int ammo = 8;
     private int magazine = 64;
     private int minDamage = 20;

@@ -2300,7 +2300,7 @@ SpriteRenderer:
   m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 56d3468e2bdcf9b4ab1c409e902a6a12, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.46226418, g: 0.46226418, b: 0.46226418, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
@@ -2332,7 +2332,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0792d266128bd643b6da05f080c3837, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 1907605427488731722, guid: c41745bc113676d469fdee8b9b0b9dc7, type: 3}
+  bulletPrefab: {fileID: 5215543354323034142, guid: 0f747a7a58a604949a570507cb5f2245, type: 3}
   bulletSpeed: 10
   bulletLifeTime: 5
 --- !u!1 &943198745
@@ -4573,7 +4573,7 @@ MonoBehaviour:
   platformLeftPrefab: {fileID: 3767010550175255973, guid: dd7958add7bb4a54c8df5477c67c9522, type: 3}
   platformRightPrefab: {fileID: 4364207888349565425, guid: f26f0b0cdfc66d54ba797b199cd0c025, type: 3}
   playerPrefab: {fileID: 8616937628321680139, guid: af1cb13bd56ef73429d5ca75c9d4dc5f, type: 3}
-  width: 100
+  width: 20
   height: 20
   player: {fileID: 1261849199}
   soldierPrefab: {fileID: 7235682654702471235, guid: b02f4d7d98fabce458438fdd4bd682fd, type: 3}
