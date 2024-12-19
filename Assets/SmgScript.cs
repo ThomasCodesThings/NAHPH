@@ -10,7 +10,8 @@ public class SmgScript : MonoBehaviour
 
     private float lastShotTime = 0f;
     private float shotDelay = 0.2f;
-    private float bulletOffset = 0.5f;
+    private float bulletOffsetX = 1.2f;
+    private float bulletOffsetY = 0.15f;
     private static int maxAmmo = 5;
     private int ammo = maxAmmo;
     private int magazine = 40;
@@ -85,7 +86,7 @@ public class SmgScript : MonoBehaviour
     {
         lastShotTime = Time.time;
 
-        Vector3 bulletSpawnPosition = transform.position + transform.right * bulletOffset;
+        Vector3 bulletSpawnPosition = transform.position + transform.right * bulletOffsetX + transform.up * bulletOffsetY;
 
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition, Quaternion.identity);
         ammo--;

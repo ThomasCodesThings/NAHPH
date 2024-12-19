@@ -618,10 +618,10 @@ public void updateUI(PlayerStats playerStats){
 
     weaponThresholds = new Dictionary<int, GameObject>
         {
-            { 100, smgPrefab },
-            { 250, shotgunPrefab },
-            { 400, laserPrefab },
-            { 600, plasmaCannonPrefab }
+            { 10, smgPrefab },
+            { 20, shotgunPrefab },
+            { 30, laserPrefab },
+            { 40, plasmaCannonPrefab }
         };
 
     spawnedThresholds = new HashSet<int>();
