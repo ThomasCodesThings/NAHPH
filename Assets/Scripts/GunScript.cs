@@ -10,7 +10,8 @@ public class GunScript : MonoBehaviour
 
     private float lastShotTime = 0f;
     private float shotDelay = 0.5f;
-    private float bulletOffset = 1f;
+    private float bulletOffsetX = 0.55f;
+    private float bulletOffsetY = 0.1f;
     private int ammo = 8;
     private int magazine = 64;
     private int minDamage = 20;
@@ -79,7 +80,7 @@ public class GunScript : MonoBehaviour
     {
         lastShotTime = Time.time;
 
-        Vector3 bulletSpawnPosition = transform.position + transform.right * bulletOffset;
+        Vector3 bulletSpawnPosition = transform.position + transform.right * bulletOffsetX + transform.up * bulletOffsetY;
 
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition, Quaternion.identity);
         ammo--;
