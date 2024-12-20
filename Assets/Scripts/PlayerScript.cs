@@ -30,6 +30,8 @@ public class PlayerScript : MonoBehaviour
     private float pixelsPerUnit = 1000.0f;
     private Vector2 pivotPoint = new Vector2(0.5f, 0.5f);
     private string[] weaponUpgrades = new string[] { "Smg", "Shotgun", "Laser", "Plasma Cannon" };
+    private GameObject gameManager;
+    private RangeWeapon currentRangeWeapon;
 
      /************************************************************************
      * 
@@ -57,9 +59,9 @@ public class PlayerScript : MonoBehaviour
         return null;
     }
 
-    public GameObject getRangeWeapon()
+    public RangeWeapon getCurrentRangeWeapon()
     {
-        return rangeWeapon;
+        return currentRangeWeapon;
     }
 
     public GameObject getMeleeWeapon()
@@ -69,7 +71,8 @@ public class PlayerScript : MonoBehaviour
 
     public int getDamage()
     {
-        switch(currentWeaponName){
+        return currentRangeWeapon.getDamage();
+        /*switch(currentWeaponName){
             case "Basic Pistol":
                 return rangeWeapon.GetComponent<GunScript>().getDamage();
             case "Smg":
@@ -82,7 +85,7 @@ public class PlayerScript : MonoBehaviour
                 return rangeWeapon.GetComponent<PlasmaCannonScript>().getDamage();
             default:
                 return rangeWeapon.GetComponent<GunScript>().getDamage();
-        }
+        }*/
     }
 
     public void setHealth(int damage)
@@ -114,7 +117,8 @@ public class PlayerScript : MonoBehaviour
 
     public PlayerStats getPlayerStats()
     {
-        switch(currentWeaponName){
+        return new PlayerStats(health, maxHealth, xp, currentRangeWeapon.getAmmo(), currentRangeWeapon.getMagazine(), currentRangeWeapon.getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
+        /*switch(currentWeaponName){
             case "Basic Pistol":
                return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<GunScript>().getAmmo(), rangeWeapon.GetComponent<GunScript>().getMagazine(), rangeWeapon.GetComponent<GunScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
             case "Smg":
@@ -127,7 +131,7 @@ public class PlayerScript : MonoBehaviour
                 return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<PlasmaCannonScript>().getAmmo(), rangeWeapon.GetComponent<PlasmaCannonScript>().getMagazine(), rangeWeapon.GetComponent<PlasmaCannonScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
             default:
                 return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<GunScript>().getAmmo(), rangeWeapon.GetComponent<GunScript>().getMagazine(), rangeWeapon.GetComponent<GunScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
-        }
+        }*/
     }
 
     public void addXP(int xp)
@@ -171,9 +175,10 @@ public class PlayerScript : MonoBehaviour
         pauseMenu.SetActive(false);
         rangeWeapon = GameObject.FindGameObjectWithTag("PlayerRangeWeapon");
         playerBody = GameObject.FindGameObjectWithTag("PlayerBody");
+        gameManager = GameObject.FindGameObjectWithTag("GameManager");
         //meleeWeapon = GameObject.FindGameObjectWithTag("PlayerMeleeWeapon");
 
-        currentWeapon = rangeWeapon;
+        currentRangeWeapon = gameManager.GetComponent<GameManager>().getCurrentWeapon();
         
     }
 
@@ -285,7 +290,8 @@ public class PlayerScript : MonoBehaviour
 
         if(other.gameObject.CompareTag("AmmoPack")){
             int ammo = other.gameObject.GetComponent<AmmoPackScript>().getAmmoAmount();
-            switch(currentWeaponName){
+            currentRangeWeapon.addAmmo(ammo);
+           /* switch(currentWeaponName){
                 case "Basic Pistol":
                     rangeWeapon.GetComponent<GunScript>().addAmmo(ammo);
                     break;
@@ -304,7 +310,7 @@ public class PlayerScript : MonoBehaviour
                 default:
                     rangeWeapon.GetComponent<GunScript>().addAmmo(ammo);
                     break;
-            }
+            }*/
 
             Destroy(other.gameObject);
         }
@@ -331,8 +337,10 @@ public class PlayerScript : MonoBehaviour
             rangeWeapon.transform.localPosition = previousPosition;
             rangeWeapon.transform.localRotation = previousRotation;*/
             //GameObject copy = other.gameObject;
-            rangeWeapon = Instantiate(other.gameObject, new Vector3(-200, 200, 0), Quaternion.identity);
-            currentWeapon = rangeWeapon;
+            //rangeWeapon = Instantiate(other.gameObject, new Vector3(-200, 200, 0), Quaternion.identity);
+            //currentWeapon = rangeWeapon;
+            gameManager.GetComponent<GameManager>().setCurrentWeapon(weapon);
+            currentRangeWeapon = gameManager.GetComponent<GameManager>().getCurrentWeapon();
             currentWeaponName = weapon;
         
 

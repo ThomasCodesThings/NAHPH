@@ -59,5 +59,104 @@ namespace GameStructs
         }
     }
 
-    
+    public class RangeWeapon{
+        private int damage;
+        private int maxAmmo;
+        private int ammo;
+        private int magazine;
+        private string name;
+
+        private float offsetX;
+        private float offsetY;
+
+        private float bulletSpeed;
+        private float bulletLifeTime;
+        private float shotDelay;
+
+        private GameObject bulletPrefab;
+        private Texture2D weaponIcon;
+
+        public int getDamage(){
+            return damage;
+        }
+
+        public int getMaxAmmo(){
+            return maxAmmo;
+        }
+
+        public int getAmmo(){
+            return ammo;
+        }
+
+        public int getMagazine(){
+            return magazine;
+        }
+
+        public string getName(){
+            return name;
+        }
+
+        public float getOffsetX(){
+            return offsetX;
+        }
+
+        public float getOffsetY(){
+            return offsetY;
+        }
+
+        public float getBulletSpeed(){
+            return bulletSpeed;
+        }
+
+        public float getBulletLifeTime(){
+            return bulletLifeTime;
+        }
+
+        public float getShotDelay(){
+            return shotDelay;
+        }
+
+        public GameObject getBulletPrefab(){
+            return bulletPrefab;
+        }
+
+        public Texture2D getWeaponIcon(){
+            return weaponIcon;
+        }
+
+        public void addAmmo(int amount){
+            this.magazine += amount;
+        }
+
+        public void setAmmo(int ammo){
+            this.ammo = ammo;
+        }
+
+        public void decrementMagazine(int amount){
+            this.magazine -= amount;
+        }
+
+        public void decrementAmmo(){
+            this.ammo--;
+        }
+
+        public void setMagazine(int magazine){
+            this.magazine = magazine;
+        }
+
+        public RangeWeapon(int damage, int maxAmmo, int ammo, int magazine, string name, float offsetX, float offsetY, float bulletSpeed, float bulletLifeTime, float shotDelay, GameObject bulletPrefab, Texture2D weaponIcon){
+            this.damage = damage;
+            this.maxAmmo = maxAmmo;
+            this.ammo = ammo;
+            this.magazine = magazine;
+            this.name = name;
+            this.offsetX = offsetX;
+            this.offsetY = offsetY;
+            this.bulletSpeed = bulletSpeed;
+            this.bulletLifeTime = bulletLifeTime;
+            this.shotDelay = shotDelay;
+            this.bulletPrefab = bulletPrefab;
+            this.weaponIcon = weaponIcon;
+        }
+    }
 }

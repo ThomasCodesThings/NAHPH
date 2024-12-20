@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour
     private List<GameObject> enemies = new List<GameObject>();
     private List<GameObject> medkits = new List<GameObject>();
     private List<GameObject> ammos = new List<GameObject>();
+    private string currentWeapon = "Basic Pistol";
     private int[,] blockGrid;
     private AStar AStarSearch;
 
@@ -97,6 +98,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject laserPrefab;
     [SerializeField] GameObject plasmaCannonPrefab;
 
+    [SerializeField] GameObject baseBulletPrefab;
+    [SerializeField] GameObject invisBulletPrefab;
+    [SerializeField] GameObject plasmaBulletPrefab;
+
+    [SerializeField] Texture2D basePistolIcon;
+    [SerializeField] Texture2D smgIcon;
+    [SerializeField] Texture2D shotgunIcon;
+    [SerializeField] Texture2D laserIcon;
+    [SerializeField] Texture2D plasmaCannonIcon;
+
+    private Dictionary<string, RangeWeapon> weapons = new Dictionary<string, RangeWeapon>();
+
     private List<(int, int)> blockedCells = new List<(int, int)>();
 
     public List<int> getHeights(){
@@ -109,6 +122,18 @@ public class GameManager : MonoBehaviour
 
     public float getElapsedTime(){
         return totalElapsedTime;
+    }
+
+    public void setCurrentWeapon(string weapon){
+        currentWeapon = weapon;
+    }
+
+    public RangeWeapon getCurrentWeapon(){
+        return weapons[currentWeapon];
+    }
+
+    public void addAmmo(int amount){
+        weapons[currentWeapon].addAmmo(amount);
     }
 
     private void generatePlatform(int startX, int startY, int platformWidth){
@@ -634,6 +659,12 @@ public void updateUI(PlayerStats playerStats){
                 blockGrid[x, y] = 1; 
             }
         }
+
+        weapons.Add("Basic Pistol", new RangeWeapon(damage: 5, maxAmmo: 8, ammo: 8, magazine: 64, name: "Basic Pistol", offsetX: 0.55f, offsetY: 0.1f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: basePistolIcon));
+        weapons.Add("Smg", new RangeWeapon(damage: 10, maxAmmo: 10, ammo: 10, magazine: 40, name: "Smg", offsetX: 1.1f, offsetY: 0.15f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: smgIcon));
+        weapons.Add("Shotgun", new RangeWeapon(damage: 20, maxAmmo: 7, ammo: 7, magazine: 21, name: "Shotgun", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: shotgunIcon));
+        weapons.Add("Laser", new RangeWeapon(damage: 30, maxAmmo: 5, ammo: 5, magazine: 30, name: "Laser", offsetX: 0.9f, offsetY: -0.1f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: laserIcon));
+        weapons.Add("Plasma Cannon", new RangeWeapon(damage: 40, maxAmmo: 5, ammo: 5, magazine: 20, name: "Plasma Cannon", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: plasmaBulletPrefab, weaponIcon: plasmaCannonIcon));
 }
 
 public (int, int) getNextBlock(float srcX, float srcY)

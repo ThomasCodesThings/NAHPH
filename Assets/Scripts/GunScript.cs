@@ -1,53 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GameStructs;
 
 public class GunScript : MonoBehaviour
 {
-    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private GameObject baseBulletPrefab;
     [SerializeField] private float bulletSpeed = 10f;
     [SerializeField] private float bulletLifeTime = 5f;
 
     private float lastShotTime = 0f;
-    private float shotDelay = 0.5f;
-    private float bulletOffsetX = 0.55f;
-    private float bulletOffsetY = 0.1f;
-    private int ammo = 8;
-    private int magazine = 64;
-    private int minDamage = 20;
-    private int maxDamage = 30;
-    private string name = "Basic Pistol";
-    private int maxAmmo = 8;
 
-    public int getAmmo()
-    {
-        return ammo;
-    }
+    private GameObject player;
 
-    public int getMagazine()
-    {
-        return magazine;
-    }
-
-    public int getDamage()
-    {
-        return Random.Range(minDamage, maxDamage);
-    }
-
-    public string getName()
-    {
-        return name;
-    }
-
-    public void addAmmo(int amount)
-    {
-        magazine += amount;
-    }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
@@ -58,37 +28,34 @@ public class GunScript : MonoBehaviour
         return;
     }
 
-    if (Input.GetKeyDown(KeyCode.R))
-    {
-        if (magazine > 0)
+    RangeWeapon weapon = player.GetComponent<PlayerScript>().getCurrentRangeWeapon();
+    
+
+   if (Input.GetKeyDown(KeyCode.R))
+   {
+        if (weapon.getMagazine() > 0)
         {
-            int missingAmmo = maxAmmo - ammo;
-            if (magazine >= missingAmmo)
-            {
-                ammo = maxAmmo;
-                magazine -= missingAmmo;
-            }
-            else
-            {
-                ammo += magazine;
-                magazine = 0;
-            }
+            int missingAmmo = weapon.getMaxAmmo() - weapon.getAmmo();
+            int ammoToReload = Mathf.Min(missingAmmo, weapon.getMagazine());
+
+            weapon.setAmmo(weapon.getAmmo() + ammoToReload);
+            weapon.decrementMagazine(ammoToReload);
         }
-        Debug.Log("Reloading");
     }
 
-    if(Input.GetMouseButton(0) && Time.time - lastShotTime > shotDelay && ammo > 0)
+
+    if(Input.GetMouseButton(0) && Time.time - lastShotTime > weapon.getShotDelay() && weapon.getAmmo() > 0)
     {
         lastShotTime = Time.time;
 
-        Vector3 bulletSpawnPosition = transform.position + transform.right * bulletOffsetX + transform.up * bulletOffsetY;
-        Debug.Log("Spawning in gunscript");
+        Vector3 bulletSpawnPosition = transform.position + transform.right * weapon.getOffsetX() + transform.up * weapon.getOffsetY();
 
-        GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition, Quaternion.identity);
-        ammo--;
-        bullet.GetComponent<Rigidbody2D>().velocity = transform.right * bulletSpeed;
-        Destroy(bullet, bulletLifeTime);
+        GameObject bullet = Instantiate(weapon.getBulletPrefab(), bulletSpawnPosition, Quaternion.identity);
+        weapon.decrementAmmo();
+        bullet.GetComponent<Rigidbody2D>().velocity = transform.right * weapon.getBulletSpeed();
+        Destroy(bullet, weapon.getBulletLifeTime());
     }
+   
 }
 
 }

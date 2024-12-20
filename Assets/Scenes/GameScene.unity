@@ -4594,6 +4594,14 @@ MonoBehaviour:
   shotgunPrefab: {fileID: 7163977236383335979, guid: 1e10195c0fabcdf408d030b447fef0b0, type: 3}
   laserPrefab: {fileID: 779747454004402257, guid: 085a1f44c0526724980e25680c23f79f, type: 3}
   plasmaCannonPrefab: {fileID: 575209615412231045, guid: ee8d4394235099244ad09f068088cc3d, type: 3}
+  baseBulletPrefab: {fileID: 5215543354323034142, guid: 0f747a7a58a604949a570507cb5f2245, type: 3}
+  invisBulletPrefab: {fileID: 1907605427488731722, guid: 085d3493ee299f442a11fed251524e2f, type: 3}
+  plasmaBulletPrefab: {fileID: 3751690880110825005, guid: caa3f41527970a641a19a4ff034e6f7b, type: 3}
+  basePistolIcon: {fileID: 2800000, guid: 4670003709aefd74aa48b5f3119bde35, type: 3}
+  smgIcon: {fileID: 2800000, guid: bddd0eacb0e4b3a44a620fc5cfc48768, type: 3}
+  shotgunIcon: {fileID: 2800000, guid: c4fb521268c933a40aa9ec6623f8fbd0, type: 3}
+  laserIcon: {fileID: 2800000, guid: b19815748cbc7534da9dbc61df92f39e, type: 3}
+  plasmaCannonIcon: {fileID: 2800000, guid: 21122441e0f5b3b4da30008a5ae030a2, type: 3}
 --- !u!4 &1638814578
 Transform:
   m_ObjectHideFlags: 0
