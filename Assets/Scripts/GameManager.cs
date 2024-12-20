@@ -235,7 +235,7 @@ public class GameManager : MonoBehaviour
         }
 
 
-       for (int y = 5; y < height; y+=4)
+      /* for (int y = 5; y < height; y+=4)
         {
             for (int x = -width + 3; x < width; x++)
             {   
@@ -257,7 +257,7 @@ public class GameManager : MonoBehaviour
                     x += gapSize; 
                 }
             }
-        }
+        }*/
 
     }
 
@@ -415,9 +415,9 @@ private Vector3 generateRandomSpawnPoint(int offsetY = 2)
 
     int chance = random.Next(1, 10);
 
-    if(chance > 7){
+    if(chance > 0){
         int randomX = random.Next(-width, width);
-        int randomY = random.Next(2, height);
+        int randomY = random.Next(2, 4);
         return new Vector3(randomX, randomY, 0);
     }else{
         //pick random item from blockedCells
@@ -663,7 +663,7 @@ public void updateUI(PlayerStats playerStats){
         weapons.Add("Basic Pistol", new RangeWeapon(damage: 5, maxAmmo: 8, ammo: 8, magazine: 64, name: "Basic Pistol", offsetX: 0.55f, offsetY: 0.1f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: basePistolIcon));
         weapons.Add("Smg", new RangeWeapon(damage: 10, maxAmmo: 10, ammo: 10, magazine: 40, name: "Smg", offsetX: 1.1f, offsetY: 0.15f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: smgIcon));
         weapons.Add("Shotgun", new RangeWeapon(damage: 20, maxAmmo: 7, ammo: 7, magazine: 21, name: "Shotgun", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: shotgunIcon));
-        weapons.Add("Laser", new RangeWeapon(damage: 30, maxAmmo: 5, ammo: 5, magazine: 30, name: "Laser", offsetX: 0.9f, offsetY: -0.1f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: laserIcon));
+        weapons.Add("Laser", new RangeWeapon(damage: 30, maxAmmo: 5, ammo: 5, magazine: 30, name: "Laser", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: laserIcon));
         weapons.Add("Plasma Cannon", new RangeWeapon(damage: 40, maxAmmo: 5, ammo: 5, magazine: 20, name: "Plasma Cannon", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: plasmaBulletPrefab, weaponIcon: plasmaCannonIcon));
 }
 

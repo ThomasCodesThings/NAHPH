@@ -164,6 +164,56 @@ public class PlayerScript : MonoBehaviour
         return currentWeaponName;
     }
 
+    private void setAnimationState(){
+        Debug.Log("Setting animation state for weapon: " + currentWeaponName);
+        switch(currentWeaponName){
+            case "Basic Pistol":
+                meleeWeaponAnimator.SetBool("HasBasicPistol", true);
+                meleeWeaponAnimator.SetBool("HasSmg", false);
+                meleeWeaponAnimator.SetBool("HasShotgun", false);
+                meleeWeaponAnimator.SetBool("HasLaserGun", false);
+                meleeWeaponAnimator.SetBool("HasPlasmaCannon", false);
+                meleeWeaponAnimator.SetBool("OnMeleeAttack", false);
+                break;
+                
+            case "Smg":
+                meleeWeaponAnimator.SetBool("HasBasicPistol", false);
+                meleeWeaponAnimator.SetBool("HasSmg", true);
+                meleeWeaponAnimator.SetBool("HasShotgun", false);
+                meleeWeaponAnimator.SetBool("HasLaserGun", false);
+                meleeWeaponAnimator.SetBool("HasPlasmaCannon", false);
+                meleeWeaponAnimator.SetBool("OnMeleeAttack", false);
+                break;
+
+            case "Shotgun":
+                meleeWeaponAnimator.SetBool("HasBasicPistol", false);
+                meleeWeaponAnimator.SetBool("HasSmg", false);
+                meleeWeaponAnimator.SetBool("HasShotgun", true);
+                meleeWeaponAnimator.SetBool("HasLaserGun", false);
+                meleeWeaponAnimator.SetBool("HasPlasmaCannon", false);
+                meleeWeaponAnimator.SetBool("OnMeleeAttack", false);
+                break;
+
+            case "LaserGun":
+                meleeWeaponAnimator.SetBool("HasBasicPistol", false);
+                meleeWeaponAnimator.SetBool("HasSmg", false);
+                meleeWeaponAnimator.SetBool("HasShotgun", false);
+                meleeWeaponAnimator.SetBool("HasLaserGun", true);
+                meleeWeaponAnimator.SetBool("HasPlasmaCannon", false);
+                meleeWeaponAnimator.SetBool("OnMeleeAttack", false);
+                break;
+
+            case "PlasmaCanon":
+                meleeWeaponAnimator.SetBool("HasBasicPistol", false);
+                meleeWeaponAnimator.SetBool("HasSmg", false);
+                meleeWeaponAnimator.SetBool("HasShotgun", false);
+                meleeWeaponAnimator.SetBool("HasLaserGun", false);
+                meleeWeaponAnimator.SetBool("HasPlasmaCannon", true);
+                meleeWeaponAnimator.SetBool("OnMeleeAttack", false);
+                break;           
+        }
+    }
+
     public void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -176,7 +226,7 @@ public class PlayerScript : MonoBehaviour
         rangeWeapon = GameObject.FindGameObjectWithTag("PlayerRangeWeapon");
         playerBody = GameObject.FindGameObjectWithTag("PlayerBody");
         gameManager = GameObject.FindGameObjectWithTag("GameManager");
-        //meleeWeapon = GameObject.FindGameObjectWithTag("PlayerMeleeWeapon");
+        meleeWeaponAnimator = playerBody.GetComponent<Animator>();
 
         currentRangeWeapon = gameManager.GetComponent<GameManager>().getCurrentWeapon();
         
@@ -259,6 +309,23 @@ public class PlayerScript : MonoBehaviour
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.AddForce(new Vector2(rb.velocity.x, jumpForce));
+        }
+
+        //detect right click
+        if(Input.GetMouseButtonDown(1))
+        {
+            meleeWeaponAnimator.SetBool("OnMeleeAttack", true);
+            meleeWeaponAnimator.SetBool("HasBasicPistol", false);
+            meleeWeaponAnimator.SetBool("HasSmg", false);
+            meleeWeaponAnimator.SetBool("HasShotgun", false);
+            meleeWeaponAnimator.SetBool("HasLaserGun", false);
+            meleeWeaponAnimator.SetBool("HasPlasmaCannon", false);
+        }
+
+        if(Input.GetMouseButtonUp(1))
+        {
+            //meleeWeaponAnimator.SetBool("OnMeleeAttack", false);
+            setAnimationState();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
