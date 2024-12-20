@@ -74,6 +74,7 @@ public class GunScript : MonoBehaviour
                 magazine = 0;
             }
         }
+        Debug.Log("Reloading");
     }
 
     if(Input.GetMouseButton(0) && Time.time - lastShotTime > shotDelay && ammo > 0)
@@ -81,6 +82,7 @@ public class GunScript : MonoBehaviour
         lastShotTime = Time.time;
 
         Vector3 bulletSpawnPosition = transform.position + transform.right * bulletOffsetX + transform.up * bulletOffsetY;
+        Debug.Log("Spawning in gunscript");
 
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition, Quaternion.identity);
         ammo--;

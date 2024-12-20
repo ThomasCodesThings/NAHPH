@@ -10,7 +10,8 @@ public class ShotgunScript : MonoBehaviour
 
     private float lastShotTime = 0f;
     private float shotDelay = 0.7f;
-    private float bulletOffset = 0.5f;
+    private float bulletOffsetX = 1.2f;
+    private float bulletOffsetY = -1f;
     private static int maxAmmo = 5;
     private int ammo = maxAmmo;
     private int magazine = 20;
@@ -85,7 +86,8 @@ public class ShotgunScript : MonoBehaviour
     {
         lastShotTime = Time.time;
 
-        Vector3 bulletSpawnPosition = transform.position + transform.right * bulletOffset;
+        Vector3 bulletSpawnPosition = transform.position;
+        Debug.Log(bulletSpawnPosition);
 
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition, Quaternion.identity);
         ammo--;

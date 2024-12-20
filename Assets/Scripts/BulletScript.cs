@@ -7,7 +7,6 @@ public class BulletScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("BulletScript Start() called");
         //set gameobject sprite renderer to false
         //GetComponent<SpriteRenderer>().enabled = false;
     }
@@ -51,7 +50,6 @@ public class BulletScript : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("BulletScript OnCollisionEnter2D() called");
         if(collision.gameObject.CompareTag("Floor")){
             Debug.Log("Bullet hit the floor");
             Destroy(gameObject);
