@@ -267,7 +267,7 @@ public class GameManager : MonoBehaviour
             case Difficulty.Easy:
                 switch(currentWave){
                     case 1:
-                        return (2, 0, 1, 1);
+                        return (1, 0, 1, 1);
                     case 2:
                         return (3, 1, 3, 1);
                     case 3:

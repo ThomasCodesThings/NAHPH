@@ -22,7 +22,7 @@ public class SoldierScript : MonoBehaviour
 
 
     [SerializeField] float jumpForce = 10f;
-    [SerializeField] float speed = 5f;
+    [SerializeField] float speed = 2.5f;
 
     [SerializeField] Slider healthBar;
     [SerializeField] Color minHealthColor = Color.red;
@@ -32,7 +32,8 @@ public class SoldierScript : MonoBehaviour
     private int damage = 1;
     private float lastShotTime = 0f;
     private float shotDelay = 0.5f;
-    private float bulletOffset = 0.7f;
+    private float bulletOffsetX = 1f;
+    private float bulletOffsetY = 0.5f;
     private float bulletSpeed = 7f;
     private float bulletLifeTime = 5f;
     [SerializeField] private GameObject bulletPrefab;
@@ -122,6 +123,8 @@ public class SoldierScript : MonoBehaviour
         healthBar.maxValue = health;
         player = GameObject.FindGameObjectWithTag("Player");
 
+        IgnoreCollision();
+
     }
 
     // Update is called once per frame
@@ -155,24 +158,31 @@ public class SoldierScript : MonoBehaviour
         enemyX = (int)transform.position.x;
         enemyY = (int)transform.position.y;
 
+        if(playerX < enemyX){
+            transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
+        }else{
+            transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
+        }
         int index = Mathf.Clamp(enemyX + gameManager.GetComponent<GameManager>().getBaseWidth(), 0, heights.Count - 1);
 
         float distance = Vector2.Distance(new Vector2(playerX, playerY), new Vector2(enemyX, enemyY));
-        canMove = distance > 5f;
-        Debug.Log("Distance: " + distance);
         if (distance < triggerRadius)
         {
             bool isPlayerOnLeft = playerX < enemyX;
-            if (playerY == enemyY)
+            if (playerY == enemyY + 1)
             {
                 shoot(isPlayerOnLeft);
                 animator.SetBool("IsWalking", false);
             }
             else
             {
+                if(distance < 2){
+                    return;
+                }
+                else
                 if (isPlayerOnLeft)
                 {
-                    if (index - 1 >= 0 && heights[index - 1] > enemyY && isGrounded && canMove)
+                    if (index - 1 >= 0 && heights[index - 1] > enemyY && isGrounded)
                     {
                         jump(isPlayerOnLeft);
                         animator.SetBool("IsWalking", false);
@@ -185,7 +195,7 @@ public class SoldierScript : MonoBehaviour
                 }
                 else
                 {
-                    if (index + 1 < heights.Count && heights[index + 1] > enemyY && isGrounded && canMove)
+                    if (index + 1 < heights.Count && heights[index + 1] > enemyY && isGrounded)
                     {
                         jump(isPlayerOnLeft);
                         animator.SetBool("IsWalking", false);
@@ -231,16 +241,12 @@ public class SoldierScript : MonoBehaviour
         lastShotTime = Time.time;
         float direction = isPlayerOnLeft ? -1 : 1;
 
-        GameObject torso = transform.GetChild(0).gameObject;
-        // Adjust bullet spawn position based on direction
-        Vector3 bulletSpawnPosition = (torso.transform.position + Vector3.right * bulletOffset * direction) + new Vector3(0, 0.4f, 0);
+
+        Vector3 bulletSpawnPosition = (gameObject.transform.position + new Vector3(direction * bulletOffsetX, bulletOffsetY, 0));
         
-        
-        // Instantiate bullet and set velocity
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition, Quaternion.identity);
         bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(direction * bulletSpeed, 0);
 
-        // Destroy bullet after its lifetime expires
         Destroy(bullet, bulletLifeTime);
     }
 }
