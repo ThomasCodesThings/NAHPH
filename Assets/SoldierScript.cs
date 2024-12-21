@@ -43,7 +43,6 @@ public class SoldierScript : MonoBehaviour
     public void setHealth(int damage)
     {
         health -= damage;
-        
     }
 
     public bool isKilled(){

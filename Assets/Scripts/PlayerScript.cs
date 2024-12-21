@@ -33,6 +33,11 @@ public class PlayerScript : MonoBehaviour
     private GameObject gameManager;
     private RangeWeapon currentRangeWeapon;
 
+    private float lastMeleeAttack = 0.0f;
+    private float meleeAttackDelay = 0.7f;
+    private int meleeDamage = 20;
+    private float minHitDistance = 4f;
+
      /************************************************************************
      * 
      *  Player body sprites
@@ -214,6 +219,57 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    private void attackEnemyWithMelee()
+    {
+        bool isFacingRight = transform.rotation.eulerAngles.y == 0;
+        GameObject[] soldiers = GameObject.FindGameObjectsWithTag("Soldier");
+        GameObject[] drones = GameObject.FindGameObjectsWithTag("Drone");
+        GameObject[] bosses = GameObject.FindGameObjectsWithTag("Boss");
+
+        foreach(GameObject soldier in soldiers){
+            if(soldier == null){
+                continue;
+            }
+            float distance = Vector2.Distance(transform.position, soldier.transform.position);
+            if(distance < minHitDistance){
+                soldier.GetComponent<SoldierScript>().setHealth(meleeDamage);
+                if(soldier.GetComponent<SoldierScript>().isKilled()){
+                    addXP(soldier.GetComponent<SoldierScript>().getXP());
+                    addKill();
+                }
+            }
+        }
+
+        foreach(GameObject drone in drones){
+            if(drone == null){
+                continue;
+            }
+            float distance = Vector2.Distance(transform.position, drone.transform.position);
+            if(distance < minHitDistance){
+                drone.GetComponent<DroneScript>().setHealth(meleeDamage);
+                if(drone.GetComponent<DroneScript>().isKilled()){
+                    addXP(drone.GetComponent<DroneScript>().getXP());
+                    addKill();
+                }
+            }
+        }
+
+        foreach(GameObject boss in bosses){
+            if(boss == null){
+                continue;
+            }
+            float distance = Vector2.Distance(transform.position, boss.transform.position);
+            if(distance < minHitDistance){
+                boss.GetComponent<BossScript>().setHealth(meleeDamage);
+                if(boss.GetComponent<BossScript>().isKilled()){
+                    addXP(boss.GetComponent<BossScript>().getXP());
+                    addKill();
+                }
+            }
+        }
+        //meleeWeaponAnimator.SetBool("OnMeleeAttack", true);
+    }
+
     public void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -311,19 +367,23 @@ public class PlayerScript : MonoBehaviour
             rb.AddForce(new Vector2(rb.velocity.x, jumpForce));
         }
 
+
         //detect right click
-        if(Input.GetMouseButtonDown(1))
+        if(Input.GetMouseButtonDown(1) && Time.time - lastMeleeAttack > meleeAttackDelay)
         {
+            lastMeleeAttack = Time.time;
             meleeWeaponAnimator.SetBool("OnMeleeAttack", true);
             meleeWeaponAnimator.SetBool("HasBasicPistol", false);
             meleeWeaponAnimator.SetBool("HasSmg", false);
             meleeWeaponAnimator.SetBool("HasShotgun", false);
             meleeWeaponAnimator.SetBool("HasLaserGun", false);
             meleeWeaponAnimator.SetBool("HasPlasmaCannon", false);
+            attackEnemyWithMelee();
         }
 
         if(Input.GetMouseButtonUp(1))
         {
+
             //meleeWeaponAnimator.SetBool("OnMeleeAttack", false);
             setAnimationState();
         }
