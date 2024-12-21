@@ -38,6 +38,7 @@ public class SoldierScript : MonoBehaviour
     private float bulletLifeTime = 5f;
     [SerializeField] private GameObject bulletPrefab;
     private bool canMove = true;
+    private float slowDownTime = 3f;
 
 
     public void setHealth(int damage)
@@ -55,6 +56,19 @@ public class SoldierScript : MonoBehaviour
     public int getDamage()
     {
         return damage;
+    }
+
+    public void slowDown()
+    {
+        speed /= 2;
+
+        StartCoroutine(slowDownCoroutine());
+    }
+
+    public IEnumerator slowDownCoroutine()
+    {
+        yield return new WaitForSeconds(slowDownTime);
+        speed *= 2;
     }
 
     private void IgnoreCollision()

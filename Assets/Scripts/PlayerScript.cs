@@ -233,6 +233,7 @@ public class PlayerScript : MonoBehaviour
             float distance = Vector2.Distance(transform.position, soldier.transform.position);
             if(distance < minHitDistance){
                 soldier.GetComponent<SoldierScript>().setHealth(meleeDamage);
+                soldier.GetComponent<SoldierScript>().slowDown();
                 if(soldier.GetComponent<SoldierScript>().isKilled()){
                     addXP(soldier.GetComponent<SoldierScript>().getXP());
                     addKill();
