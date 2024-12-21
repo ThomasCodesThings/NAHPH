@@ -165,7 +165,7 @@ public class PlayerScript : MonoBehaviour
     }
 
     private void setAnimationState(){
-        Debug.Log("Setting animation state for weapon: " + currentWeaponName);
+       
         switch(currentWeaponName){
             case "Basic Pistol":
                 meleeWeaponAnimator.SetBool("HasBasicPistol", true);
@@ -194,7 +194,7 @@ public class PlayerScript : MonoBehaviour
                 meleeWeaponAnimator.SetBool("OnMeleeAttack", false);
                 break;
 
-            case "LaserGun":
+            case "Laser":
                 meleeWeaponAnimator.SetBool("HasBasicPistol", false);
                 meleeWeaponAnimator.SetBool("HasSmg", false);
                 meleeWeaponAnimator.SetBool("HasShotgun", false);
@@ -203,7 +203,7 @@ public class PlayerScript : MonoBehaviour
                 meleeWeaponAnimator.SetBool("OnMeleeAttack", false);
                 break;
 
-            case "PlasmaCanon":
+            case "Plasma Cannon":
                 meleeWeaponAnimator.SetBool("HasBasicPistol", false);
                 meleeWeaponAnimator.SetBool("HasSmg", false);
                 meleeWeaponAnimator.SetBool("HasShotgun", false);
@@ -328,6 +328,8 @@ public class PlayerScript : MonoBehaviour
             setAnimationState();
         }
 
+       
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (Time.timeScale == 1)
@@ -409,6 +411,8 @@ public class PlayerScript : MonoBehaviour
             gameManager.GetComponent<GameManager>().setCurrentWeapon(weapon);
             currentRangeWeapon = gameManager.GetComponent<GameManager>().getCurrentWeapon();
             currentWeaponName = weapon;
+
+             setAnimationState();
         
 
             switch(weapon){
