@@ -36,6 +36,7 @@ public class SoldierScript : MonoBehaviour
     private float bulletSpeed = 7f;
     private float bulletLifeTime = 5f;
     [SerializeField] private GameObject bulletPrefab;
+    private bool canMove = true;
 
 
     public void setHealth(int damage)
@@ -157,6 +158,8 @@ public class SoldierScript : MonoBehaviour
         int index = Mathf.Clamp(enemyX + gameManager.GetComponent<GameManager>().getBaseWidth(), 0, heights.Count - 1);
 
         float distance = Vector2.Distance(new Vector2(playerX, playerY), new Vector2(enemyX, enemyY));
+        canMove = distance > 5f;
+        Debug.Log("Distance: " + distance);
         if (distance < triggerRadius)
         {
             bool isPlayerOnLeft = playerX < enemyX;
@@ -169,7 +172,7 @@ public class SoldierScript : MonoBehaviour
             {
                 if (isPlayerOnLeft)
                 {
-                    if (index - 1 >= 0 && heights[index - 1] > enemyY && isGrounded)
+                    if (index - 1 >= 0 && heights[index - 1] > enemyY && isGrounded && canMove)
                     {
                         jump(isPlayerOnLeft);
                         animator.SetBool("IsWalking", false);
@@ -182,7 +185,7 @@ public class SoldierScript : MonoBehaviour
                 }
                 else
                 {
-                    if (index + 1 < heights.Count && heights[index + 1] > enemyY && isGrounded)
+                    if (index + 1 < heights.Count && heights[index + 1] > enemyY && isGrounded && canMove)
                     {
                         jump(isPlayerOnLeft);
                         animator.SetBool("IsWalking", false);
@@ -244,6 +247,7 @@ public class SoldierScript : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+
         if (other.gameObject.CompareTag("Floor"))
         {
             isGrounded = true;
@@ -257,4 +261,6 @@ public class SoldierScript : MonoBehaviour
             Destroy(other.gameObject);
         }
     }
+
+    
 }
