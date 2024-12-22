@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class MedkitScript : MonoBehaviour
 {
-     private int healAmount = 10;
+    private int healAmount = 10;
     private Rigidbody2D rb;
 
+    // Update medkit size and heal amount based on type
     public void updateMedkit(string type){
         switch(type){
             case "small":
@@ -27,6 +28,7 @@ public class MedkitScript : MonoBehaviour
         }
     }
 
+    // Get heal amount
     public int getHealAmount(){
         return healAmount;
     }
@@ -42,6 +44,7 @@ public class MedkitScript : MonoBehaviour
         
     }
 
+    // Stop medkit from moving when it hits the floor
     void OnCollisionEnter2D(Collision2D collision){
         if(collision.gameObject.CompareTag("Floor") && rb != null){
             rb.isKinematic = true;

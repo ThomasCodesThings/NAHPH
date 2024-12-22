@@ -31,28 +31,33 @@ public class DifficultyManager : MonoBehaviour
         }
     }
 
+    // Set the game to full screen or windowed
     public void SetFullScreen(bool isFullScreen)
     {
         Screen.fullScreen = isFullScreen;
     }
     
+    // Get the current difficulty
     public Difficulty getDifficulty()
     {
         return currentDifficulty;
     }
 
+    // Increase the game difficulty
     public void IncreaseDifficulty()
     {
         gameDifficulty = Mathf.Clamp(gameDifficulty + 1, 0, 2);
         UpdateDifficultyUI();
     }
 
+    // Decrease the game difficulty
     public void DecreaseDifficulty()
     {
         gameDifficulty = Mathf.Clamp(gameDifficulty - 1, 0, 2);
         UpdateDifficultyUI();
     }
 
+    // Update the difficulty UI
     private void UpdateDifficultyUI()
     {
         currentDifficulty = (Difficulty)gameDifficulty;

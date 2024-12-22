@@ -5,6 +5,7 @@ using UnityEngine;
 public class DroneProjectileScript : MonoBehaviour
 {
 
+    // Get the damage of the drone
     public int getDamage()
     {
         return GameObject.FindGameObjectWithTag("Drone").GetComponent<DroneScript>().getDamage();

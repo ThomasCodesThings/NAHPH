@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// This script contains all the structs, enums and classes used in the game
+
 namespace GameStructs
 {
     

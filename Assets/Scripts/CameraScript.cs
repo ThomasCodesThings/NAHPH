@@ -19,8 +19,6 @@ public class CameraScript : MonoBehaviour
 
     [SerializeField] Camera cam;
 
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -30,9 +28,11 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Center camera on player
         targetPosition = new Vector3(player.position.x, player.position.y, -10);
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothSpeed);
 
+        // Camera zoom in and out
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         zoom -= scroll * zoomMultiplier;
         zoom = Mathf.Clamp(zoom, minZoom, maxZoom);

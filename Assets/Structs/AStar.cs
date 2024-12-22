@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* NOT ORIGINAL WORK */
+//Pathfinding A* algorithm, shamelessly copied from https://www.geeksforgeeks.org/a-search-algorithm/ and changed for project needs
+
 namespace AI { 
 public class AStar
 {
@@ -58,9 +61,9 @@ public class AStar
         {
             gridOutput += grid[i, j] + " ";
         }
-        gridOutput += "\n"; // Add a newline after each row
+        gridOutput += "\n";
     }
-    Debug.Log(gridOutput.Trim()); // Log the entire grid at once
+    Debug.Log(gridOutput.Trim());
 }
 
 

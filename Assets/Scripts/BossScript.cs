@@ -32,24 +32,29 @@ public class BossScript : MonoBehaviour
     private bool playerIsOnLeft = false;
     private GameObject audioManager;
 
+    // Function to set the health of the boss
     public void setHealth(int damage)
     {
         health -= damage;
     }
 
+    // Function to check if the boss is killed
     public bool isKilled(){
         return health <= 0;
     }
 
+    // Function to get the XP from killing the boss
     public int getXP(){
         return Random.Range(500, 1000);
     }
 
+    // Function to get the damage of the boss
     public int getDamage()
     {
         return damage;
     }
 
+    // Function to ignore collision with other objects
     private void IgnoreCollision()
     {
         GameObject[] medkits = GameObject.FindGameObjectsWithTag("Medkit");
@@ -106,44 +111,44 @@ public class BossScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-    gameManager = GameObject.FindGameObjectWithTag("GameManager");
-    if (gameManager == null)
-    {
-        Debug.LogError("GameManager not found in the scene.");
-    }
+        gameManager = GameObject.FindGameObjectWithTag("GameManager");
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager not found in the scene.");
+        }
 
-    player = GameObject.FindGameObjectWithTag("Player");
-    if (player == null)
-    {
-        Debug.LogError("Player not found in the scene.");
-    }
+        player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null)
+        {
+            Debug.LogError("Player not found in the scene.");
+        }
 
-    spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
-    if (healthBar != null)
-    {
-        healthBar.value = health;
-        healthBar.maxValue = health;
-    }
-    else
-    {
-        Debug.LogWarning("HealthBar is not assigned in the Inspector.");
-    }
+        if (healthBar != null)
+        {
+            healthBar.value = health;
+            healthBar.maxValue = health;
+        }
+        else
+        {
+            Debug.LogWarning("HealthBar is not assigned in the Inspector.");
+        }
 
-    bossBody = GameObject.FindGameObjectWithTag("BossBody");
-    if (bossBody == null)
-    {
-        Debug.LogError("bossBody not found in the scene.");
-    }
+        bossBody = GameObject.FindGameObjectWithTag("BossBody");
+        if (bossBody == null)
+        {
+            Debug.LogError("bossBody not found in the scene.");
+        }
 
-    bossWeapon = GameObject.FindGameObjectWithTag("BossWeapon");
-    if (bossWeapon == null)
-    {
-        Debug.LogError("bossWeapon not found in the scene.");
-    }
+        bossWeapon = GameObject.FindGameObjectWithTag("BossWeapon");
+        if (bossWeapon == null)
+        {
+            Debug.LogError("bossWeapon not found in the scene.");
+        }
 
-    audioManager = GameObject.FindGameObjectWithTag("AudioManager");
-    IgnoreCollision();
+        audioManager = GameObject.FindGameObjectWithTag("AudioManager");
+        IgnoreCollision();
     }
 
     // Update is called once per frame
@@ -151,11 +156,12 @@ public class BossScript : MonoBehaviour
     {
         //IgnoreCollision();
 
-        if (Time.timeScale == 0)
+        if (Time.timeScale == 0) // When the game is paused do nothing
         {
             return;
         }
 
+        // Flip the boss sprite based on the player's position
         playerIsOnLeft = player.transform.position.x < transform.position.x;
         if (playerIsOnLeft)
         {
@@ -168,19 +174,22 @@ public class BossScript : MonoBehaviour
             bossWeapon.GetComponent<SpriteRenderer>().flipX = true;
         }
 
+        // Update the health bar position, value and color
         if (healthBar != null){
         healthBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * healthBarOffset);
         healthBar.value = health;
         healthBar.fillRect.GetComponent<Image>().color = Color.Lerp(minHealthColor, maxHealthColor, healthBar.normalizedValue);
         }
 
+        // Move the boss towards the player using A* algorithm
         int width = gameManager.GetComponent<GameManager>().getBaseWidth();
         (int newX, int newY) = gameManager.GetComponent<GameManager>().getNextBlock(transform.position.x, transform.position.y);
         Vector3 target = new Vector3(newX - width, newY, 0);
         transform.position = Vector3.Lerp(transform.position, target, Time.deltaTime * smooth);
 
-        animator.SetBool("IsFiring", Time.time - lastShotTime < shotDelay);
+        animator.SetBool("IsFiring", Time.time - lastShotTime < shotDelay); // Play the firing animation
 
+        // Fire bullets at the player
         if (Time.time - lastShotTime > shotDelay)
         {
             audioManager.GetComponent<AudioScript>().playBossAttack();
@@ -202,6 +211,7 @@ public class BossScript : MonoBehaviour
        }
     }
 
+    // Function to destroy the boss, boss body and boss weapon should be destroyed separately but it does not work properly
     private void OnDestroy(){
   
             Rigidbody2D bodyRb = bossBody.GetComponent<Rigidbody2D>();

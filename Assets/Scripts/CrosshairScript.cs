@@ -10,6 +10,7 @@ public class CrosshairScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Set the cursor to the crosshair texture
         cursorHotspot = new Vector2(crosshairTexture.width / 2, crosshairTexture.height / 2);
         Cursor.SetCursor(crosshairTexture, cursorHotspot, CursorMode.Auto);
     }

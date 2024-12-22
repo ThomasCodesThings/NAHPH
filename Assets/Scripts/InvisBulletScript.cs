@@ -7,13 +7,14 @@ public class InvisBulletScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //set gameobject sprite renderer to false
+        // Set gameobject sprite renderer to false, making it invisible
         GetComponent<SpriteRenderer>().enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Ignore collisions with medkits, ammopacks, energy projectiles and ballistic projectiles
         GameObject[] medkits = GameObject.FindGameObjectsWithTag("Medkit");
         GameObject[] ammopacks = GameObject.FindGameObjectsWithTag("AmmoPack");
         GameObject[] energyProjectiles = GameObject.FindGameObjectsWithTag("EnergyProjectile");

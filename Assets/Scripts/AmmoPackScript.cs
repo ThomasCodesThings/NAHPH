@@ -7,6 +7,7 @@ public class AmmoPackScript : MonoBehaviour
     [SerializeField] int ammoAmount = 10;
     private Rigidbody2D rb;
 
+    // Update the ammo amount and size of the ammo pack
     public void updateAmmoPack(string type){
         switch(type){
             case "small":
@@ -26,9 +27,12 @@ public class AmmoPackScript : MonoBehaviour
                 break;
         }
     }
+
+    // Get the ammo amount
     public int getAmmoAmount(){
         return ammoAmount;
     }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,6 +45,7 @@ public class AmmoPackScript : MonoBehaviour
         
     }
 
+    // When the ammo pack collides with the floor, stop the ammo pack from moving
     void OnCollisionEnter2D(Collision2D collision){
         if(collision.gameObject.CompareTag("Floor")){
             if(collision.gameObject == null){

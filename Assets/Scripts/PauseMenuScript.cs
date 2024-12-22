@@ -16,11 +16,10 @@ public class PauseMenuScript : MonoBehaviour
     void Update()
     {
 
-
-        
     }
 
-   public void GetBackToMainMenu()
+    // Get from paused menu to main menu
+    public void GetBackToMainMenu()
     {
          GameObject player = GameObject.FindGameObjectWithTag("Player");
         if(player != null){
@@ -46,6 +45,7 @@ public class PauseMenuScript : MonoBehaviour
 
     }
 
+    // Exit the game
     public void ExitGame()
     {
         Application.Quit();

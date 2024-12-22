@@ -20,15 +20,15 @@ public class GunScript : MonoBehaviour
     // Update is called once per frame
     void Update()
 {
-    if (Time.timeScale == 0)
+    if (Time.timeScale == 0) // If the game is paused do nothing
     {
         return;
     }
 
-    RangeWeapon weapon = player.GetComponent<PlayerScript>().getCurrentRangeWeapon();
+    RangeWeapon weapon = player.GetComponent<PlayerScript>().getCurrentRangeWeapon(); // Get the current weapon
     
 
-   if (Input.GetKeyDown(KeyCode.R))
+   if (Input.GetKeyDown(KeyCode.R)) // Reload the weapon
    {
         if (weapon.getMagazine() > 0)
         {
@@ -42,17 +42,17 @@ public class GunScript : MonoBehaviour
     }
 
 
-    if(Input.GetMouseButton(0) && Time.time - lastShotTime > weapon.getShotDelay() && weapon.getAmmo() > 0)
+    if(Input.GetMouseButton(0) && Time.time - lastShotTime > weapon.getShotDelay() && weapon.getAmmo() > 0) // Fire from the weapon
     {
         lastShotTime = Time.time;
         audioManager.GetComponent<AudioScript>().playRangeGunFire(weapon.getName());
 
         Vector3 bulletSpawnPosition = transform.position + transform.right * weapon.getOffsetX() + transform.up * weapon.getOffsetY();
 
-        GameObject bullet = Instantiate(weapon.getBulletPrefab(), bulletSpawnPosition, Quaternion.identity);
+        GameObject bullet = Instantiate(weapon.getBulletPrefab(), bulletSpawnPosition, Quaternion.identity); // Spawn bullet
         weapon.decrementAmmo();
-        bullet.GetComponent<Rigidbody2D>().velocity = transform.right * weapon.getBulletSpeed();
-        Destroy(bullet, weapon.getBulletLifeTime());
+        bullet.GetComponent<Rigidbody2D>().velocity = transform.right * weapon.getBulletSpeed(); // Set bullet velocity
+        Destroy(bullet, weapon.getBulletLifeTime()); // Destroy bullet after some time
     }
    
 }

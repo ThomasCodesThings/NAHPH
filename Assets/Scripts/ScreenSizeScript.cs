@@ -8,10 +8,9 @@ public class ScreenSizeScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int currentMaxWidth = Screen.currentResolution.width;
-        int currentMaxHeight = Screen.currentResolution.height;
-
-        Screen.SetResolution(currentMaxWidth, currentMaxHeight, Screen.fullScreen);
+        int currentMaxWidth = Screen.currentResolution.width; // Get the current screen width
+        int currentMaxHeight = Screen.currentResolution.height; // Get the current screen height
+        Screen.SetResolution(currentMaxWidth, currentMaxHeight, Screen.fullScreen); // Set the resolution to the current screen resolution
     }
 
     // Update is called once per frame
@@ -20,6 +19,7 @@ public class ScreenSizeScript : MonoBehaviour
         
     }
 
+    // Change the screen resolution based on the input value of dropdown menu
     public void HandleInputData(int value){
         switch(value){
             case 0:

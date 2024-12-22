@@ -14,12 +14,13 @@ public class GameOverScript : MonoBehaviour
     [SerializeField] TMP_Text medkitsUsedText;
 
     private GameObject audioManager;
-
-
+    
+    // Exit the game
     public void exitGame(){
         Application.Quit();
     }
 
+    // Switch to the main menu
     public void switchToMainMenu(){
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if(player != null){
@@ -50,7 +51,8 @@ public class GameOverScript : MonoBehaviour
     }
     // Start is called before the first frame update
     void Start()
-    {
+    {   
+        // Play the game over sound
         if(audioManager){
             audioManager.GetComponent<AudioScript>().musicSource.Stop();
             audioManager.GetComponent<AudioScript>().musicSource.clip = audioManager.GetComponent<AudioScript>().gameOverSound;
@@ -61,6 +63,8 @@ public class GameOverScript : MonoBehaviour
         if(gameManager == null){
             return;
         }
+
+        // Display the game stats
         GameStats stats = gameManager.GetComponent<GameManager>().getGameStats();
         timeText.text = stats.time;
         xpText.text = stats.totalXp;

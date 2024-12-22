@@ -178,105 +178,70 @@ public class GameManager : MonoBehaviour
         return playerEnemiesKilled;
     }
 
+
+    // Generate platform, with left side, center and left side prefabs, on both ends add lamps
     private void generatePlatform(int startX, int startY, int platformWidth)
-{
-    int prefabLength = 2;
-
-    // Ensure the platform does not exceed grid bounds
-    if (startX + platformWidth > width)
     {
-        Debug.LogWarning("Platform cannot be placed due to out-of-bounds coordinates.");
-        return;
-    }
+        int prefabLength = 2;
 
-    // Instantiate the left prefab
-    if (isWithinBlockGrid(startX + width, startY) && isWithinBlockGrid(startX + width + 1, startY))
-    {
-        Instantiate(platformLeftPrefab, new Vector3(startX, startY, 0), Quaternion.identity);
-        blockGrid[startX + width, startY] = 0;
-        blockGrid[startX + width + 1, startY] = 0;
-        blockedCells.Add((startX, startY));
-        blockedCells.Add((startX + 1, startY));
-
-        if(!blockedCells.Contains((startX, startY + 3))){
-            Instantiate(lampPrefab, new Vector3(startX, startY + 3, -5), Quaternion.identity);
-        }
-    }
-
-    // Instantiate center prefabs
-    for (int x = startX + prefabLength; x < startX + platformWidth - prefabLength; x += prefabLength)
-    {
-        if (isWithinBlockGrid(x + width, startY) && isWithinBlockGrid(x + width + 1, startY))
+        // Ensure the platform does not exceed grid bounds
+        if (startX + platformWidth > width)
         {
-            Instantiate(platformCenterPrefab, new Vector3(x, startY, 0), Quaternion.identity);
-            blockGrid[x + width, startY] = 0;
-            blockGrid[x + width + 1, startY] = 0;
-            blockedCells.Add((x, startY));
-            blockedCells.Add((x + 1, startY));
+            Debug.LogWarning("Platform cannot be placed due to out-of-bounds coordinates.");
+            return;
         }
-    }
 
-
-    int rightX = startX + platformWidth - prefabLength;
-    if (isWithinBlockGrid(rightX + width, startY) && isWithinBlockGrid(rightX + width + 1, startY))
-    {
-        Instantiate(platformRightPrefab, new Vector3(rightX, startY, 0), Quaternion.identity);
-        blockGrid[rightX + width, startY] = 0;
-        blockGrid[rightX + width + 1, startY] = 0;
-        blockedCells.Add((rightX, startY));
-        blockedCells.Add((rightX + 1, startY));
-
-        if(!blockedCells.Contains((rightX, startY + 3))){
-            Instantiate(lampPrefab, new Vector3(rightX, startY + 3, -5), Quaternion.identity);
-        }
-    }
-}
-
-
-    /*
-        private void generatePlatform(int startX, int startY, int platformWidth)
+        // Instantiate the left prefab
+        if (isWithinBlockGrid(startX + width, startY) && isWithinBlockGrid(startX + width + 1, startY))
         {
-            int prefabLength = 2;
-
-            int endX = Mathf.Min(startX + platformWidth, width - prefabLength); 
-            int clippedWidth = Mathf.Max(endX - startX, 0);
-
-            if (clippedWidth < prefabLength * 2)
-            {
-                return;
-            }
-
             Instantiate(platformLeftPrefab, new Vector3(startX, startY, 0), Quaternion.identity);
+            blockGrid[startX + width, startY] = 0;
+            blockGrid[startX + width + 1, startY] = 0;
+            blockedCells.Add((startX, startY));
+            blockedCells.Add((startX + 1, startY));
 
-            int centerWidth = clippedWidth - 2 * prefabLength;
-            if (centerWidth > 0)
-            {
-                GameObject centerInstance = Instantiate(platformCenterPrefab, new Vector3(startX + prefabLength, startY, 0), Quaternion.identity);
-
-                Vector3 scale = centerInstance.transform.localScale;
-                scale.x = centerWidth / (float)prefabLength;
-                centerInstance.transform.localScale = scale;
+            if(!blockedCells.Contains((startX, startY + 3))){
+                Instantiate(lampPrefab, new Vector3(startX, startY + 3, -5), Quaternion.identity);
             }
+        }
 
-            Instantiate(platformRightPrefab, new Vector3(startX + clippedWidth - prefabLength, startY, 0), Quaternion.identity);
-
-            for (int x = startX; x < startX + clippedWidth; x++)
+        // Instantiate center prefabs
+        for (int x = startX + prefabLength; x < startX + platformWidth - prefabLength; x += prefabLength)
+        {
+            if (isWithinBlockGrid(x + width, startY) && isWithinBlockGrid(x + width + 1, startY))
             {
-                int gridX = x + width;
-                if (gridX >= 0 && gridX < blockGrid.GetLength(0))
-                {
-                    blockGrid[gridX, startY] = 0;
-                }
+                Instantiate(platformCenterPrefab, new Vector3(x, startY, 0), Quaternion.identity);
+                blockGrid[x + width, startY] = 0;
+                blockGrid[x + width + 1, startY] = 0;
+                blockedCells.Add((x, startY));
+                blockedCells.Add((x + 1, startY));
             }
-        }*/
+        }
+
+
+        int rightX = startX + platformWidth - prefabLength;
+        if (isWithinBlockGrid(rightX + width, startY) && isWithinBlockGrid(rightX + width + 1, startY))
+        {
+            Instantiate(platformRightPrefab, new Vector3(rightX, startY, 0), Quaternion.identity);
+            blockGrid[rightX + width, startY] = 0;
+            blockGrid[rightX + width + 1, startY] = 0;
+            blockedCells.Add((rightX, startY));
+            blockedCells.Add((rightX + 1, startY));
+
+            if(!blockedCells.Contains((rightX, startY + 3))){
+                Instantiate(lampPrefab, new Vector3(rightX, startY + 3, -5), Quaternion.identity);
+            }
+        }
+    }
+
 
     public int generateFloorPlatform(int startX, int startY, int platformWidth)
     {
         int totalWidth = 0;
-        bool ignoreLeftFloor = startX == -width + 1;
-        bool ignoreRightFloor = startX + platformWidth > width - 1;
+        bool ignoreLeftFloor = startX == -width + 1; // Ignore left floor if the platform starts at the left edge
+        bool ignoreRightFloor = startX + platformWidth > width - 1; // Ignore right floor if the platform ends at the right edge
 
-        if (!ignoreLeftFloor)
+        if (!ignoreLeftFloor) // If the platform does not start at the left edge, instantiate the left floor prefab
         {
             if (isWithinBlockGrid(startX + width, startY))
             {
@@ -289,11 +254,12 @@ public class GameManager : MonoBehaviour
         }
 
         int calculatedWidth = platformWidth;
-        if (startX + platformWidth > width)
+        if (startX + platformWidth > width) // Calculate proper floor width
         {
             calculatedWidth = width - startX;
         }
 
+        // Instantiate center floor prefabs
         for (int x = (ignoreLeftFloor ? startX : startX + 1); x < startX + calculatedWidth - 1; x++)
         {
             if (isWithinBlockGrid(x + width, startY))
@@ -306,7 +272,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (!ignoreRightFloor)
+        if (!ignoreRightFloor) // If the platform does not end at the right edge, instantiate the right floor prefab
         {
             if (isWithinBlockGrid(startX + calculatedWidth - 1 + width, startY))
             {
@@ -318,7 +284,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        for (int y = startY - 1; y >= -15; y--)
+        for (int y = startY - 1; y >= -15; y--) // Fill the space below the platform with dirt
         {
             for (int x = startX; x < startX + totalWidth; x++)
             {
@@ -329,13 +295,13 @@ public class GameManager : MonoBehaviour
         return totalWidth;
     }
 
-    private bool isWithinBlockGrid(int x, int y)
+    private bool isWithinBlockGrid(int x, int y) // Check if the coordinates are within the block grid bounds
     {
         return x >= 0 && x < blockGrid.GetLength(0) && y >= 0 && y < blockGrid.GetLength(1);
     }
 
 
-    private int revFreeBlock(int x){
+    private int revFreeBlock(int x){ // Get the first free block (that is not above void) from the right
         for(int i = x; i > 0; i--){
             if(heights[i] != -1){
                 return heights[i];
@@ -344,6 +310,7 @@ public class GameManager : MonoBehaviour
         return heights[x];
     }
 
+    // Generate drone and boss spawn point
     private Vector3 generateFlyingEnemySpawnPoint(){
         int x = random.Next(-width + 1, width - 1);
         int y = random.Next(height - 3, height - 1);
@@ -351,6 +318,7 @@ public class GameManager : MonoBehaviour
     }
 
 
+    // Function to procedurally generate terrain
    public void generate()
     {
         int wallSize = height;
@@ -358,11 +326,12 @@ public class GameManager : MonoBehaviour
         //1 -cell is non blocked
         int prevY = 2;
 
+        // Generate floor with random gaps
         for (int x = -width; x < width;)
         {
-            bool generateGap = random.Next(0, 4) == 1;
+            bool generateGap = random.Next(0, 4) == 1; // 25% chance to generate a gap
             if(generateGap){
-                int gapSize = random.Next(3, 5);
+                int gapSize = random.Next(2, 4);
                 x += gapSize;
                 prevY = random.Next(0, 2) == 0 ? prevY - 1 : prevY + 1;
                 for(int k = 0; k < gapSize; k++){
@@ -381,6 +350,8 @@ public class GameManager : MonoBehaviour
             x += realWidth;
         }
 
+
+        // Generate walls on the left and right edges
         for (int i = 0; i < height; i++)
         {
             Instantiate(dirtPrefab, new Vector3(-width, i, 0), Quaternion.identity);
@@ -390,6 +361,8 @@ public class GameManager : MonoBehaviour
             blockGrid[width * 2 - 1, i] = 0;
         }
 
+
+        // Generate platforms, go from bottom to top, leave 6 blocks between platforms vertically and 2-4 blocks between platforms horizontally
         int previousY = -1;
         bool previousWasGap = false;
 
@@ -403,7 +376,7 @@ public class GameManager : MonoBehaviour
                 if (spawnPlatform && !previousWasGap)
                 {
                     int platformWidth = random.Next(4, 8);
-                    if (platformWidth % 2 != 0)
+                    if (platformWidth % 2 != 0) // Ensure the platform width is even
                     {
                         platformWidth++;
                     }
@@ -416,7 +389,7 @@ public class GameManager : MonoBehaviour
 
                     if (y == previousY)
                     {
-                        int gapSize = random.Next(1, 3);
+                        int gapSize = random.Next(2, 4);
                         x += gapSize;
                         previousWasGap = true;
                         continue;
@@ -432,7 +405,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    int gapSize = random.Next(1, 3);
+                    int gapSize = random.Next(2, 4);
                     x += gapSize;
 
                     if (previousWasGap)
@@ -513,7 +486,7 @@ public class GameManager : MonoBehaviour
     }
 }
 
-
+    // Calculate the time for each wave based on the current difficulty
     private int calculateWaveTime(){
         switch(currentDifficulty){
             case Difficulty.Easy:
@@ -527,161 +500,173 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Format function
     public string floatToMinutesSeconds(float time)
-{
-    int minutes = Mathf.FloorToInt(time / 60);
-    int seconds = Mathf.FloorToInt(time % 60);
-
-    return string.Format("{0:00}:{1:00}", minutes, seconds);
-}
-
-public string floatToDate(float time)
-{
-    int minutes = Mathf.FloorToInt(time / 60);
-    int seconds = Mathf.FloorToInt(time % 60);
-    int hours = Mathf.FloorToInt(minutes / 60);
-
-    return string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
-}
-
-public string formatNumber(int number)
-{
-    return string.Format("{0:n0}", number);
-}
-
-public GameStats getGameStats()
-{
-    string formatedTime = floatToDate(totalElapsedTime);
-    string formatedEnemiesKilled = formatNumber(playerEnemiesKilled);
-    string formatedMedkitsUsed = formatNumber(playerMedkitsUsed);
-    string formatedXp = formatNumber(playerXp);
-    return new GameStats(formatedTime, formatedEnemiesKilled, formatedMedkitsUsed, formatedXp);
-}
-
-private void removeCollision(List<GameObject> enemies)
-{
-    foreach (GameObject enemy in enemies)
     {
-        if (enemy == null)
+        int minutes = Mathf.FloorToInt(time / 60);
+        int seconds = Mathf.FloorToInt(time % 60);
+
+        return string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    // Format function
+    public string floatToDate(float time)
+    {
+        int minutes = Mathf.FloorToInt(time / 60);
+        int seconds = Mathf.FloorToInt(time % 60);
+        int hours = Mathf.FloorToInt(minutes / 60);
+
+        return string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+    }
+
+    // Format function
+    public string formatNumber(int number)
+    {
+        return string.Format("{0:n0}", number);
+    }
+
+    // Get the current game stats
+    public GameStats getGameStats()
+    {
+        string formatedTime = floatToDate(totalElapsedTime);
+        string formatedEnemiesKilled = formatNumber(playerEnemiesKilled);
+        string formatedMedkitsUsed = formatNumber(playerMedkitsUsed);
+        string formatedXp = formatNumber(playerXp);
+        return new GameStats(formatedTime, formatedEnemiesKilled, formatedMedkitsUsed, formatedXp);
+    }
+
+    // Remove collision between enemies and medkits and ammos
+    private void removeCollision(List<GameObject> enemies)
+    {
+        foreach (GameObject enemy in enemies)
         {
-            continue;
-        }
-        foreach (GameObject medkit in medkits)
-        {
-            if (medkit == null)
+            if (enemy == null)
             {
                 continue;
             }
-            Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), medkit.GetComponent<Collider2D>());
-        }
-
-        foreach (GameObject ammo in ammos)
-        {
-            if (ammo == null)
+            foreach (GameObject medkit in medkits)
             {
-                continue;
+                if (medkit == null)
+                {
+                    continue;
+                }
+                Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), medkit.GetComponent<Collider2D>());
             }
-            Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), ammo.GetComponent<Collider2D>());
+
+            foreach (GameObject ammo in ammos)
+            {
+                if (ammo == null)
+                {
+                    continue;
+                }
+                Physics2D.IgnoreCollision(enemy.GetComponent<Collider2D>(), ammo.GetComponent<Collider2D>());
+            }
+        }
+
+    }
+
+    // Clear all enemies, medkits and ammos after each wave
+    public void clearAfterWave(){
+        foreach(GameObject enemy in enemies){
+            if(enemy != null){
+                Destroy(enemy);
+            }
+        }
+
+        foreach(GameObject medkit in medkits){
+            if(medkit != null){
+                Destroy(medkit);
+            }
+        }
+
+        foreach(GameObject ammo in ammos){
+            if(ammo != null){
+                Destroy(ammo);
+            }
         }
     }
 
-}
-
-public void clearAfterWave(){
-    foreach(GameObject enemy in enemies){
-        if(enemy != null){
-            Destroy(enemy);
-        }
+    // Generate random spawn point for enemies and items
+    private Vector3 generateRandomSpawnPoint(int offsetY = 2)
+    {
+        int randomIndex = random.Next(0, blockedCells.Count);
+        (int x, int y) = blockedCells[randomIndex];
+        return new Vector3(x, y + offsetY, 0);
     }
 
-    foreach(GameObject medkit in medkits){
-        if(medkit != null){
-            Destroy(medkit);
-        }
-    }
-
-    foreach(GameObject ammo in ammos){
-        if(ammo != null){
-            Destroy(ammo);
-        }
-    }
-}
-
-private Vector3 generateRandomSpawnPoint(int offsetY = 2)
-{
-    int randomIndex = random.Next(0, blockedCells.Count);
-    (int x, int y) = blockedCells[randomIndex];
-    return new Vector3(x, y + offsetY, 0);
-}
-
-
+    // Spawn soldiers
     private List<GameObject> spawnSoldiers(int count)
-{
-    List<GameObject> enemies = new List<GameObject>(); 
-    for (int i = 0; i < count; i++)
     {
-        Vector3 spawnPoint = generateRandomSpawnPoint();
-        GameObject enemy = Instantiate(soldierPrefab, spawnPoint, Quaternion.identity);
-        enemies.Add(enemy); 
+        List<GameObject> enemies = new List<GameObject>(); 
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 spawnPoint = generateRandomSpawnPoint();
+            GameObject enemy = Instantiate(soldierPrefab, spawnPoint, Quaternion.identity);
+            enemies.Add(enemy); 
+        }
+        return enemies;
     }
-    return enemies;
-}
 
- private List<GameObject> spawnDrones(int count)
-{
-    List<GameObject> enemies = new List<GameObject>(); 
-    for (int i = 0; i < count; i++)
+    // Spawn drones
+    private List<GameObject> spawnDrones(int count)
     {
-        Vector3 spawnPoint = generateFlyingEnemySpawnPoint();
-        GameObject enemy = Instantiate(dronePrefab, spawnPoint, Quaternion.identity);
-        enemies.Add(enemy); 
-    }
-    return enemies;
-}
-
-private List<GameObject> spawnMedKits(int count){
-    List<GameObject> medkits = new List<GameObject>();
-    for (int i = 0; i < count; i++)
-    {
-        Vector3 spawnPoint = generateRandomSpawnPoint();
-        GameObject medkit = Instantiate(medkitPrefab, spawnPoint, Quaternion.identity);
-        string medkitType = medkitTypes[UnityEngine.Random.Range(0, medkitTypes.Length)];
-        medkit.GetComponent<MedkitScript>().updateMedkit(medkitType);
-        medkits.Add(medkit);
-    }
-    return medkits;
-}
-
-private List<GameObject> spawnAmmo(int count){
-    List<GameObject> ammos = new List<GameObject>();
-    for (int i = 0; i < count; i++)
-    {
-        Vector3 spawnPoint = generateRandomSpawnPoint();
-        GameObject ammo = Instantiate(ammoPackPrefab, spawnPoint, Quaternion.identity);
-        string ammoType = ammoTypes[UnityEngine.Random.Range(0, ammoTypes.Length)];
-        ammo.GetComponent<AmmoPackScript>().updateAmmoPack(ammoType);
-        ammos.Add(ammo);
-    }
-    return ammos;
-}
-
-public void clearDecals(){
-    GameObject[] bullets = GameObject.FindGameObjectsWithTag("Bullet");
-    foreach(GameObject bullet in bullets){
-        Destroy(bullet);
+        List<GameObject> enemies = new List<GameObject>(); 
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 spawnPoint = generateFlyingEnemySpawnPoint();
+            GameObject enemy = Instantiate(dronePrefab, spawnPoint, Quaternion.identity);
+            enemies.Add(enemy); 
+        }
+        return enemies;
     }
 
-    GameObject[] energyProjectiles = GameObject.FindGameObjectsWithTag("EnergyProjectile");
-    foreach(GameObject energyProjectile in energyProjectiles){
-        Destroy(energyProjectile);
+    // Spawn medkits
+    private List<GameObject> spawnMedKits(int count){
+        List<GameObject> medkits = new List<GameObject>();
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 spawnPoint = generateRandomSpawnPoint();
+            GameObject medkit = Instantiate(medkitPrefab, spawnPoint, Quaternion.identity);
+            string medkitType = medkitTypes[UnityEngine.Random.Range(0, medkitTypes.Length)];
+            medkit.GetComponent<MedkitScript>().updateMedkit(medkitType);
+            medkits.Add(medkit);
+        }
+        return medkits;
     }
 
-    GameObject[] ballisticProjectiles = GameObject.FindGameObjectsWithTag("BallisticProjectile");
-    foreach(GameObject ballisticProjectile in ballisticProjectiles){
-        Destroy(ballisticProjectile);
+    // Spawn ammo packs
+    private List<GameObject> spawnAmmo(int count){
+        List<GameObject> ammos = new List<GameObject>();
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 spawnPoint = generateRandomSpawnPoint();
+            GameObject ammo = Instantiate(ammoPackPrefab, spawnPoint, Quaternion.identity);
+            string ammoType = ammoTypes[UnityEngine.Random.Range(0, ammoTypes.Length)];
+            ammo.GetComponent<AmmoPackScript>().updateAmmoPack(ammoType);
+            ammos.Add(ammo);
+        }
+        return ammos;
     }
-}
 
+    // Clear all decals after each wave
+    public void clearDecals(){
+        GameObject[] bullets = GameObject.FindGameObjectsWithTag("Bullet");
+        foreach(GameObject bullet in bullets){
+            Destroy(bullet);
+        }
+
+        GameObject[] energyProjectiles = GameObject.FindGameObjectsWithTag("EnergyProjectile");
+        foreach(GameObject energyProjectile in energyProjectiles){
+            Destroy(energyProjectile);
+        }
+
+        GameObject[] ballisticProjectiles = GameObject.FindGameObjectsWithTag("BallisticProjectile");
+        foreach(GameObject ballisticProjectile in ballisticProjectiles){
+            Destroy(ballisticProjectile);
+        }
+    }
+
+    // Corutine to handle wave
     private IEnumerator handleWaves(){
         while (currentWave <= maxWaves)
         {
@@ -707,6 +692,7 @@ public void clearDecals(){
         SceneManager.LoadScene("VictoryScene");
     }
 
+    // Corutine to handle grace period
     private IEnumerator handleGraceTime(){
         duration = gracePeriod;
         medkits = spawnMedKits(medkitCount);
@@ -726,81 +712,83 @@ public void clearDecals(){
         }
     }
 
+    // Corutine to handle what happening during the wave
     private IEnumerator handleWaveTime()
-{
-    duration = calculateWaveTime();
-    List<GameObject> soldiers = spawnSoldiers(soldierCount);
-    List<GameObject> drones = spawnDrones(droneCount);
-
-    List<GameObject> enemies = new List<GameObject>();
-    enemies.AddRange(soldiers);
-    enemies.AddRange(drones);
-    
-    if(currentWave == maxWaves){
-        GameObject boss = Instantiate(bossPrefab, generateFlyingEnemySpawnPoint(), Quaternion.identity);
-        enemies.Add(boss);
-    }
-
-    removeCollision(enemies);
-    audioManager.GetComponent<AudioScript>().musicSource.Stop();
-    audioManager.GetComponent<AudioScript>().musicSource.clip = audioManager.GetComponent<AudioScript>().backgroundMusic;
-    audioManager.GetComponent<AudioScript>().musicSource.loop = true;
-    audioManager.GetComponent<AudioScript>().musicSource.Play();
-    while (enemies.Count > 0 && duration > 0)
     {
-        if(timerText == null){
-            yield break;
+        duration = calculateWaveTime();
+        List<GameObject> soldiers = spawnSoldiers(soldierCount);
+        List<GameObject> drones = spawnDrones(droneCount);
+
+        List<GameObject> enemies = new List<GameObject>();
+        enemies.AddRange(soldiers);
+        enemies.AddRange(drones);
+        
+        if(currentWave == maxWaves){ // Spawn boss on the last wave
+            GameObject boss = Instantiate(bossPrefab, generateFlyingEnemySpawnPoint(), Quaternion.identity);
+            enemies.Add(boss);
         }
-        timerText.text = floatToMinutesSeconds(duration);
-        yield return null;
-        duration -= Time.deltaTime;
 
-        for (int i = 0; i < enemies.Count; i++)
+        removeCollision(enemies);
+        audioManager.GetComponent<AudioScript>().musicSource.Stop();
+        audioManager.GetComponent<AudioScript>().musicSource.clip = audioManager.GetComponent<AudioScript>().backgroundMusic;
+        audioManager.GetComponent<AudioScript>().musicSource.loop = true;
+        audioManager.GetComponent<AudioScript>().musicSource.Play();
+        while (enemies.Count > 0 && duration > 0)
         {
+            if(timerText == null){
+                yield break;
+            }
+            timerText.text = floatToMinutesSeconds(duration);
+            yield return null;
+            duration -= Time.deltaTime;
 
-            if(enemies[i] != null){
-                switch(enemies[i].tag){
-                    case "Soldier":
-                        if(enemies[i].GetComponent<SoldierScript>().isKilled()){
-                            int xp = enemies[i].GetComponent<SoldierScript>().getXP();
-                            player.GetComponent<PlayerScript>().addXP(xp);
-                            player.GetComponent<PlayerScript>().addKill();
-                            Destroy(enemies[i]);
-                            enemies.RemoveAt(i);
-                        }
+            for (int i = 0; i < enemies.Count; i++)
+            {
 
-                        break;
-                    case "Drone":
-                        if(enemies[i].GetComponent<DroneScript>().isKilled()){
-                            int xp = enemies[i].GetComponent<DroneScript>().getXP();
-                            player.GetComponent<PlayerScript>().addXP(xp);
-                            player.GetComponent<PlayerScript>().addKill();
-                            Destroy(enemies[i]);
-                            enemies.RemoveAt(i);
-                        }
-                        break;
+                if(enemies[i] != null){
+                    switch(enemies[i].tag){
+                        case "Soldier":
+                            if(enemies[i].GetComponent<SoldierScript>().isKilled()){
+                                int xp = enemies[i].GetComponent<SoldierScript>().getXP();
+                                player.GetComponent<PlayerScript>().addXP(xp);
+                                player.GetComponent<PlayerScript>().addKill();
+                                Destroy(enemies[i]);
+                                enemies.RemoveAt(i);
+                            }
 
-                    case "Boss":
-                        if(enemies[i].GetComponent<BossScript>().isKilled()){
-                            int xp = enemies[i].GetComponent<BossScript>().getXP();
-                            player.GetComponent<PlayerScript>().addXP(xp);
-                            player.GetComponent<PlayerScript>().addKill();
-                            Destroy(enemies[i]);
-                            enemies.RemoveAt(i);
-                        }
-                        break;
+                            break;
+                        case "Drone":
+                            if(enemies[i].GetComponent<DroneScript>().isKilled()){
+                                int xp = enemies[i].GetComponent<DroneScript>().getXP();
+                                player.GetComponent<PlayerScript>().addXP(xp);
+                                player.GetComponent<PlayerScript>().addKill();
+                                Destroy(enemies[i]);
+                                enemies.RemoveAt(i);
+                            }
+                            break;
+
+                        case "Boss":
+                            if(enemies[i].GetComponent<BossScript>().isKilled()){
+                                int xp = enemies[i].GetComponent<BossScript>().getXP();
+                                player.GetComponent<PlayerScript>().addXP(xp);
+                                player.GetComponent<PlayerScript>().addKill();
+                                Destroy(enemies[i]);
+                                enemies.RemoveAt(i);
+                            }
+                            break;
+                    }
                 }
             }
         }
+        //game over
+        if (duration <= 0)
+        {
+            SceneManager.LoadScene("GameOverScene");
+        }
     }
-    //game over
-    if (duration <= 0)
-    {
-        SceneManager.LoadScene("GameOverScene");
-    }
-}
 
-public void updateUI(PlayerStats playerStats){
+    // Update UI
+    public void updateUI(PlayerStats playerStats){
         if (healthBar == null || xpBar == null || levelText == null || waveText == null || timerText == null || ammoText == null || magazineText == null || weaponNameText == null || medkitsCountText == null)
         {
             return;
@@ -816,7 +804,7 @@ public void updateUI(PlayerStats playerStats){
         ? int.Parse(levelText.text.Substring(6)) - 1 
         : 0;
 
-        while(currentLevel < levels.Count - 1 && xpCount + levels[currentLevel].xpToNextLevel <= playerStats.xp)
+        while(currentLevel < levels.Count - 1 && xpCount + levels[currentLevel].xpToNextLevel <= playerStats.xp) // Calculate current level
         {
             xpCount += levels[currentLevel].xpToNextLevel;
             currentLevel++;
@@ -826,6 +814,7 @@ public void updateUI(PlayerStats playerStats){
             audioManager.GetComponent<AudioScript>().playLevelUp();
         }
 
+        // Update xp bar and level text
         int difference = playerStats.xp - xpCount;
         int xpForNextLevel = levels[currentLevel].xpToNextLevel;
         float differencePercentage = (float)difference / xpForNextLevel;
@@ -837,86 +826,88 @@ public void updateUI(PlayerStats playerStats){
     }
     
    void Awake()
-{
-    seed = Math.Abs(Guid.NewGuid().GetHashCode());
-    random = new System.Random(seed);
-    DontDestroyOnLoad(gameObject);
-    difficultyManager = GameObject.FindGameObjectWithTag("DifficultyManager");
-
-    if (difficultyManager != null)
     {
-        currentDifficulty = difficultyManager.GetComponent<DifficultyManager>().getDifficulty();
-        Debug.Log("Current Difficulty: " + currentDifficulty);
-    }
-    else
-    {
-        Debug.LogError("DifficultyManager not found in the scene.");
-    }
+        seed = Math.Abs(Guid.NewGuid().GetHashCode()); // Calculate random seed
+        random = new System.Random(seed); // Set random seed
+        DontDestroyOnLoad(gameObject);
+        difficultyManager = GameObject.FindGameObjectWithTag("DifficultyManager");
 
-    levels.Add(new Level(100));
-    levels.Add(new Level(200));
-    levels.Add(new Level(400));
-    levels.Add(new Level(600));
-    levels.Add(new Level(950));
-    levels.Add(new Level(1300));
-    levels.Add(new Level(1800));
-    levels.Add(new Level(2500));
-    levels.Add(new Level(3400));
-    levels.Add(new Level(4500));
-    levels.Add(new Level(5800));
-    levels.Add(new Level(7400));
-    levels.Add(new Level(9300));
-    levels.Add(new Level(11500));
-    levels.Add(new Level(14000));
-    levels.Add(new Level(17000));
-    levels.Add(new Level(20500));
-    levels.Add(new Level(24500));
-    levels.Add(new Level(29000));
-    levels.Add(new Level(34000));
-
-    
-
-
-    weaponThresholds = new Dictionary<int, GameObject>
+        if (difficultyManager != null)
         {
-            { 200, smgPrefab },
-            { 600, shotgunPrefab },
-            { 1200, laserPrefab },
-            { 3000, plasmaCannonPrefab }
-        };
-
-    spawnedThresholds = new HashSet<int>();
-
-    blockGrid = new int[width * 2, height];
-        for (int x = 0; x < blockGrid.GetLength(0); x++)
+            currentDifficulty = difficultyManager.GetComponent<DifficultyManager>().getDifficulty();
+            Debug.Log("Current Difficulty: " + currentDifficulty);
+        }
+        else
         {
-            for (int y = 0; y < blockGrid.GetLength(1); y++)
-            {
-                blockGrid[x, y] = 1; 
-            }
+            Debug.LogError("DifficultyManager not found in the scene.");
         }
 
+        levels.Add(new Level(100));
+        levels.Add(new Level(200));
+        levels.Add(new Level(400));
+        levels.Add(new Level(600));
+        levels.Add(new Level(950));
+        levels.Add(new Level(1300));
+        levels.Add(new Level(1800));
+        levels.Add(new Level(2500));
+        levels.Add(new Level(3400));
+        levels.Add(new Level(4500));
+        levels.Add(new Level(5800));
+        levels.Add(new Level(7400));
+        levels.Add(new Level(9300));
+        levels.Add(new Level(11500));
+        levels.Add(new Level(14000));
+        levels.Add(new Level(17000));
+        levels.Add(new Level(20500));
+        levels.Add(new Level(24500));
+        levels.Add(new Level(29000));
+        levels.Add(new Level(34000));
+
+        
+        weaponThresholds = new Dictionary<int, GameObject> //<xp, weapon>
+            {
+                { 200, smgPrefab },
+                { 600, shotgunPrefab },
+                { 1200, laserPrefab },
+                { 3000, plasmaCannonPrefab }
+            };
+
+        spawnedThresholds = new HashSet<int>();
+
+        // Initialize empty block grid for pathfinding
+        blockGrid = new int[width * 2, height];
+            for (int x = 0; x < blockGrid.GetLength(0); x++)
+            {
+                for (int y = 0; y < blockGrid.GetLength(1); y++)
+                {
+                    blockGrid[x, y] = 1; 
+                }
+            }
+
+        // Initialize range weapons
         weapons.Add("Basic Pistol", new RangeWeapon(damage: 20, maxAmmo: 8, ammo: 8, magazine: 72, name: "Basic Pistol", offsetX: 0.55f, offsetY: 0.1f, bulletSpeed: 10f, bulletLifeTime: 3f, shotDelay: 0.25f, bulletPrefab: baseBulletPrefab, weaponIcon: basePistolIcon));
         weapons.Add("Smg", new RangeWeapon(damage: 10, maxAmmo: 10, ammo: 10, magazine: 40, name: "Smg", offsetX: 1.1f, offsetY: 0.15f, bulletSpeed: 20f, bulletLifeTime: 2f, shotDelay: 0.1f, bulletPrefab: baseBulletPrefab, weaponIcon: smgIcon));
         weapons.Add("Shotgun", new RangeWeapon(damage: 20, maxAmmo: 7, ammo: 7, magazine: 21, name: "Shotgun", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 4f, shotDelay: 0.5f, bulletPrefab: baseBulletPrefab, weaponIcon: shotgunIcon));
         weapons.Add("Laser Gun", new RangeWeapon(damage: 35, maxAmmo: 5, ammo: 5, magazine: 30, name: "Laser Gun", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 200f, bulletLifeTime: 5f, shotDelay: 0.5f, bulletPrefab: invisBulletPrefab, weaponIcon: laserIcon));
         weapons.Add("Plasma Cannon", new RangeWeapon(damage: 50, maxAmmo: 5, ammo: 5, magazine: 20, name: "Plasma Cannon", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 20f, bulletLifeTime: 7f, shotDelay: 0.7f, bulletPrefab: plasmaBulletPrefab, weaponIcon: plasmaCannonIcon));
 
-     audioManager = GameObject.FindGameObjectWithTag("AudioManager");
+        audioManager = GameObject.FindGameObjectWithTag("AudioManager");
 
-     Debug.Log(seed);
-}
+        Debug.Log(seed);
+    }
 
-public (int, int) getNextBlock(float srcX, float srcY)
-{
-    GameObject player = GameObject.FindGameObjectWithTag("Player");
-    int enemyX = (int)Math.Round(srcX) + width;
-    int enemyY = (int)Math.Round(srcY);
-    int playerX = (int)Math.Round(player.transform.position.x) + width;
-    int playerY = (int)Math.Round(player.transform.position.y) + 1;
-    
-    return AStarSearch.getNextMove(enemyX, enemyY, playerX, playerY);
-}
+
+    // Function to get the next block for the drone and boss to move to
+    public (int, int) getNextBlock(float srcX, float srcY)
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        int enemyX = (int)Math.Round(srcX) + width;
+        int enemyY = (int)Math.Round(srcY);
+        int playerX = (int)Math.Round(player.transform.position.x) + width;
+        int playerY = (int)Math.Round(player.transform.position.y) + 1;
+        
+        return AStarSearch.getNextMove(enemyX, enemyY, playerX, playerY);
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -929,34 +920,33 @@ public (int, int) getNextBlock(float srcX, float srcY)
 
     // Update is called once per frame
     void Update()
-{
-    if (player != null)
     {
-        playerStats = player.GetComponent<PlayerScript>().getPlayerStats();
-        updateUI(playerStats);
-        totalElapsedTime += Time.deltaTime;
-
-        if (player.GetComponent<PlayerScript>().isKilled())
+        if (player != null)
         {
-       
-            //player = null;
-            Destroy(player);
-            SceneManager.LoadScene("GameOverScene");
-        
-        }
+            playerStats = player.GetComponent<PlayerScript>().getPlayerStats();
+            updateUI(playerStats);
+            totalElapsedTime += Time.deltaTime;
 
-        if(weaponThresholds == null || spawnedThresholds == null){
-            return;
-        }
-        foreach (int threshold in weaponThresholds.Keys)
-        {
-            if (playerStats.xp >= threshold && !spawnedThresholds.Contains(threshold))
+            if (player.GetComponent<PlayerScript>().isKilled()) // If the player is killed, go to the game over scene
             {
-                Vector3 spawnPoint = generateRandomSpawnPoint(offsetY: 1);
-                Instantiate(weaponThresholds[threshold], spawnPoint, Quaternion.identity);
-                spawnedThresholds.Add(threshold);
+                //player = null;
+                Destroy(player);
+                SceneManager.LoadScene("GameOverScene");
+            
+            }
+
+            if(weaponThresholds == null || spawnedThresholds == null){
+                return;
+            }
+            foreach (int threshold in weaponThresholds.Keys) // Spawn weapons if player reaches the required xp
+            {
+                if (playerStats.xp >= threshold && !spawnedThresholds.Contains(threshold))
+                {
+                    Vector3 spawnPoint = generateRandomSpawnPoint(offsetY: 1);
+                    Instantiate(weaponThresholds[threshold], spawnPoint, Quaternion.identity);
+                    spawnedThresholds.Add(threshold);
+                }
             }
         }
     }
-}
 }

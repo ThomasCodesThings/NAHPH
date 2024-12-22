@@ -20,6 +20,7 @@ public class BulletSoldierScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Ignore collision with medkits, ammopacks, weak enemies and bullets
         GameObject[] medkits = GameObject.FindGameObjectsWithTag("Medkit");
         GameObject[] ammopacks = GameObject.FindGameObjectsWithTag("AmmoPack");
         GameObject[] weakEnemies = GameObject.FindGameObjectsWithTag("WeakEnemy");

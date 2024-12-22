@@ -16,11 +16,12 @@ public class VictoryScript : MonoBehaviour
 
     private GameObject audioManager;
 
-
+    // Exit the game
     public void exitGame(){
         Application.Quit();
     }
 
+    // Switch to the main menu
     public void switchToMainMenu(){
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if(player != null){
@@ -52,6 +53,7 @@ public class VictoryScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {   
+        // Play the victory sound
         audioManager.GetComponent<AudioScript>().musicSource.Stop();
         audioManager.GetComponent<AudioScript>().musicSource.clip = audioManager.GetComponent<AudioScript>().victorySound;
         audioManager.GetComponent<AudioScript>().musicSource.loop = false;
@@ -60,6 +62,8 @@ public class VictoryScript : MonoBehaviour
         if(gameManager == null){
             return;
         }
+
+        // Display the final game stats
         GameStats stats = gameManager.GetComponent<GameManager>().getGameStats();
         timeText.text = stats.time;
         xpText.text = stats.totalXp;

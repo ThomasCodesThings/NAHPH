@@ -14,7 +14,7 @@ public class DroneWeaponScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //calculate angle between player and this weapon and set angle of weapon to that
+        // Calculate angle between player and this weapon and set angle of weapon to that
         Vector3 difference = player.transform.position - transform.position;
         difference.Normalize();
         float rotation_z = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;

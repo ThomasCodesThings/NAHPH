@@ -32,26 +32,31 @@ public class DroneScript : MonoBehaviour
     private bool playerIsOnLeft = false;
     private GameObject audioManager;
 
-    private int minDistance = 2;
+    private int minDistance = 2; // Minimum distance to player
 
+    // Get the health of the drone
     public void setHealth(int damage)
     {
         health -= damage;
     }
 
+    // Get the health of the drone
     public bool isKilled(){
         return health <= 0;
     }
 
+    // Get the XP of the drone
     public int getXP(){
         return Random.Range(100, 200);
     }
 
+    // Get the damage of the drone
     public int getDamage()
     {
         return damage;
     }
 
+    // Ignore collision with other objects
     private void IgnoreCollision()
     {
         GameObject[] medkits = GameObject.FindGameObjectsWithTag("Medkit");
@@ -123,6 +128,7 @@ public class DroneScript : MonoBehaviour
     rb = GetComponent<Rigidbody2D>();
     spriteRenderer = GetComponent<SpriteRenderer>();
 
+    // Set the health bar value
     if (healthBar != null)
     {
         healthBar.value = health;
@@ -155,11 +161,12 @@ public class DroneScript : MonoBehaviour
     {
         //IgnoreCollision();
 
-        if (Time.timeScale == 0)
+        if (Time.timeScale == 0) // If the game is paused do nothing
         {
             return;
         }
 
+        // Check if the player is on the left or right side of the drone and base on that flip the sprite
         playerIsOnLeft = player.transform.position.x < transform.position.x;
         if (playerIsOnLeft)
         {
@@ -180,6 +187,7 @@ public class DroneScript : MonoBehaviour
             droneWeapon.GetComponent<SpriteRenderer>().flipX = false;
         }
 
+        // Update the health bar position, value and color
         if (healthBar != null){
         healthBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * healthBarOffset);
         healthBar.value = health;
@@ -188,14 +196,17 @@ public class DroneScript : MonoBehaviour
 
         int width = gameManager.GetComponent<GameManager>().getBaseWidth();
         int distance = (int)Vector3.Distance(transform.position, player.transform.position);
-        if (distance < minDistance)
+        if (distance < minDistance) // If the player is too close to the drone, the drone does not move
         {
             return;
         }
+
+        // Otherwise it moves to new position
         (int newX, int newY) = gameManager.GetComponent<GameManager>().getNextBlock(transform.position.x, transform.position.y);
         Vector3 target = new Vector3(newX - width, newY, 0);
         transform.position = Vector3.Lerp(transform.position, target, Time.deltaTime * smooth);
 
+        // Drone attack
         if (Time.time - lastShotTime > shotDelay)
         {
             audioManager.GetComponent<AudioScript>().playDroneAttack();
@@ -217,6 +228,7 @@ public class DroneScript : MonoBehaviour
        }
     }
 
+    // Destroy drone parts separately, it worked before but now it does not work
     private void OnDestroy(){
 
             if(droneBody == null || droneWeapon == null){

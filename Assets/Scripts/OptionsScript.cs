@@ -8,8 +8,6 @@ public class OptionsScript : MonoBehaviour
     [SerializeField] GameObject fullScreenOff;
     
     
-    
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +20,7 @@ public class OptionsScript : MonoBehaviour
         
     }
 
+    // Switch between fullscreen and windowed mode
     public void SwitchFullScreen()
     {
         if (Screen.fullScreen)
@@ -38,9 +37,8 @@ public class OptionsScript : MonoBehaviour
         }
     }
 
+    // Close the options menu
     public void Close(){
         gameObject.SetActive(false);
     }
-
-
 }

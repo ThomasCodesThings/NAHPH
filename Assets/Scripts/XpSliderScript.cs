@@ -20,6 +20,7 @@ public class XpSliderScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Activate the xp slider if the player has some xp
         int currentXp = gameManager.GetComponent<GameManager>().getPlayerXP();
         if(currentXp > 0)
         {

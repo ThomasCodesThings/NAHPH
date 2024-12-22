@@ -42,37 +42,43 @@ public class SoldierScript : MonoBehaviour
 
     private GameObject audioManager;
 
-
+    // Get the health of the soldier
     public void setHealth(int damage)
     {
         health -= damage;
     }
 
+    // Check if the soldier is killed
     public bool isKilled(){
         return health <= 0;
     }
 
+    // Get the XP of the soldier
     public int getXP(){
         return Random.Range(50, 100);
     }
+
+    // Get the damage of the soldier
     public int getDamage()
     {
         return damage;
     }
 
+    // Slow down the soldier (the soldier is slowwed down for a 3 seconds of time when its hit by a hammer)
     public void slowDown()
     {
         speed /= 2;
-
         StartCoroutine(slowDownCoroutine());
     }
 
+    // Slow down coroutine
     public IEnumerator slowDownCoroutine()
     {
         yield return new WaitForSeconds(slowDownTime);
         speed *= 2;
     }
 
+    // Ignore collision with other objects
     private void IgnoreCollision()
     {
         GameObject[] medkits = GameObject.FindGameObjectsWithTag("Medkit");
@@ -151,19 +157,17 @@ public class SoldierScript : MonoBehaviour
         return;
     }
 
-    if(gameObject.transform.position.y < 0){
+    if(gameObject.transform.position.y < 0){ // If the soldier falls off the map, kill him
         health = 0;
     }
 
-    //IgnoreCollision();
-
-    if (Time.timeScale == 0)
+    if (Time.timeScale == 0) // If the game is paused, do nothing
     {
         return;
     }
 
-
-        float directionMultiplier = transform.localScale.x > 0 ? 1 : -1; 
+    // Update the health bar position and value
+    float directionMultiplier = transform.localScale.x > 0 ? 1 : -1; 
         Vector3 healthBarWorldPosition = new Vector3(
         transform.position.x + directionMultiplier * -0.1f,
         transform.position.y + 2f * healthBarOffset, 
@@ -178,6 +182,7 @@ public class SoldierScript : MonoBehaviour
         enemyX = (int)transform.position.x;
         enemyY = (int)transform.position.y;
 
+        // If the player is on the left side of the soldier, make him face left, otherwise make him face right
         if(playerX < enemyX){
             transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
         }else{
@@ -186,28 +191,28 @@ public class SoldierScript : MonoBehaviour
         int index = Mathf.Clamp(enemyX + gameManager.GetComponent<GameManager>().getBaseWidth(), 0, heights.Count - 1);
 
         float distance = Vector2.Distance(new Vector2(playerX, playerY), new Vector2(enemyX, enemyY));
-        if (distance < triggerRadius)
+        if (distance < triggerRadius) //Wake up soldier if the player is close enough
         {
             bool isPlayerOnLeft = playerX < enemyX;
-            if (playerY == enemyY + 1)
+            if (playerY == enemyY + 1) //If the player is on the same height as the soldier, shoot him
             {
                 shoot(isPlayerOnLeft);
                 animator.SetBool("IsWalking", false);
             }
-            else
+            else //Otherwise move to him by walking or jumping
             {
-                if(distance < 2){
+                if(distance < 2){ //Prevent him from being "too close" to the player
                     return;
                 }
                 else
                 if (isPlayerOnLeft)
                 {
-                    if (index - 1 >= 0 && heights[index - 1] > enemyY && isGrounded && heights[index - 1] != -1)
+                    if (index - 1 >= 0 && heights[index - 1] > enemyY && isGrounded && heights[index - 1] != -1) //If there is a block on the left side of the soldier, jump over it
                     {
                         jump(isPlayerOnLeft);
                         animator.SetBool("IsWalking", false);
                     }
-                    else
+                    else //Otherwise walk
                     {
                         walk(isPlayerOnLeft);
                         animator.SetBool("IsWalking", true);
@@ -215,11 +220,11 @@ public class SoldierScript : MonoBehaviour
                 }
                 else
                 {
-                    if (index + 1 < heights.Count && heights[index + 1] > enemyY && isGrounded && heights[index + 1] != -1)
+                    if (index + 1 < heights.Count && heights[index + 1] > enemyY && isGrounded && heights[index + 1] != -1) //If there is a block on the right side of the soldier, jump over it
                     {
                         jump(isPlayerOnLeft);
                         animator.SetBool("IsWalking", false);
-                    }else
+                    }else //Otherwise walk
                     {
                         walk(isPlayerOnLeft);
                         animator.SetBool("IsWalking", true);
@@ -229,8 +234,9 @@ public class SoldierScript : MonoBehaviour
         }
     }
     
+    //Enemy "AI" functions
 
-     private void walk(bool isPlayerOnLeft)
+    private void walk(bool isPlayerOnLeft)
     {
         float direction = isPlayerOnLeft ? -1 : 1;
         transform.localScale = new Vector3(direction, transform.localScale.y, transform.localScale.z);
@@ -255,39 +261,35 @@ public class SoldierScript : MonoBehaviour
     }
 
     private void shoot(bool isPlayerOnLeft)
-{
-    if (Time.time - lastShotTime > shotDelay)
     {
-        audioManager.GetComponent<AudioScript>().playSoldierAttack();
-        lastShotTime = Time.time;
-        float direction = isPlayerOnLeft ? -1 : 1;
+        if (Time.time - lastShotTime > shotDelay)
+        {
+            audioManager.GetComponent<AudioScript>().playSoldierAttack();
+            lastShotTime = Time.time;
+            float direction = isPlayerOnLeft ? -1 : 1;
 
 
-        Vector3 bulletSpawnPosition = (gameObject.transform.position + new Vector3(direction * bulletOffsetX, bulletOffsetY, 0));
-        
-        GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition, Quaternion.identity);
-        bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(direction * bulletSpeed, 0);
+            Vector3 bulletSpawnPosition = (gameObject.transform.position + new Vector3(direction * bulletOffsetX, bulletOffsetY, 0));
+            
+            GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition, Quaternion.identity);
+            bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(direction * bulletSpeed, 0);
 
-        Destroy(bullet, bulletLifeTime);
+            Destroy(bullet, bulletLifeTime);
+        }
     }
-}
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-
-        if (other.gameObject.CompareTag("Floor"))
+        if (other.gameObject.CompareTag("Floor")) //If the soldier is on the floor, colider with the floor he can move
         {
             isGrounded = true;
         }
 
-        if (other.gameObject.CompareTag("Bullet"))
+        if (other.gameObject.CompareTag("Bullet")) //If the soldier is hit by a bullet, decrease his health
         {
-            
             int damage = player.GetComponent<PlayerScript>().getDamage();
             setHealth(damage);
             Destroy(other.gameObject);
         }
     }
-
-    
 }
