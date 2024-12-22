@@ -1960,7 +1960,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: AID KITS USED
+  m_text: MED KITS USED
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: faff7f2c0bc197a419d59de1e11231f3, type: 2}
   m_sharedMaterial: {fileID: -1232171295461550652, guid: faff7f2c0bc197a419d59de1e11231f3, type: 2}
