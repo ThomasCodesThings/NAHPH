@@ -356,20 +356,6 @@ public class GameManager : MonoBehaviour
         int wallSize = height;
         //0 - cell is blocked
         //1 -cell is non blocked
-
-        /*for (int x = -width; x < width; x++)
-        {
-            int gridX = x + width;
-
-            Instantiate(dirtPrefab, new Vector3(x, 0, 0), Quaternion.identity);
-            Instantiate(floorPrefab, new Vector3(x, 1, 0), Quaternion.identity);
-            
-            blockGrid[gridX, 0] = 0;  
-            blockGrid[gridX, 1] = 0;
-            
-            heights.Add(1);
-        }*/
-
         int prevY = 2;
 
         for (int x = -width; x < width;)
@@ -405,6 +391,8 @@ public class GameManager : MonoBehaviour
         }
 
         int previousY = -1;
+        bool previousWasGap = false;
+
         for (int yMultiplier = 1; yMultiplier < platformLayers + 1; yMultiplier++)
         {
             for (int x = -width; x < width;)
@@ -412,7 +400,7 @@ public class GameManager : MonoBehaviour
                 int randomInt = random.Next(0, 5);
                 bool spawnPlatform = randomInt == 1 || randomInt == 2;
 
-                if (spawnPlatform)
+                if (spawnPlatform && !previousWasGap)
                 {
                     int platformWidth = random.Next(4, 8);
                     if (platformWidth % 2 != 0)
@@ -428,23 +416,35 @@ public class GameManager : MonoBehaviour
 
                     if (y == previousY)
                     {
-            
-                        int gapSize = random.Next(2, 4);
+                        int gapSize = random.Next(1, 3);
                         x += gapSize;
+                        previousWasGap = true;
                         continue;
                     }
 
                     if (x + platformWidth <= width)
                     {
-                        generatePlatform(x, y + ((int)5f * yMultiplier), platformWidth);
-                        previousY = y; 
+                        generatePlatform(x, y + ((int)6f * yMultiplier), platformWidth);
+                        previousY = y;
+                        previousWasGap = false;
                     }
                     x += platformWidth;
                 }
                 else
                 {
-                    int gapSize = random.Next(2, 4);
+                    int gapSize = random.Next(1, 3);
                     x += gapSize;
+
+                    if (previousWasGap)
+                    {
+                        spawnPlatform = true;
+                        previousWasGap = false;
+                    }
+                    else
+                    {
+                        previousWasGap = true;
+                    }
+
                     if (x >= width)
                     {
                         break;
@@ -452,6 +452,7 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
     }
 
     //(number of soldiers, number of drones, number of medkits, number of ammos)

@@ -206,7 +206,7 @@ public class PlayerScript : MonoBehaviour
                 meleeWeaponAnimator.SetBool("OnMeleeAttack", false);
                 break;
 
-            case "Laser":
+            case "Laser Gun":
                 meleeWeaponAnimator.SetBool("HasBasicPistol", false);
                 meleeWeaponAnimator.SetBool("HasSmg", false);
                 meleeWeaponAnimator.SetBool("HasShotgun", false);
