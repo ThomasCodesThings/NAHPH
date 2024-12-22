@@ -15,8 +15,7 @@ public class BossScript : MonoBehaviour
     private float healthBarOffset = 0.5f;
 
     private int health = 500;
-    private float triggerRadius = 10f;
-    private int damage = 0;
+    private int damage = 20;
     private SpriteRenderer spriteRenderer;
 
     private float lastShotTime = 0f;

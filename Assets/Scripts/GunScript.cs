@@ -5,10 +5,6 @@ using GameStructs;
 
 public class GunScript : MonoBehaviour
 {
-    [SerializeField] private GameObject baseBulletPrefab;
-    [SerializeField] private float bulletSpeed = 10f;
-    [SerializeField] private float bulletLifeTime = 5f;
-
     private float lastShotTime = 0f;
 
     private GameObject player;

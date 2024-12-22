@@ -1699,7 +1699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3a01fb93291c6041b2c6cd83a7ab91f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crosshairTexture: {fileID: 2800000, guid: 5dd9d80d2aeefca4e854d84d6585d1e3, type: 3}
+  crosshairTexture: {fileID: 2800000, guid: f8da3e382dcb53942b4e0417d16488a8, type: 3}
 --- !u!4 &668680835
 Transform:
   m_ObjectHideFlags: 0
@@ -2947,8 +2947,8 @@ Transform:
   m_GameObject: {fileID: 1179832893}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -3.2303555}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalPosition: {x: 0, y: -5, z: -3.2303555}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 870489302}
@@ -4624,11 +4624,12 @@ MonoBehaviour:
   platformLeftPrefab: {fileID: 3767010550175255973, guid: dd7958add7bb4a54c8df5477c67c9522, type: 3}
   platformRightPrefab: {fileID: 4364207888349565425, guid: f26f0b0cdfc66d54ba797b199cd0c025, type: 3}
   playerPrefab: {fileID: 8616937628321680139, guid: af1cb13bd56ef73429d5ca75c9d4dc5f, type: 3}
-  width: 100
+  width: 50
   height: 25
   player: {fileID: 1261849199}
   soldierPrefab: {fileID: 7235682654702471235, guid: b02f4d7d98fabce458438fdd4bd682fd, type: 3}
   dronePrefab: {fileID: 6831116145412626140, guid: 608c817d930a8244eb467979c526d725, type: 3}
+  bossPrefab: {fileID: 5894442017591989037, guid: 309a8fb59181eee4eba005827b1f29f6, type: 3}
   medkitPrefab: {fileID: 8723278715032774768, guid: eca6d9764aef1bf47b5375a4370fd80e, type: 3}
   ammoPackPrefab: {fileID: 3658277320011829494, guid: 63bb57ddc9ed9664eb39aebf55af897f, type: 3}
   lampPrefab: {fileID: 3259132862285132831, guid: 8afef4bc3cac9234e97c45ab00b7dfa7, type: 3}

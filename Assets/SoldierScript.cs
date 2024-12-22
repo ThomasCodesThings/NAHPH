@@ -29,7 +29,7 @@ public class SoldierScript : MonoBehaviour
     [SerializeField] Color maxHealthColor = Color.green;
     private float healthBarOffset = 0.75f;
 
-    private int damage = 1;
+    private int damage = 5;
     private float lastShotTime = 0f;
     private float shotDelay = 0.5f;
     private float bulletOffsetX = 1f;
@@ -147,6 +147,9 @@ public class SoldierScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    if(player == null){
+        return;
+    }
 
     if(gameObject.transform.position.y < 0){
         health = 0;
@@ -199,7 +202,7 @@ public class SoldierScript : MonoBehaviour
                 else
                 if (isPlayerOnLeft)
                 {
-                    if (index - 1 >= 0 && heights[index - 1] > enemyY && isGrounded)
+                    if (index - 1 >= 0 && heights[index - 1] > enemyY && isGrounded && heights[index - 1] != -1)
                     {
                         jump(isPlayerOnLeft);
                         animator.SetBool("IsWalking", false);
@@ -212,7 +215,7 @@ public class SoldierScript : MonoBehaviour
                 }
                 else
                 {
-                    if (index + 1 < heights.Count && heights[index + 1] > enemyY && isGrounded)
+                    if (index + 1 < heights.Count && heights[index + 1] > enemyY && isGrounded && heights[index + 1] != -1)
                     {
                         jump(isPlayerOnLeft);
                         animator.SetBool("IsWalking", false);

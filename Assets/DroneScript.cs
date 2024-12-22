@@ -14,15 +14,14 @@ public class DroneScript : MonoBehaviour
     private float healthBarOffset = 0.5f;
 
     private int health = 100;
-    private float triggerRadius = 10f;
-    private int damage = 2;
+    private int damage = 10;
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
 
     private float lastShotTime = 0f;
-    private float shotDelay = 0.5f;
+    private float shotDelay = 0.35f;
     private float bulletOffset = 0.4f;
-    private float bulletSpeed = 7f;
+    private float bulletSpeed = 10f;
     private float bulletLifeTime = 5f;
     [SerializeField] private GameObject bulletPrefab;
 

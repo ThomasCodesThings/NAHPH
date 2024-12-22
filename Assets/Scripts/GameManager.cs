@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] GameObject soldierPrefab;
     [SerializeField] GameObject dronePrefab;
+    [SerializeField] GameObject bossPrefab;
     [SerializeField] GameObject medkitPrefab;
     [SerializeField] GameObject ammoPackPrefab;
     [SerializeField] GameObject lampPrefab;
@@ -422,69 +423,35 @@ public class GameManager : MonoBehaviour
                     int y = revFreeBlock(x + width);
                     if (y < 0 || y >= blockGrid.GetLength(1))
                     {
-                        Debug.LogWarning($"Skipping platform at x={x} due to invalid Y value: {y}");
                         continue;
                     }
 
                     if (y == previousY)
                     {
             
-                        int gapSize = random.Next(4, 7);
+                        int gapSize = random.Next(2, 4);
                         x += gapSize;
-                        Debug.Log($"Forced gap at x={x} due to repeated Y value: {y}");
                         continue;
                     }
 
                     if (x + platformWidth <= width)
                     {
-                        generatePlatform(x, y + ((int)4.5f * yMultiplier), platformWidth);
+                        generatePlatform(x, y + ((int)5f * yMultiplier), platformWidth);
                         previousY = y; 
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"Platform at x={x} exceeds grid bounds and is skipped.");
                     }
                     x += platformWidth;
                 }
                 else
                 {
-                    int gapSize = random.Next(4, 7);
+                    int gapSize = random.Next(2, 4);
                     x += gapSize;
                     if (x >= width)
                     {
-                        Debug.LogWarning("Gap size caused x to exceed grid bounds.");
                         break;
                     }
                 }
             }
         }
-
-
-/*
-      for (int y = 5; y < height; y+=4)
-        {
-            for (int x = -width + 3; x < width; x++)
-            {   
-                int randomInt = random.Next(0, 5);
-                bool spawnPlatform = randomInt == 1 || randomInt == 2;
-
-                if (spawnPlatform)
-                {
-                    int platformWidth = random.Next(4, 8);
-                    if(!(platformWidth % 2 == 0)){
-                        platformWidth++;
-                    }
-                    generatePlatform(x, y, platformWidth);
-                    x += platformWidth;
-                }
-                else
-                {
-                    int gapSize = random.Next(4, 7);
-                    x += gapSize; 
-                }
-            }
-        }*/
-
     }
 
     //(number of soldiers, number of drones, number of medkits, number of ammos)
@@ -549,11 +516,11 @@ public class GameManager : MonoBehaviour
     private int calculateWaveTime(){
         switch(currentDifficulty){
             case Difficulty.Easy:
-                return (currentWave - 1)  * 60 + 180;
+                return (currentWave - 1)  * 60 + 240;
             case Difficulty.Medium:
-                return (currentWave - 1)  * 60 + 120;
+                return (currentWave - 1)  * 60 + 180;
             case Difficulty.Hard:
-                return (currentWave - 1)  * 60 + 60;
+                return (currentWave - 1)  * 60 + 120;
             default:
                 return 60;
         }
@@ -583,9 +550,6 @@ public string formatNumber(int number)
 
 public GameStats getGameStats()
 {
-    /*if(player == null){
-        return new GameStats("00:00:00", "0", "0", "0");
-    }*/
     string formatedTime = floatToDate(totalElapsedTime);
     string formatedEnemiesKilled = formatNumber(playerEnemiesKilled);
     string formatedMedkitsUsed = formatNumber(playerMedkitsUsed);
@@ -770,6 +734,11 @@ public void clearDecals(){
     List<GameObject> enemies = new List<GameObject>();
     enemies.AddRange(soldiers);
     enemies.AddRange(drones);
+    
+    if(currentWave == maxWaves){
+        GameObject boss = Instantiate(bossPrefab, generateFlyingEnemySpawnPoint(), Quaternion.identity);
+        enemies.Add(boss);
+    }
 
     removeCollision(enemies);
     audioManager.GetComponent<AudioScript>().musicSource.Stop();
@@ -803,6 +772,16 @@ public void clearDecals(){
                     case "Drone":
                         if(enemies[i].GetComponent<DroneScript>().isKilled()){
                             int xp = enemies[i].GetComponent<DroneScript>().getXP();
+                            player.GetComponent<PlayerScript>().addXP(xp);
+                            player.GetComponent<PlayerScript>().addKill();
+                            Destroy(enemies[i]);
+                            enemies.RemoveAt(i);
+                        }
+                        break;
+
+                    case "Boss":
+                        if(enemies[i].GetComponent<BossScript>().isKilled()){
+                            int xp = enemies[i].GetComponent<BossScript>().getXP();
                             player.GetComponent<PlayerScript>().addXP(xp);
                             player.GetComponent<PlayerScript>().addKill();
                             Destroy(enemies[i]);
@@ -899,10 +878,10 @@ public void updateUI(PlayerStats playerStats){
 
     weaponThresholds = new Dictionary<int, GameObject>
         {
-            { 10, smgPrefab },
-            { 20, shotgunPrefab },
-            { 30, laserPrefab },
-            { 40, plasmaCannonPrefab }
+            { 20, smgPrefab },
+            { 60, shotgunPrefab },
+            { 120, laserPrefab },
+            { 300, plasmaCannonPrefab }
         };
 
     spawnedThresholds = new HashSet<int>();
@@ -916,11 +895,11 @@ public void updateUI(PlayerStats playerStats){
             }
         }
 
-        weapons.Add("Basic Pistol", new RangeWeapon(damage: 5, maxAmmo: 8, ammo: 8, magazine: 64, name: "Basic Pistol", offsetX: 0.55f, offsetY: 0.1f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: basePistolIcon));
-        weapons.Add("Smg", new RangeWeapon(damage: 10, maxAmmo: 10, ammo: 10, magazine: 40, name: "Smg", offsetX: 1.1f, offsetY: 0.15f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: smgIcon));
-        weapons.Add("Shotgun", new RangeWeapon(damage: 20, maxAmmo: 7, ammo: 7, magazine: 21, name: "Shotgun", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: shotgunIcon));
-        weapons.Add("Laser Gun", new RangeWeapon(damage: 30, maxAmmo: 5, ammo: 5, magazine: 30, name: "Laser Gun", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: laserIcon));
-        weapons.Add("Plasma Cannon", new RangeWeapon(damage: 40, maxAmmo: 5, ammo: 5, magazine: 20, name: "Plasma Cannon", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: plasmaBulletPrefab, weaponIcon: plasmaCannonIcon));
+        weapons.Add("Basic Pistol", new RangeWeapon(damage: 20, maxAmmo: 8, ammo: 8, magazine: 72, name: "Basic Pistol", offsetX: 0.55f, offsetY: 0.1f, bulletSpeed: 10f, bulletLifeTime: 3f, shotDelay: 0.25f, bulletPrefab: baseBulletPrefab, weaponIcon: basePistolIcon));
+        weapons.Add("Smg", new RangeWeapon(damage: 10, maxAmmo: 10, ammo: 10, magazine: 40, name: "Smg", offsetX: 1.1f, offsetY: 0.15f, bulletSpeed: 20f, bulletLifeTime: 2f, shotDelay: 0.1f, bulletPrefab: baseBulletPrefab, weaponIcon: smgIcon));
+        weapons.Add("Shotgun", new RangeWeapon(damage: 20, maxAmmo: 7, ammo: 7, magazine: 21, name: "Shotgun", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 4f, shotDelay: 0.5f, bulletPrefab: baseBulletPrefab, weaponIcon: shotgunIcon));
+        weapons.Add("Laser Gun", new RangeWeapon(damage: 35, maxAmmo: 5, ammo: 5, magazine: 30, name: "Laser Gun", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 200f, bulletLifeTime: 5f, shotDelay: 0.5f, bulletPrefab: invisBulletPrefab, weaponIcon: laserIcon));
+        weapons.Add("Plasma Cannon", new RangeWeapon(damage: 50, maxAmmo: 5, ammo: 5, magazine: 20, name: "Plasma Cannon", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 20f, bulletLifeTime: 7f, shotDelay: 0.7f, bulletPrefab: plasmaBulletPrefab, weaponIcon: plasmaCannonIcon));
 
      audioManager = GameObject.FindGameObjectWithTag("AudioManager");
 

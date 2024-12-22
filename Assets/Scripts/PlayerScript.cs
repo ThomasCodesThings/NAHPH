@@ -34,9 +34,9 @@ public class PlayerScript : MonoBehaviour
     private RangeWeapon currentRangeWeapon;
 
     private float lastMeleeAttack = 0.0f;
-    private float meleeAttackDelay = 0.7f;
+    private float meleeAttackDelay = 0.4f;
     private int meleeDamage = 20;
-    private float minHitDistance = 4f;
+    private float minHitDistance = 3f;
 
      /************************************************************************
      * 
