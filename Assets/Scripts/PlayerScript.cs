@@ -692,12 +692,14 @@ public class PlayerScript : MonoBehaviour
     public void PauseGame()
     {
         Time.timeScale = 0;
+        audioManager.GetComponent<AudioScript>().musicSource.Pause();
         pauseMenu.SetActive(true);
     }
 
     public void ResumeGame()
     {
         Time.timeScale = 1;
+        audioManager.GetComponent<AudioScript>().musicSource.Play();
         pauseMenu.SetActive(false);
     }
 
