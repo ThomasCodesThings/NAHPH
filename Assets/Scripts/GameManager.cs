@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject platformLeftPrefab;
     [SerializeField] GameObject platformRightPrefab;
     [SerializeField] GameObject playerPrefab;
-    [SerializeField] int width = 50;
+    [SerializeField] int width = 100;
     [SerializeField] int height = 25;
     [SerializeField] GameObject player;
     [SerializeField] GameObject soldierPrefab;
@@ -66,8 +66,8 @@ public class GameManager : MonoBehaviour
     private int droneCount = 1;
     private int medkitCount = 1;
     private int ammoCount = 1;
-    private int maxWaves = 5;
-    int platformLayers = 2;
+    private int maxWaves = 10;
+    private int platformLayers = 2;
 
 
     private List<int> heights = new List<int>();
@@ -488,57 +488,63 @@ public class GameManager : MonoBehaviour
     }
 
     //(number of soldiers, number of drones, number of medkits, number of ammos)
-    public (int, int, int, int) getLevelSettings(){
-        switch(currentDifficulty){
-            case Difficulty.Easy:
-                switch(currentWave){
-                    case 1:
-                        return (1, 0, 1, 1);
-                    case 2:
-                        return (3, 1, 3, 1);
-                    case 3:
-                        return (5, 1, 5, 3);
-                    case 4:
-                        return (7, 2, 2, 5);
-                    case 5:
-                        return (10, 2, 3, 5);
-                    default:
-                        return (1, 1, 1, 1);
-                }
-            case Difficulty.Medium:
-                switch(currentWave){
-                    case 1:
-                        return (5, 0, 3, 1);
-                    case 2:
-                        return (7, 1, 3, 1);
-                    case 3:
-                        return (10, 2, 5, 3);
-                    case 4:
-                        return (15, 2, 2, 5);
-                    case 5:
-                        return (15, 3, 3, 5);
-                    default:
-                        return (1, 1, 1, 1);
-                }
-            case Difficulty.Hard:
-                switch(currentWave){
-                    case 1:
-                        return (7, 1, 3, 1);
-                    case 2:
-                        return (10, 2, 3, 1);
-                    case 3:
-                        return (15, 2, 5, 3);
-                    case 4:
-                        return (20, 3, 2, 5);
-                    case 5:
-                        return (20, 4, 3, 5);
-                    default:
-                        return (1, 1, 1, 1);
-                }
-            default:
-                return (1, 1, 1, 1);
-        }
+    public (int, int, int, int) getLevelSettings()
+{
+    switch (currentDifficulty)
+    {
+        case Difficulty.Easy:
+            switch (currentWave)
+            {
+                case 1: return (1, 0, 1, 2);
+                case 2: return (2, 0, 2, 3);
+                case 3: return (3, 1, 2, 4);
+                case 4: return (5, 1, 3, 5);
+                case 5: return (7, 1, 3, 6);
+                case 6: return (8, 1, 3, 6);
+                case 7: return (10, 2, 3, 7);
+                case 8: return (12, 2, 4, 8);
+                case 9: return (15, 2, 4, 9);
+                case 10: return (18, 2, 5, 10);
+                default: return (1, 1, 1, 1);
+            }
+
+        case Difficulty.Medium:
+            switch (currentWave)
+            {
+                case 1: return (3, 0, 1, 2);
+                case 2: return (5, 1, 1, 3);
+                case 3: return (7, 1, 2, 4);
+                case 4: return (10, 1, 2, 5);
+                case 5: return (12, 2, 3, 6);
+                case 6: return (15, 2, 3, 7);
+                case 7: return (18, 2, 4, 8);
+                case 8: return (20, 3, 4, 9);
+                case 9: return (23, 3, 5, 10);
+                case 10: return (25, 3, 5, 11);
+                default: return (1, 1, 1, 1);
+            }
+
+        case Difficulty.Hard:
+            switch (currentWave)
+            {
+                case 1: return (5, 1, 1, 2);
+                case 2: return (7, 1, 1, 3);
+                case 3: return (10, 1, 2, 4);
+                case 4: return (15, 2, 2, 5);
+                case 5: return (18, 2, 3, 6);
+                case 6: return (20, 3, 3, 7);
+                case 7: return (23, 3, 4, 8);
+                case 8: return (25, 3, 4, 9);
+                case 9: return (28, 4, 5, 10);
+                case 10: return (30, 5, 5, 12);
+                default: return (1, 1, 1, 1);
+            }
+
+        default:
+            return (1, 1, 1, 1);
     }
+}
+
 
     private int calculateWaveTime(){
         switch(currentDifficulty){
