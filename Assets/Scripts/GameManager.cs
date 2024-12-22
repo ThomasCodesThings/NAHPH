@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject dronePrefab;
     [SerializeField] GameObject medkitPrefab;
     [SerializeField] GameObject ammoPackPrefab;
+    [SerializeField] GameObject lampPrefab;
 
     /************************************************************************
      * 
@@ -195,6 +196,10 @@ public class GameManager : MonoBehaviour
         blockGrid[startX + width + 1, startY] = 0;
         blockedCells.Add((startX, startY));
         blockedCells.Add((startX + 1, startY));
+
+        if(!blockedCells.Contains((startX, startY + 3))){
+            Instantiate(lampPrefab, new Vector3(startX, startY + 3, -5), Quaternion.identity);
+        }
     }
 
     // Instantiate center prefabs
@@ -219,6 +224,10 @@ public class GameManager : MonoBehaviour
         blockGrid[rightX + width + 1, startY] = 0;
         blockedCells.Add((rightX, startY));
         blockedCells.Add((rightX + 1, startY));
+
+        if(!blockedCells.Contains((rightX, startY + 3))){
+            Instantiate(lampPrefab, new Vector3(rightX, startY + 3, -5), Quaternion.identity);
+        }
     }
 }
 

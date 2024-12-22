@@ -51,7 +51,7 @@ public class GameOverScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(audioManager == null){
+        if(audioManager){
             audioManager.GetComponent<AudioScript>().musicSource.Stop();
             audioManager.GetComponent<AudioScript>().musicSource.clip = audioManager.GetComponent<AudioScript>().gameOverSound;
             audioManager.GetComponent<AudioScript>().musicSource.loop = false;
