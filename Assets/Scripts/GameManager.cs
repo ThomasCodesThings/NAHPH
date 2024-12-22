@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject platformLeftPrefab;
     [SerializeField] GameObject platformRightPrefab;
     [SerializeField] GameObject playerPrefab;
-    [SerializeField] int width = 25;
+    [SerializeField] int width = 50;
     [SerializeField] int height = 20;
     [SerializeField] GameObject player;
     [SerializeField] GameObject soldierPrefab;
@@ -242,6 +242,64 @@ public class GameManager : MonoBehaviour
             }
         }*/
 
+    public int generateFloorPlatform(int startX, int startY, int platformWidth)
+    {
+        int totalWidth = 0;
+        bool ignoreLeftFloor = startX == -width + 1;
+        bool ignoreRightFloor = startX + platformWidth > width - 1;
+
+        if (!ignoreLeftFloor)
+        {
+            if (isWithinBlockGrid(startX + width, startY))
+            {
+                Instantiate(floorLeftPrefab, new Vector3(startX, startY, 0), Quaternion.identity);
+                blockGrid[startX + width, startY] = 0;
+                totalWidth++;
+            }
+        }
+
+        int calculatedWidth = platformWidth;
+        if (startX + platformWidth > width)
+        {
+            calculatedWidth = width - startX;
+        }
+
+        for (int x = (ignoreLeftFloor ? startX : startX + 1); x < startX + calculatedWidth - 1; x++)
+        {
+            if (isWithinBlockGrid(x + width, startY))
+            {
+                Instantiate(floorPrefab, new Vector3(x, startY, 0), Quaternion.identity);
+                blockGrid[x + width, startY] = 0;
+                totalWidth++;
+            }
+        }
+
+        if (!ignoreRightFloor)
+        {
+            if (isWithinBlockGrid(startX + calculatedWidth - 1 + width, startY))
+            {
+                Instantiate(floorRightPrefab, new Vector3(startX + calculatedWidth - 1, startY, 0), Quaternion.identity);
+                blockGrid[startX + calculatedWidth - 1 + width, startY] = 0;
+                totalWidth++;
+            }
+        }
+
+        for (int y = startY - 1; y >= -15; y--)
+        {
+            for (int x = startX; x < startX + totalWidth; x++)
+            {
+                Instantiate(dirtPrefab, new Vector3(x, y, 0), Quaternion.identity);
+            }
+        }
+
+        return totalWidth;
+    }
+
+    private bool isWithinBlockGrid(int x, int y)
+    {
+        return x >= 0 && x < blockGrid.GetLength(0) && y >= 0 && y < blockGrid.GetLength(1);
+    }
+
 
 
 
@@ -251,7 +309,7 @@ public class GameManager : MonoBehaviour
         //0 - cell is blocked
         //1 -cell is non blocked
 
-        for (int x = -width; x < width; x++)
+        /*for (int x = -width; x < width; x++)
         {
             int gridX = x + width;
 
@@ -262,6 +320,28 @@ public class GameManager : MonoBehaviour
             blockGrid[gridX, 1] = 0;
             
             heights.Add(1);
+        }*/
+
+        int prevY = 2;
+
+        for (int x = -width; x < width;)
+        {
+            bool generateGap = random.Next(0, 4) == 1;
+            if(generateGap){
+                int gapSize = random.Next(3, 6);
+                x += gapSize;
+                prevY = random.Next(0, 2) == 0 ? prevY - 1 : prevY + 1;
+                continue;
+            }
+            int platformWidth = random.Next(4, 8);
+            int platformHeight = random.Next(-2, 3);
+            int platformY = prevY + platformHeight;
+            if(platformY == prevY){
+                platformY = random.Next(0, 2) == 0 ? prevY - 1 : prevY + 1;
+            }
+            int realWidth = generateFloorPlatform(x, platformY, platformWidth);
+            prevY = platformY;
+            x += realWidth;
         }
 
         for (int i = 0; i < height; i++)
