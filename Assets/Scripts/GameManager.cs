@@ -846,14 +846,27 @@ public void updateUI(PlayerStats playerStats){
 
     levels.Add(new Level(100));
     levels.Add(new Level(200));
-    levels.Add(new Level(300));
     levels.Add(new Level(400));
-    levels.Add(new Level(500));
     levels.Add(new Level(600));
-    levels.Add(new Level(700));
-    levels.Add(new Level(800));
-    levels.Add(new Level(900));
-    levels.Add(new Level(1000));
+    levels.Add(new Level(950));
+    levels.Add(new Level(1300));
+    levels.Add(new Level(1800));
+    levels.Add(new Level(2500));
+    levels.Add(new Level(3400));
+    levels.Add(new Level(4500));
+    levels.Add(new Level(5800));
+    levels.Add(new Level(7400));
+    levels.Add(new Level(9300));
+    levels.Add(new Level(11500));
+    levels.Add(new Level(14000));
+    levels.Add(new Level(17000));
+    levels.Add(new Level(20500));
+    levels.Add(new Level(24500));
+    levels.Add(new Level(29000));
+    levels.Add(new Level(34000));
+
+    
+
 
     weaponThresholds = new Dictionary<int, GameObject>
         {
