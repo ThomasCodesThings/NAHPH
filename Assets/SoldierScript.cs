@@ -40,6 +40,8 @@ public class SoldierScript : MonoBehaviour
     private bool canMove = true;
     private float slowDownTime = 3f;
 
+    private GameObject audioManager;
+
 
     public void setHealth(int damage)
     {
@@ -136,6 +138,8 @@ public class SoldierScript : MonoBehaviour
         healthBar.maxValue = health;
         player = GameObject.FindGameObjectWithTag("Player");
 
+        audioManager = GameObject.FindGameObjectWithTag("AudioManager");
+
         IgnoreCollision();
 
     }
@@ -156,9 +160,9 @@ public class SoldierScript : MonoBehaviour
     }
 
 
-        float directionMultiplier = transform.localScale.x > 0 ? 1 : -1; // Flip offset based on character's facing direction
+        float directionMultiplier = transform.localScale.x > 0 ? 1 : -1; 
         Vector3 healthBarWorldPosition = new Vector3(
-        transform.position.x + directionMultiplier * -0.1f, // Adjust for facing direction
+        transform.position.x + directionMultiplier * -0.1f,
         transform.position.y + 2f * healthBarOffset, 
         transform.position.z   
     );
@@ -251,6 +255,7 @@ public class SoldierScript : MonoBehaviour
 {
     if (Time.time - lastShotTime > shotDelay)
     {
+        audioManager.GetComponent<AudioScript>().playSoldierAttack();
         lastShotTime = Time.time;
         float direction = isPlayerOnLeft ? -1 : 1;
 

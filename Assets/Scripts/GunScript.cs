@@ -12,12 +12,13 @@ public class GunScript : MonoBehaviour
     private float lastShotTime = 0f;
 
     private GameObject player;
-
+    private GameObject audioManager;
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        audioManager = GameObject.FindGameObjectWithTag("AudioManager");
     }
 
     // Update is called once per frame
@@ -35,6 +36,7 @@ public class GunScript : MonoBehaviour
    {
         if (weapon.getMagazine() > 0)
         {
+            audioManager.GetComponent<AudioScript>().playPlayerReload();
             int missingAmmo = weapon.getMaxAmmo() - weapon.getAmmo();
             int ammoToReload = Mathf.Min(missingAmmo, weapon.getMagazine());
 
@@ -47,6 +49,7 @@ public class GunScript : MonoBehaviour
     if(Input.GetMouseButton(0) && Time.time - lastShotTime > weapon.getShotDelay() && weapon.getAmmo() > 0)
     {
         lastShotTime = Time.time;
+        audioManager.GetComponent<AudioScript>().playRangeGunFire(weapon.getName());
 
         Vector3 bulletSpawnPosition = transform.position + transform.right * weapon.getOffsetX() + transform.up * weapon.getOffsetY();
 

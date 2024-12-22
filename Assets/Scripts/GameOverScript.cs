@@ -13,6 +13,8 @@ public class GameOverScript : MonoBehaviour
     [SerializeField] TMP_Text enemiesKilledText;
     [SerializeField] TMP_Text medkitsUsedText;
 
+    private GameObject audioManager;
+
 
     public void exitGame(){
         Application.Quit();
@@ -39,10 +41,16 @@ public class GameOverScript : MonoBehaviour
     void Awake()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameManager");
+        audioManager = GameObject.FindGameObjectWithTag("AudioManager");
     }
     // Start is called before the first frame update
     void Start()
     {
+        audioManager.GetComponent<AudioScript>().musicSource.Stop();
+        audioManager.GetComponent<AudioScript>().musicSource.clip = audioManager.GetComponent<AudioScript>().gameOverSound;
+        audioManager.GetComponent<AudioScript>().musicSource.loop = false;
+        audioManager.GetComponent<AudioScript>().musicSource.Play();
+
         if(gameManager == null){
             return;
         }

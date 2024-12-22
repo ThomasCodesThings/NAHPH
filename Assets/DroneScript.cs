@@ -31,6 +31,7 @@ public class DroneScript : MonoBehaviour
     private float destroyedTime = 3f;
     private float explosionForce = 10f;
     private bool playerIsOnLeft = false;
+    private GameObject audioManager;
 
     private int minDistance = 2;
 
@@ -145,6 +146,9 @@ public class DroneScript : MonoBehaviour
         Debug.LogError("DroneWeapon not found in the scene.");
     }
 
+    audioManager = GameObject.FindGameObjectWithTag("AudioManager");
+
+    IgnoreCollision();
     }
 
     // Update is called once per frame
@@ -160,11 +164,19 @@ public class DroneScript : MonoBehaviour
         playerIsOnLeft = player.transform.position.x < transform.position.x;
         if (playerIsOnLeft)
         {
+            if (droneBody == null || droneWeapon == null)
+            {
+                return;
+            }
             droneBody.GetComponent<SpriteRenderer>().flipX = true;
             droneWeapon.GetComponent<SpriteRenderer>().flipX = true;
         }
         else
         {
+            if (droneBody == null || droneWeapon == null)
+            {
+                return;
+            }
             droneBody.GetComponent<SpriteRenderer>().flipX = false;
             droneWeapon.GetComponent<SpriteRenderer>().flipX = false;
         }
@@ -187,6 +199,7 @@ public class DroneScript : MonoBehaviour
 
         if (Time.time - lastShotTime > shotDelay)
         {
+            audioManager.GetComponent<AudioScript>().playDroneAttack();
             lastShotTime = Time.time;
             GameObject bullet = Instantiate(bulletPrefab, droneWeapon.transform.position + droneWeapon.transform.right * bulletOffset, droneWeapon.transform.rotation);
             bullet.GetComponent<Rigidbody2D>().velocity = droneWeapon.transform.right * bulletSpeed;
@@ -206,7 +219,11 @@ public class DroneScript : MonoBehaviour
     }
 
     private void OnDestroy(){
-  
+
+            if(droneBody == null || droneWeapon == null){
+                return;
+            }
+
             Rigidbody2D bodyRb = droneBody.GetComponent<Rigidbody2D>();
             Rigidbody2D weaponRb = droneWeapon.GetComponent<Rigidbody2D>();
 

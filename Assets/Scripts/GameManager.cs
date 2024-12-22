@@ -112,6 +112,21 @@ public class GameManager : MonoBehaviour
 
     private List<(int, int)> blockedCells = new List<(int, int)>();
 
+    private GameObject audioManager;
+
+    /************************************************************************
+     * 
+     *  Stats
+     * 
+     * *********************************************************************/
+
+    private int playerXp = 0;
+    private int playerMedkitsUsed = 0;
+    private int playerEnemiesKilled = 0;
+
+
+
+
     public List<int> getHeights(){
         return heights;
     }
@@ -134,6 +149,30 @@ public class GameManager : MonoBehaviour
 
     public void addAmmo(int amount){
         weapons[currentWeapon].addAmmo(amount);
+    }
+
+    public void addKill(){
+        playerEnemiesKilled++;
+    }
+
+    public void addMedkitsUsed(){
+        playerMedkitsUsed++;
+    }
+
+    public void addXP(int xp){
+        playerXp += xp;
+    }
+
+    public int getPlayerXP(){
+        return playerXp;
+    }
+
+    public int getPlayerMedkitsUsed(){
+        return playerMedkitsUsed;
+    }
+
+    public int getPlayerEnemiesKilled(){
+        return playerEnemiesKilled;
     }
 
     private void generatePlatform(int startX, int startY, int platformWidth){
@@ -351,13 +390,13 @@ public string formatNumber(int number)
 
 public GameStats getGameStats()
 {
-    if(player == null){
+    /*if(player == null){
         return new GameStats("00:00:00", "0", "0", "0");
-    }
+    }*/
     string formatedTime = floatToDate(totalElapsedTime);
-    string formatedEnemiesKilled = formatNumber(player.GetComponent<PlayerScript>().getKills());
-    string formatedMedkitsUsed = formatNumber(player.GetComponent<PlayerScript>().getMedkitsUsed());
-    string formatedXp = formatNumber(player.GetComponent<PlayerScript>().getXp());
+    string formatedEnemiesKilled = formatNumber(playerEnemiesKilled);
+    string formatedMedkitsUsed = formatNumber(playerMedkitsUsed);
+    string formatedXp = formatNumber(playerXp);
     return new GameStats(formatedTime, formatedEnemiesKilled, formatedMedkitsUsed, formatedXp);
 }
 
@@ -525,6 +564,10 @@ public void clearDecals(){
         duration = gracePeriod;
         medkits = spawnMedKits(medkitCount);
         ammos = spawnAmmo(ammoCount);
+        audioManager.GetComponent<AudioScript>().musicSource.Stop();
+        audioManager.GetComponent<AudioScript>().musicSource.clip = audioManager.GetComponent<AudioScript>().graceTimeCountdown;
+        audioManager.GetComponent<AudioScript>().musicSource.loop = false;
+        audioManager.GetComponent<AudioScript>().musicSource.Play();
         while (duration > 0)
         {
             if(timerText == null){
@@ -547,6 +590,10 @@ public void clearDecals(){
     enemies.AddRange(drones);
 
     removeCollision(enemies);
+    audioManager.GetComponent<AudioScript>().musicSource.Stop();
+    audioManager.GetComponent<AudioScript>().musicSource.clip = audioManager.GetComponent<AudioScript>().backgroundMusic;
+    audioManager.GetComponent<AudioScript>().musicSource.loop = true;
+    audioManager.GetComponent<AudioScript>().musicSource.Play();
     while (enemies.Count > 0 && duration > 0)
     {
         if(timerText == null){
@@ -603,11 +650,18 @@ public void updateUI(PlayerStats playerStats){
 
         int currentLevel = 0;
         int xpCount = 0;
+        int previousLevel = levelText.text.StartsWith("LEVEL ") 
+        ? int.Parse(levelText.text.Substring(6)) - 1 
+        : 0;
 
         while(currentLevel < levels.Count - 1 && xpCount + levels[currentLevel].xpToNextLevel <= playerStats.xp)
         {
             xpCount += levels[currentLevel].xpToNextLevel;
             currentLevel++;
+        }
+
+        if(previousLevel != currentLevel){
+            audioManager.GetComponent<AudioScript>().playLevelUp();
         }
 
         int difference = playerStats.xp - xpCount;
@@ -640,6 +694,11 @@ public void updateUI(PlayerStats playerStats){
     levels.Add(new Level(300));
     levels.Add(new Level(400));
     levels.Add(new Level(500));
+    levels.Add(new Level(600));
+    levels.Add(new Level(700));
+    levels.Add(new Level(800));
+    levels.Add(new Level(900));
+    levels.Add(new Level(1000));
 
     weaponThresholds = new Dictionary<int, GameObject>
         {
@@ -663,8 +722,10 @@ public void updateUI(PlayerStats playerStats){
         weapons.Add("Basic Pistol", new RangeWeapon(damage: 5, maxAmmo: 8, ammo: 8, magazine: 64, name: "Basic Pistol", offsetX: 0.55f, offsetY: 0.1f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: basePistolIcon));
         weapons.Add("Smg", new RangeWeapon(damage: 10, maxAmmo: 10, ammo: 10, magazine: 40, name: "Smg", offsetX: 1.1f, offsetY: 0.15f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: smgIcon));
         weapons.Add("Shotgun", new RangeWeapon(damage: 20, maxAmmo: 7, ammo: 7, magazine: 21, name: "Shotgun", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: shotgunIcon));
-        weapons.Add("Laser", new RangeWeapon(damage: 30, maxAmmo: 5, ammo: 5, magazine: 30, name: "Laser", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: laserIcon));
+        weapons.Add("Laser Gun", new RangeWeapon(damage: 30, maxAmmo: 5, ammo: 5, magazine: 30, name: "Laser Gun", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: baseBulletPrefab, weaponIcon: laserIcon));
         weapons.Add("Plasma Cannon", new RangeWeapon(damage: 40, maxAmmo: 5, ammo: 5, magazine: 20, name: "Plasma Cannon", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: plasmaBulletPrefab, weaponIcon: plasmaCannonIcon));
+
+     audioManager = GameObject.FindGameObjectWithTag("AudioManager");
 }
 
 public (int, int) getNextBlock(float srcX, float srcY)
@@ -685,6 +746,7 @@ public (int, int) getNextBlock(float srcX, float srcY)
       StartCoroutine(handleWaves());
       AStarSearch = new AStar(blockGrid);
     }
+    
 
     // Update is called once per frame
     void Update()
@@ -699,8 +761,9 @@ public (int, int) getNextBlock(float srcX, float srcY)
         {
        
             //player = null;
-
+            Destroy(player);
             SceneManager.LoadScene("GameOverScene");
+        
         }
 
         if(weaponThresholds == null || spawnedThresholds == null){

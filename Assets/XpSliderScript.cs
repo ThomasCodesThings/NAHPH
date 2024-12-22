@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class XpSliderScript : MonoBehaviour
 {
-    private GameObject player;
+    private GameObject gameManager;
     private GameObject xpSlider;
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.FindWithTag("Player");
+        gameManager = GameObject.FindWithTag("GameManager");
         xpSlider = GameObject.FindWithTag("XpSlider");
         if(xpSlider != null)
         {
@@ -20,7 +20,7 @@ public class XpSliderScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int currentXp = player.GetComponent<PlayerScript>().getXp();
+        int currentXp = gameManager.GetComponent<GameManager>().getPlayerXP();
         if(currentXp > 0)
         {
             xpSlider.SetActive(true);

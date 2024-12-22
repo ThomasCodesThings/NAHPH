@@ -29,7 +29,7 @@ public class PlayerScript : MonoBehaviour
     private GameObject playerBody;
     private float pixelsPerUnit = 1000.0f;
     private Vector2 pivotPoint = new Vector2(0.5f, 0.5f);
-    private string[] weaponUpgrades = new string[] { "Smg", "Shotgun", "Laser", "Plasma Cannon" };
+    private string[] weaponUpgrades = new string[] { "Smg", "Shotgun", "Laser Gun", "Plasma Cannon" };
     private GameObject gameManager;
     private RangeWeapon currentRangeWeapon;
 
@@ -51,6 +51,8 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] Texture2D plasmaCannonBodyTexture;
 
     [SerializeField] Animator meleeWeaponAnimator;
+
+    GameObject audioManager;
 
     public GameObject FindChildWithTag(GameObject parent, string tag)
     {
@@ -103,6 +105,11 @@ public class PlayerScript : MonoBehaviour
         return health <= 0;
     }
 
+    public void addMedkitsUsed()
+    {
+        gameManager.GetComponent<GameManager>().addMedkitsUsed();
+    }
+
     public int heal()
     {
         if (medkitsHealingAmount.Count > 0)
@@ -113,7 +120,7 @@ public class PlayerScript : MonoBehaviour
             {
                 health = maxHealth;
             }
-            medkitsUsed++;
+            addMedkitsUsed();
             medkitsHealingAmount.RemoveAt(0);
         }
         
@@ -122,7 +129,7 @@ public class PlayerScript : MonoBehaviour
 
     public PlayerStats getPlayerStats()
     {
-        return new PlayerStats(health, maxHealth, xp, currentRangeWeapon.getAmmo(), currentRangeWeapon.getMagazine(), currentRangeWeapon.getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
+        return new PlayerStats(health, maxHealth, gameManager.GetComponent<GameManager>().getPlayerXP(), currentRangeWeapon.getAmmo(), currentRangeWeapon.getMagazine(), currentRangeWeapon.getName(), medkitsHealingAmount.Count, gameManager.GetComponent<GameManager>().getPlayerMedkitsUsed(), gameManager.GetComponent<GameManager>().getPlayerEnemiesKilled());
         /*switch(currentWeaponName){
             case "Basic Pistol":
                return new PlayerStats(health, maxHealth, xp, rangeWeapon.GetComponent<GunScript>().getAmmo(), rangeWeapon.GetComponent<GunScript>().getMagazine(), rangeWeapon.GetComponent<GunScript>().getName(), medkitsHealingAmount.Count, medkitsUsed, enemiesKilled);
@@ -141,15 +148,15 @@ public class PlayerScript : MonoBehaviour
 
     public void addXP(int xp)
     {
-        this.xp += xp;
+        gameManager.GetComponent<GameManager>().addXP(xp);
     }
 
     public void addKill()
     {
-        enemiesKilled++;
+        gameManager.GetComponent<GameManager>().addKill();
     }
 
-    public int getXp()
+    /*public int getXp()
     {
         return xp;
     }
@@ -162,7 +169,7 @@ public class PlayerScript : MonoBehaviour
     public int getMedkitsUsed()
     {
         return medkitsUsed;
-    }
+    }*/
 
     public string getCurrentWeaponName()
     {
@@ -271,10 +278,10 @@ public class PlayerScript : MonoBehaviour
         //meleeWeaponAnimator.SetBool("OnMeleeAttack", true);
     }
 
-    public void Awake()
+    /*public void Awake()
     {
         DontDestroyOnLoad(gameObject);
-    }
+    }*/
 
     // Start is called before the first frame update
     void Start()
@@ -286,6 +293,8 @@ public class PlayerScript : MonoBehaviour
         meleeWeaponAnimator = playerBody.GetComponent<Animator>();
 
         currentRangeWeapon = gameManager.GetComponent<GameManager>().getCurrentWeapon();
+
+        audioManager = GameObject.FindGameObjectWithTag("AudioManager");
         
     }
 
@@ -293,7 +302,7 @@ public class PlayerScript : MonoBehaviour
     void Update()
     {
 
-        if(gameObject.transform.position.y < -10)
+        if(gameObject.transform.position.y < 0)
         {
             health = 0;
         }
@@ -366,6 +375,7 @@ public class PlayerScript : MonoBehaviour
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.AddForce(new Vector2(rb.velocity.x, jumpForce));
+            audioManager.GetComponent<AudioScript>().playPlayerJump();
         }
 
 
@@ -379,6 +389,7 @@ public class PlayerScript : MonoBehaviour
             meleeWeaponAnimator.SetBool("HasShotgun", false);
             meleeWeaponAnimator.SetBool("HasLaserGun", false);
             meleeWeaponAnimator.SetBool("HasPlasmaCannon", false);
+            audioManager.GetComponent<AudioScript>().playMeleeAttack();
             attackEnemyWithMelee();
         }
 
@@ -415,11 +426,13 @@ public class PlayerScript : MonoBehaviour
         {
 
             medkitsHealingAmount.Add(other.gameObject.GetComponent<MedkitScript>().getHealAmount());
+            audioManager.GetComponent<AudioScript>().playMedkitPickup();
             Destroy(other.gameObject);
         }
 
         if(other.gameObject.CompareTag("AmmoPack")){
             int ammo = other.gameObject.GetComponent<AmmoPackScript>().getAmmoAmount();
+            audioManager.GetComponent<AudioScript>().playAmmoPickup();
             currentRangeWeapon.addAmmo(ammo);
            /* switch(currentWeaponName){
                 case "Basic Pistol":
@@ -473,8 +486,8 @@ public class PlayerScript : MonoBehaviour
             currentRangeWeapon = gameManager.GetComponent<GameManager>().getCurrentWeapon();
             currentWeaponName = weapon;
 
-             setAnimationState();
-        
+            setAnimationState();
+            audioManager.GetComponent<AudioScript>().playPlayerWeaponPickup();
 
             switch(weapon){
                 case "Smg":
@@ -493,7 +506,7 @@ public class PlayerScript : MonoBehaviour
                         pixelsPerUnit
                     );
                     break;
-                case "Laser":
+                case "Laser Gun":
                     playerBody.GetComponent<SpriteRenderer>().sprite = Sprite.Create(
                         laserBodyTexture,
                         new Rect(0.0f, 0.0f, laserBodyTexture.width, laserBodyTexture.height),
@@ -691,6 +704,7 @@ public class PlayerScript : MonoBehaviour
     private void StartHealing()
     {
         isHealing = true;
+        audioManager.GetComponent<AudioScript>().playPlayerHeal();
         healingTimer = 0.0f;
     }
 

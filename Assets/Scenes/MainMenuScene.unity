@@ -4045,6 +4045,25 @@ MonoBehaviour:
   sfxSource: {fileID: 1485666244}
   backgroundMusic: {fileID: 8300000, guid: 4b0f626df644d6c42aacfbcf6063d783, type: 3}
   volumeText: {fileID: 242970948}
+  ammoPickup: {fileID: 8300000, guid: 7db29ff653621524eb01a0ab6b52c032, type: 3}
+  medkitPickup: {fileID: 8300000, guid: 52b19795c0f27f746b3d3e5775a03152, type: 3}
+  playerReload: {fileID: 8300000, guid: 5953d9a6f0477014bb387ac45b60d77d, type: 3}
+  playerHeal: {fileID: 8300000, guid: 117fa08570bdcb64cb0b863357a6a5ab, type: 3}
+  playerJump: {fileID: 8300000, guid: 637f021df5e004643a4402d0d396bfa0, type: 3}
+  meleeAttack: {fileID: 8300000, guid: 13cff6c6bd206f045aa8422716c16d55, type: 3}
+  basicPistolFire: {fileID: 8300000, guid: 7432cdeb35912fb4281c2bc6d03941a0, type: 3}
+  smgFire: {fileID: 8300000, guid: 29d7d998baf4b784586bf091a6eed50c, type: 3}
+  shotgunFire: {fileID: 8300000, guid: ad5a45062203bf546b82bcec5fc6828f, type: 3}
+  laserGunFire: {fileID: 8300000, guid: c2e302323d738e04c9cc488fd9e2c2a2, type: 3}
+  plasmaCannonFire: {fileID: 8300000, guid: b169378daf128dd4ca4b4e43fb77fbd4, type: 3}
+  soldierAttack: {fileID: 8300000, guid: 5be9f68c5f9035c409d6ce9caea26d9f, type: 3}
+  droneAttack: {fileID: 8300000, guid: 5ce49d5a2324dd042a671f8a7135f678, type: 3}
+  bossAttack: {fileID: 8300000, guid: 19535058989bfc24889a02957e7ab356, type: 3}
+  levelUp: {fileID: 8300000, guid: 5be842c11195c4b4c881b1840cf531a9, type: 3}
+  playerWeaponPickup: {fileID: 8300000, guid: 205942c961eb4a446803ffb7f0ec8ee0, type: 3}
+  graceTimeCountdown: {fileID: 8300000, guid: a6c3a8b84c96dbe4a9871e0bf9d83f27, type: 3}
+  victorySound: {fileID: 8300000, guid: 6a6268cbd9b12ba4d958cb2ab59f56ca, type: 3}
+  gameOverSound: {fileID: 8300000, guid: 52489477414802e4c8902001b833f7f4, type: 3}
 --- !u!4 &1630507260
 Transform:
   m_ObjectHideFlags: 0

@@ -31,6 +31,7 @@ public class BossScript : MonoBehaviour
     private float destroyedTime = 3f;
     private float explosionForce = 10f;
     private bool playerIsOnLeft = false;
+    private GameObject audioManager;
 
     public void setHealth(int damage)
     {
@@ -142,6 +143,8 @@ public class BossScript : MonoBehaviour
         Debug.LogError("bossWeapon not found in the scene.");
     }
 
+    audioManager = GameObject.FindGameObjectWithTag("AudioManager");
+    IgnoreCollision();
     }
 
     // Update is called once per frame
@@ -181,7 +184,7 @@ public class BossScript : MonoBehaviour
 
         if (Time.time - lastShotTime > shotDelay)
         {
-        
+            audioManager.GetComponent<AudioScript>().playBossAttack();
             lastShotTime = Time.time;
             GameObject bullet = Instantiate(bulletPrefab, bossWeapon.transform.position + bossWeapon.transform.right * bulletOffset, bossWeapon.transform.rotation);
             bullet.GetComponent<Rigidbody2D>().velocity = bossWeapon.transform.right * bulletSpeed;

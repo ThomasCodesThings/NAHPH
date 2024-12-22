@@ -27,7 +27,6 @@ TagManager:
   - Soldier
   - SoldierLegs
   - AudioManager
-  - Laser
   - PlasmaCannon
   - XpSlider
   - BossBody
@@ -35,6 +34,7 @@ TagManager:
   - EnergyProjectileBoss
   - Boss
   - PlayerBody
+  - LaserGun
   layers:
   - Default
   - TransparentFX
