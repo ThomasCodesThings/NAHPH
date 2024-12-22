@@ -693,6 +693,7 @@ public class PlayerScript : MonoBehaviour
     {
         Time.timeScale = 0;
         audioManager.GetComponent<AudioScript>().musicSource.Pause();
+        audioManager.GetComponent<AudioScript>().sfxSource.Pause();
         pauseMenu.SetActive(true);
     }
 
@@ -700,6 +701,7 @@ public class PlayerScript : MonoBehaviour
     {
         Time.timeScale = 1;
         audioManager.GetComponent<AudioScript>().musicSource.Play();
+        audioManager.GetComponent<AudioScript>().sfxSource.Play();
         pauseMenu.SetActive(false);
     }
 
