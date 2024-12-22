@@ -30,12 +30,17 @@ public class GameOverScript : MonoBehaviour
             Destroy(gameManager);
         }
 
-        SceneManager.LoadScene(0);
-        Time.timeScale = 1;
-        GameObject audioManager = GameObject.FindGameObjectWithTag("AudioManager");
         if(audioManager != null){
             Destroy(audioManager);
         }
+
+        GameObject difficultyManager = GameObject.FindGameObjectWithTag("DifficultyManager");
+        if(difficultyManager != null){
+            Destroy(difficultyManager);
+        }
+
+        SceneManager.LoadScene(0);
+    
     }
 
     void Awake()

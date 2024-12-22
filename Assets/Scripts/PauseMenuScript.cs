@@ -33,11 +33,17 @@ public class PauseMenuScript : MonoBehaviour
         }
         SceneManager.LoadScene(0);
         Time.timeScale = 1;
-        //destroy existing sound manager
+
         GameObject audioManager = GameObject.FindGameObjectWithTag("AudioManager");
         if(audioManager != null){
             Destroy(audioManager);
         }
+
+        GameObject difficultyManager = GameObject.FindGameObjectWithTag("DifficultyManager");
+        if(difficultyManager != null){
+            Destroy(difficultyManager);
+        }
+
     }
 
     public void ExitGame()
