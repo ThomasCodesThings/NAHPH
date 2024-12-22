@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8044909876290276635}
   - component: {fileID: 8719140435696391281}
   - component: {fileID: 403701734322635179}
-  - component: {fileID: 6350024589774231766}
   m_Layer: 0
   m_Name: PlasmaCannon
   m_TagString: PlasmaCannon
@@ -150,18 +149,3 @@ EdgeCollider2D:
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
---- !u!114 &6350024589774231766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 575209615412231045}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddc521ff9b1cacf49b2a233e8aa1ce76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 3751690880110825005, guid: caa3f41527970a641a19a4ff034e6f7b, type: 3}
-  bulletSpeed: 20
-  bulletLifeTime: 5

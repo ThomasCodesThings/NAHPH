@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2952746988875938315}
   - component: {fileID: 4550302657808789473}
   - component: {fileID: 6460474762470478605}
-  - component: {fileID: -5313236542777592098}
   m_Layer: 0
   m_Name: BallisticProjectile
   m_TagString: BallisticProjectile
@@ -163,15 +162,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &-5313236542777592098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6463940134533983277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a564e11ad9309ca48970f5cc30b192ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

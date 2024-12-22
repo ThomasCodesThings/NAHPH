@@ -9,7 +9,7 @@ public class BulletSoldierScript : MonoBehaviour
 
     public int getDamage()
     {
-        return GameObject.FindGameObjectWithTag("WeakEnemy").GetComponent<WeakEnemyScript>().getDamage();
+        return GameObject.FindGameObjectWithTag("Soldier").GetComponent<SoldierScript>().getDamage();
     }
     // Start is called before the first frame update
     void Start()
