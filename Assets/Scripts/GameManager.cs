@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject platformRightPrefab;
     [SerializeField] GameObject playerPrefab;
     [SerializeField] int width = 50;
-    [SerializeField] int height = 20;
+    [SerializeField] int height = 25;
     [SerializeField] GameObject player;
     [SerializeField] GameObject soldierPrefab;
     [SerializeField] GameObject dronePrefab;
@@ -335,8 +335,8 @@ public class GameManager : MonoBehaviour
     }
 
     private Vector3 generateFlyingEnemySpawnPoint(){
-        int x = random.Next(-width, width);
-        int y = random.Next(height - 3, height);
+        int x = random.Next(-width + 1, width - 1);
+        int y = random.Next(height - 3, height - 1);
         return new Vector3(x, y, 0);
     }
 
@@ -394,8 +394,11 @@ public class GameManager : MonoBehaviour
             blockGrid[width * 2 - 1, i] = 0;
         }
 
-        for(int yMultiuplier = 1; yMultiuplier < platformLayers + 1; yMultiuplier++){
-            for (int x = -width; x < width;){
+        int previousY = -1;
+        for (int yMultiplier = 1; yMultiplier < platformLayers + 1; yMultiplier++)
+        {
+            for (int x = -width; x < width;)
+            {
                 int randomInt = random.Next(0, 5);
                 bool spawnPlatform = randomInt == 1 || randomInt == 2;
 
@@ -414,9 +417,19 @@ public class GameManager : MonoBehaviour
                         continue;
                     }
 
+                    if (y == previousY)
+                    {
+            
+                        int gapSize = random.Next(4, 7);
+                        x += gapSize;
+                        Debug.Log($"Forced gap at x={x} due to repeated Y value: {y}");
+                        continue;
+                    }
+
                     if (x + platformWidth <= width)
                     {
-                        generatePlatform(x, y + ((int) 4.5f * yMultiuplier), platformWidth);
+                        generatePlatform(x, y + ((int)4.5f * yMultiplier), platformWidth);
+                        previousY = y; 
                     }
                     else
                     {
@@ -436,6 +449,7 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
 
 /*
       for (int y = 5; y < height; y+=4)
