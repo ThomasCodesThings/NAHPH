@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour
     private int medkitCount = 1;
     private int ammoCount = 1;
     private int maxWaves = 5;
+    int platformLayers = 2;
 
 
     private List<int> heights = new List<int>();
@@ -83,9 +84,9 @@ public class GameManager : MonoBehaviour
     private int[,] blockGrid;
     private AStar AStarSearch;
 
-    private static int seed = Math.Abs(Guid.NewGuid().GetHashCode());
+    private int seed;
 
-    System.Random random = new System.Random(seed);
+    System.Random random;
 
     /************************************************************************
      * 
@@ -175,20 +176,31 @@ public class GameManager : MonoBehaviour
         return playerEnemiesKilled;
     }
 
-    private void generatePlatform(int startX, int startY, int platformWidth){
-        int prefabLength = 2;
+    private void generatePlatform(int startX, int startY, int platformWidth)
+{
+    int prefabLength = 2;
 
-        if(startX + platformWidth > width){
-            return;
-        }
+    // Ensure the platform does not exceed grid bounds
+    if (startX + platformWidth > width)
+    {
+        Debug.LogWarning("Platform cannot be placed due to out-of-bounds coordinates.");
+        return;
+    }
 
+    // Instantiate the left prefab
+    if (isWithinBlockGrid(startX + width, startY) && isWithinBlockGrid(startX + width + 1, startY))
+    {
         Instantiate(platformLeftPrefab, new Vector3(startX, startY, 0), Quaternion.identity);
         blockGrid[startX + width, startY] = 0;
         blockGrid[startX + width + 1, startY] = 0;
         blockedCells.Add((startX, startY));
         blockedCells.Add((startX + 1, startY));
+    }
 
-        for (int x = startX + prefabLength; x < startX + platformWidth - prefabLength; x+= prefabLength)
+    // Instantiate center prefabs
+    for (int x = startX + prefabLength; x < startX + platformWidth - prefabLength; x += prefabLength)
+    {
+        if (isWithinBlockGrid(x + width, startY) && isWithinBlockGrid(x + width + 1, startY))
         {
             Instantiate(platformCenterPrefab, new Vector3(x, startY, 0), Quaternion.identity);
             blockGrid[x + width, startY] = 0;
@@ -196,13 +208,19 @@ public class GameManager : MonoBehaviour
             blockedCells.Add((x, startY));
             blockedCells.Add((x + 1, startY));
         }
-
-        Instantiate(platformRightPrefab, new Vector3(startX + platformWidth - prefabLength, startY, 0), Quaternion.identity);
-        blockGrid[startX + platformWidth - prefabLength + width, startY] = 0;
-        blockGrid[startX + platformWidth - prefabLength + 1 + width, startY] = 0;
-        blockedCells.Add((startX + platformWidth - prefabLength, startY));
-        blockedCells.Add((startX + platformWidth - prefabLength + 1, startY));
     }
+
+
+    int rightX = startX + platformWidth - prefabLength;
+    if (isWithinBlockGrid(rightX + width, startY) && isWithinBlockGrid(rightX + width + 1, startY))
+    {
+        Instantiate(platformRightPrefab, new Vector3(rightX, startY, 0), Quaternion.identity);
+        blockGrid[rightX + width, startY] = 0;
+        blockGrid[rightX + width + 1, startY] = 0;
+        blockedCells.Add((rightX, startY));
+        blockedCells.Add((rightX + 1, startY));
+    }
+}
 
 
     /*
@@ -254,6 +272,8 @@ public class GameManager : MonoBehaviour
             {
                 Instantiate(floorLeftPrefab, new Vector3(startX, startY, 0), Quaternion.identity);
                 blockGrid[startX + width, startY] = 0;
+                heights.Add(startY);
+                blockedCells.Add((startX, startY));
                 totalWidth++;
             }
         }
@@ -269,7 +289,9 @@ public class GameManager : MonoBehaviour
             if (isWithinBlockGrid(x + width, startY))
             {
                 Instantiate(floorPrefab, new Vector3(x, startY, 0), Quaternion.identity);
+                heights.Add(startY);
                 blockGrid[x + width, startY] = 0;
+                blockedCells.Add((x, startY));
                 totalWidth++;
             }
         }
@@ -279,7 +301,9 @@ public class GameManager : MonoBehaviour
             if (isWithinBlockGrid(startX + calculatedWidth - 1 + width, startY))
             {
                 Instantiate(floorRightPrefab, new Vector3(startX + calculatedWidth - 1, startY, 0), Quaternion.identity);
+                heights.Add(startY);
                 blockGrid[startX + calculatedWidth - 1 + width, startY] = 0;
+                blockedCells.Add((startX + calculatedWidth - 1, startY));
                 totalWidth++;
             }
         }
@@ -301,6 +325,20 @@ public class GameManager : MonoBehaviour
     }
 
 
+    private int revFreeBlock(int x){
+        for(int i = x; i > 0; i--){
+            if(heights[i] != -1){
+                return heights[i];
+            }
+        }
+        return heights[x];
+    }
+
+    private Vector3 generateFlyingEnemySpawnPoint(){
+        int x = random.Next(-width, width);
+        int y = random.Next(height - 3, height);
+        return new Vector3(x, y, 0);
+    }
 
 
    public void generate()
@@ -328,9 +366,12 @@ public class GameManager : MonoBehaviour
         {
             bool generateGap = random.Next(0, 4) == 1;
             if(generateGap){
-                int gapSize = random.Next(3, 6);
+                int gapSize = random.Next(3, 5);
                 x += gapSize;
                 prevY = random.Next(0, 2) == 0 ? prevY - 1 : prevY + 1;
+                for(int k = 0; k < gapSize; k++){
+                    heights.Add(-1);
+                }
                 continue;
             }
             int platformWidth = random.Next(4, 8);
@@ -353,8 +394,51 @@ public class GameManager : MonoBehaviour
             blockGrid[width * 2 - 1, i] = 0;
         }
 
+        for(int yMultiuplier = 1; yMultiuplier < platformLayers + 1; yMultiuplier++){
+            for (int x = -width; x < width;){
+                int randomInt = random.Next(0, 5);
+                bool spawnPlatform = randomInt == 1 || randomInt == 2;
 
-      /* for (int y = 5; y < height; y+=4)
+                if (spawnPlatform)
+                {
+                    int platformWidth = random.Next(4, 8);
+                    if (platformWidth % 2 != 0)
+                    {
+                        platformWidth++;
+                    }
+
+                    int y = revFreeBlock(x + width);
+                    if (y < 0 || y >= blockGrid.GetLength(1))
+                    {
+                        Debug.LogWarning($"Skipping platform at x={x} due to invalid Y value: {y}");
+                        continue;
+                    }
+
+                    if (x + platformWidth <= width)
+                    {
+                        generatePlatform(x, y + ((int) 4.5f * yMultiuplier), platformWidth);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Platform at x={x} exceeds grid bounds and is skipped.");
+                    }
+                    x += platformWidth;
+                }
+                else
+                {
+                    int gapSize = random.Next(4, 7);
+                    x += gapSize;
+                    if (x >= width)
+                    {
+                        Debug.LogWarning("Gap size caused x to exceed grid bounds.");
+                        break;
+                    }
+                }
+            }
+        }
+
+/*
+      for (int y = 5; y < height; y+=4)
         {
             for (int x = -width + 3; x < width; x++)
             {   
@@ -531,19 +615,9 @@ public void clearAfterWave(){
 
 private Vector3 generateRandomSpawnPoint(int offsetY = 2)
 {
-
-    int chance = random.Next(1, 10);
-
-    if(chance > 0){
-        int randomX = random.Next(-width, width);
-        int randomY = random.Next(2, 4);
-        return new Vector3(randomX, randomY, 0);
-    }else{
-        //pick random item from blockedCells
-        int randomIndex = random.Next(0, blockedCells.Count);
-        (int x, int y) = blockedCells[randomIndex];
-        return new Vector3(x, y + offsetY, 0);
-    }
+    int randomIndex = random.Next(0, blockedCells.Count);
+    (int x, int y) = blockedCells[randomIndex];
+    return new Vector3(x, y + offsetY, 0);
 }
 
 
@@ -564,8 +638,7 @@ private Vector3 generateRandomSpawnPoint(int offsetY = 2)
     List<GameObject> enemies = new List<GameObject>(); 
     for (int i = 0; i < count; i++)
     {
-        Vector3 spawnPoint = generateRandomSpawnPoint();
-        spawnPoint.y = 10f;
+        Vector3 spawnPoint = generateFlyingEnemySpawnPoint();
         GameObject enemy = Instantiate(dronePrefab, spawnPoint, Quaternion.identity);
         enemies.Add(enemy); 
     }
@@ -756,6 +829,8 @@ public void updateUI(PlayerStats playerStats){
     
    void Awake()
 {
+    seed = Math.Abs(Guid.NewGuid().GetHashCode());
+    random = new System.Random(seed);
     DontDestroyOnLoad(gameObject);
     difficultyManager = GameObject.FindGameObjectWithTag("DifficultyManager");
 
@@ -806,6 +881,8 @@ public void updateUI(PlayerStats playerStats){
         weapons.Add("Plasma Cannon", new RangeWeapon(damage: 40, maxAmmo: 5, ammo: 5, magazine: 20, name: "Plasma Cannon", offsetX: 0.9f, offsetY: 0f, bulletSpeed: 10f, bulletLifeTime: 1.5f, shotDelay: 0.2f, bulletPrefab: plasmaBulletPrefab, weaponIcon: plasmaCannonIcon));
 
      audioManager = GameObject.FindGameObjectWithTag("AudioManager");
+
+     Debug.Log(seed);
 }
 
 public (int, int) getNextBlock(float srcX, float srcY)
